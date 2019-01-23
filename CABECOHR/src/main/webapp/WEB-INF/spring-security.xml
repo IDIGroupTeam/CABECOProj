@@ -1,0 +1,36 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+	<http auto-config="true">
+	     <intercept-url pattern="/" access="permitAll()" /> 
+	   
+         <csrf disabled="true"/>   
+         <access-denied-handler error-page="/403" />
+         <form-login  login-page="/login" login-processing-url="/j_spring_security_login"
+     		         default-target-url="/" authentication-failure-url="/login?error=true"
+      			     username-parameter="username" password-parameter="password" />
+      	 <logout logout-success-url="/login?logout"  invalidate-session="true" delete-cookies="JSESSIONID" /> 
+   		<!--  <logout logout-url="/logout" 
+     			  logout-success-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID" /> -->
+	</http>
+     <!--
+     select u.username, user_role.user_role , role.RoleName
+ 					from user u
+					INNER JOIN user_role ON u.id=user_role.idUser 
+      				  INNER JOIN role ON role.RoleID in ( user_role.RoleID, user_role.SecondRoleID, user_role.ThirdRoleID) 
+      				  where  username=?"
+      				   authorities-by-username-query="select u.username, ur.user_role from user u, user_role ur where u.id=ur.idUser and username=?"  -->
+	<authentication-manager>
+		   <authentication-provider>
+	            <jdbc-user-service data-source-ref="dataSource"
+	              	users-by-username-query="select username, password, enabled from user where username=?"
+			    
+			    	 authorities-by-username-query="select u.username, ur.user_role from user u, user_role ur where u.id=ur.idUser and username=?"
+             	/>
+	        </authentication-provider>  
+	</authentication-manager>
+</beans:beans>

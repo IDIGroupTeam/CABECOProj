@@ -1,0 +1,14 @@
+<decorators defaultdir="/pages/layouts">
+	<decorator name="main" page="main.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+	<excludes>
+	   <pattern>/404-page.html </pattern>
+	   <pattern>/ajax*</pattern>
+	</excludes>
+	<!--
+	<decorator name="login" page="/login/login.jsp">
+		 <pattern>/login*</pattern>
+	</decorator>
+	-->
+</decorators>

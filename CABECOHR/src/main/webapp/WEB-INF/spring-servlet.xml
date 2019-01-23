@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/public/**" location="/public/" />
+	<mvc:default-servlet-handler />
+	<context:component-scan base-package="com.idi.hr" />
+
+	<!-- Config folder to load jsp page for view layer -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Read properties file -->
+	<bean id="properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:cabecohr.properties" />
+		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> <property 
+			name="ignoreResourceNotFound" value="true" /> -->
+	</bean>
+
+	<!-- Config for upload file feature -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- setting maximum upload size -->
+		<property name="maxUploadSize" value="25000000" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages/validator" />
+	</bean>
+	<!-- Config database connection -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/CABECO?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="xxx" />
+	</bean>
+	
+	<!-- Spring Email Sender Bean Configuration -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="idigroupbsc@gmail.com" />
+		<property name="password" value="idi123456" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.socketFactory.port">465</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="employeeDAO" class="com.idi.hr.dao.EmployeeDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="jobTitleDAO" class="com.idi.hr.dao.JobTitleDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="leaveDAO" class="com.idi.hr.dao.LeaveDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="departmentDAO" class="com.idi.hr.dao.DepartmentDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="insuranceDAO" class="com.idi.hr.dao.InsuranceDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="workHistoryDAO" class="com.idi.hr.dao.WorkHistoryDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
+	<bean id="timekeepingDAO" class="com.idi.hr.dao.TimekeepingDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
+	<bean id="workingDayDAO" class="com.idi.hr.dao.WorkingDayDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+		<bean id="salaryDAO" class="com.idi.hr.dao.SalaryDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+</beans>
