@@ -20,7 +20,7 @@
 <script src="${url}/public/js/common.js"></script>
 <script type="text/javascript">
 	$(function() {
-		moneyConvert("salary");
+		//moneyConvert("salary");
 	});
 </script>
 </head>
@@ -35,14 +35,16 @@
 						lương nhân viên</td>
 				</tr>
 				<tr>
-					<td bgcolor="#FAFAFA">Họ tên NV:</td>
-					<td colspan="3"><form:select path="employeeId" class="form-control animated" disabled="true">
+					<form:hidden path="employeeId"/>
+					<td bgcolor="#FAFAFA">Họ tên:</td>
+					<td colspan="3">Mã NV ${salaryForm.employeeId}, ${salaryForm.fullName}</td>	
+					<%-- <td colspan="3"><form:select path="employeeId" class="form-control animated" disabled="true">
 							<form:options items="${employeeMap}" />
-						</form:select></td>						
+						</form:select></td>	 --%>					
 				</tr>
 				<tr>
-					<td bgcolor="#FAFAFA">Lương:(*)</td>
-					<td><form:input path="salary" maxlength="12" 
+					<td bgcolor="#FAFAFA">Hệ số lương:(*)</td>
+					<td><form:input path="salary" maxlength="12" type="number" min="0.1" step="0.01" 
 							required="required" class="form-control animated"/></td>
 							
 					<td bgcolor="#FAFAFA">Số TK ngân hàng:</td>

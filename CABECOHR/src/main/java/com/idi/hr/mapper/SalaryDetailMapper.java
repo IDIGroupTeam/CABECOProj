@@ -11,17 +11,25 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 
 	public SalaryDetail mapRow(ResultSet rs, int nowNum) throws SQLException {
 		int employeeId = rs.getInt("EMPLOYEE_ID");
+		String basicSalary = rs.getString("BASIC_SALARY");
 		String finalSalary = rs.getString("ACTUAL_SALARY");
 		String overTimeN = rs.getString("OVER_TIME_N");
 		String overTimeW = rs.getString("OVER_TIME_W");
 		String overTimeH = rs.getString("OVER_TIME_H");
 		String overTimeSalary = rs.getString("OVER_TIME_SALARY");
 		String bounus = rs.getString("BOUNUS");
+		String maketingSalary = rs.getString("MARKETING_SALARY");
 		String subsidize = rs.getString("SUBSIDIZE");
+		String subLunch = rs.getString("SUB_LUNCH");
+		String subPhone = rs.getString("SUB_PHONE");
+		String subGas = rs.getString("SUB_GAS");
+		String overWork = rs.getString("OVER_WORK");
 		String advancePayed = rs.getString("ADVANCE_PAYED");
 		String taxPersonal = rs.getString("TAX_PERSONAL");
+		String totalIncome = rs.getString("TOTAL_INCOME");
+		String totalReduce = rs.getString("TOTAL_REDUCE");
 		int month = rs.getInt("MONTH");
-		int year = rs.getInt("YEAR");;
+		int year = rs.getInt("YEAR");
 		String desc = rs.getString("S.COMMENT");		
 		String payedInsurance = rs.getString("PAYED_INSURANCE");
 		String fullName = rs.getString("FULL_NAME");
@@ -36,9 +44,15 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String percentCompanyPay = rs.getString("PERCENT_SOCI_INSU_C");
 		String percentEmployeePay = rs.getString("PERCENT_SOCI_INSU_E");
 		int workcomplete = rs.getInt("WORK_COMPLETE");
-		return new SalaryDetail(employeeId, finalSalary, overTimeN, overTimeW, overTimeH, 
-				overTimeSalary, bounus, subsidize, advancePayed, taxPersonal, month, year, desc,
-				payedInsurance,fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
-				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete);
+		String workedDay = rs.getString("WORKED_DAY");
+		String other = rs.getString("OTHER");
+		String arrears = rs.getString("ARREARS");
+		String payStatus = rs.getString("PAY_STATUS");
+		return new SalaryDetail(employeeId, basicSalary, finalSalary, overTimeN, overTimeW, overTimeH, 
+				overTimeSalary, bounus, maketingSalary, subsidize, subLunch, subPhone, subGas, overWork,
+				advancePayed, taxPersonal, month, year, totalIncome, totalReduce, desc,
+				payedInsurance, fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
+				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 
+				workedDay, other, arrears, payStatus);
 	}	
 }

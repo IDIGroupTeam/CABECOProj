@@ -108,7 +108,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_SALARY_INFO").toString();
 			log.info("UPDATE_SALARY_INFO query: " + sql);
-			Object[] params = new Object[] { salary.getSalary().replaceAll(",", ""), salary.getBankNo(), 
+			Object[] params = new Object[] { salary.getSalary(), salary.getBankNo(), 
 					salary.getBankName(), salary.getBankBranch(), salary.getDesc(), salary.getEmployeeId() };
 			jdbcTmpl.update(sql, params);
 
@@ -235,19 +235,31 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("INSERT_SALARY_DETAIL query: " + sql);
 			//System.err.println("salary " + salaryDetail.getSalary());
 			// Tính lương thực nhận
-			float finalSalary = Float.valueOf(salaryDetail.getSalary());
-			if(salaryDetail.getWorkComplete() > 0) {
-				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;
+			float finalSalary = 0;
+			if(salaryDetail.getSalaryForWorkedDay() != null) {
+				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
+			}else {
+				if(salaryDetail.getBasicSalary() != null && salaryDetail.getBasicSalary().length() > 0)
+					finalSalary = Float.valueOf(salaryDetail.getBasicSalary());
+				else
+					finalSalary = Float.valueOf(salaryDetail.getSalary())*Float.valueOf(hr.getProperty("BASIC_SALARY"));
+			}
+			if(salaryDetail.getWorkComplete() >= 0) {
+				finalSalary = finalSalary*salaryDetail.getWorkComplete()/100;
 				//System.err.println(8000000*120/100);
 			}
 			// Tăng
 			float salaryPerHour = 0;
 			if (salaryDetail.getSalaryPerHour() > 0)
 				salaryPerHour = salaryDetail.getSalaryPerHour();
-			if (salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
+			if (salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0) {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getBounus().replaceAll(",", ""));
-			if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
+				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0) {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubsidize().replaceAll(",", ""));
+				salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
+			}
 			if (salaryDetail.getOverTimeN() != null && salaryDetail.getOverTimeN().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeN()) * (float) 1.5;
 			}
@@ -257,41 +269,70 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
 			}
+			if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
+				salaryDetail.setOther(salaryDetail.getOther().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubLunch() != null && salaryDetail.getSubLunch().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubLunch().replaceAll(",", ""));
+				salaryDetail.setSubLunch(salaryDetail.getSubLunch().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubPhone() != null && salaryDetail.getSubPhone().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubPhone().replaceAll(",", ""));
+				salaryDetail.setSubPhone(salaryDetail.getSubPhone().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubGas() != null && salaryDetail.getSubGas().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubGas().replaceAll(",", ""));
+				salaryDetail.setSubGas(salaryDetail.getSubGas().replaceAll(",", ""));
+			}
+			if (salaryDetail.getOverWork() != null && salaryDetail.getOverWork().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOverWork().replaceAll(",", ""));
+				salaryDetail.setOverWork(salaryDetail.getOverWork().replaceAll(",", ""));
+			}
+			if (salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaketingSalary().replaceAll(",", ""));
+				salaryDetail.setMaketingSalary(salaryDetail.getMaketingSalary().replaceAll(",", ""));
+			}	
+			salaryDetail.setTotalIncome(String.valueOf(finalSalary));
+			
 			// Giảm
-			if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
+			if (salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0) {
+				finalSalary = finalSalary - Float.valueOf(salaryDetail.getArrears().replaceAll(",", ""));
+				salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
+			}if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0) {
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getTaxPersonal().replaceAll(",", ""));
-			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
+				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+			}if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0) {
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
-			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
+				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+			}if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
+			
+			salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
-
-			//System.err.println("OverTimeSalary " + salaryDetail.getOverTimeSalary());
-
-			if(salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
-				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
-			if(salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
-				salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
-			if(salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
-				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
-			if(salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
-				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+				
+			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
-					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
-					salaryDetail.getTaxPersonal(), salaryDetail.getFinalSalary(), salaryDetail.getMonth(),
-					salaryDetail.getYear(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete() };
+					salaryDetail.getBounus(), salaryDetail.getMaketingSalary(), salaryDetail.getSubsidize(),
+					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), 
+					salaryDetail.getOverWork(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
+					salaryDetail.getSalary(), salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(),
+					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(),
+					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(),
+					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
 			try {
+				e.printStackTrace();
+				log.warn("Insert has error ... trying to update");
 				updateSalaryDetail(salaryDetail);
 			} catch (Exception ex) {
 				log.error(ex, ex);
 				throw ex;
 			}
-
 		}
 	}
 
@@ -309,18 +350,31 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("UPDATE_SALARY_DETAIL query: " + sql);
 
 			// Tính lương thực nhận
-			float finalSalary = Float.valueOf(salaryDetail.getSalary());
-			if(salaryDetail.getWorkComplete() > 0) {
-				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;				
+			float finalSalary = 0;
+			if(salaryDetail.getSalaryForWorkedDay() != null) {
+				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
+			}else {
+				if(salaryDetail.getBasicSalary() != null && salaryDetail.getBasicSalary().length() > 0)
+					finalSalary = Float.valueOf(salaryDetail.getBasicSalary());
+				else
+				 finalSalary = Float.valueOf(salaryDetail.getSalary())*Float.valueOf(hr.getProperty("BASIC_SALARY"));				 
+			}
+			
+			if(salaryDetail.getWorkComplete() >= 0) {
+				finalSalary = finalSalary*salaryDetail.getWorkComplete()/100;				
 			}
 			// Tang
 			float salaryPerHour = 0;
 			if (salaryDetail.getSalaryPerHour() > 0)
 				salaryPerHour = salaryDetail.getSalaryPerHour();
-			if (salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
+			if (salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0) {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getBounus().replaceAll(",", ""));
-			if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
+				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
+			}	
+			if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0) {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubsidize().replaceAll(",", ""));
+				salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
+			}	
 			if (salaryDetail.getOverTimeN() != null && salaryDetail.getOverTimeN().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeN()) * (float) 1.5;
 			}
@@ -330,37 +384,67 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
 			}
+			if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
+				salaryDetail.setOther(salaryDetail.getOther().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubLunch() != null && salaryDetail.getSubLunch().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubLunch().replaceAll(",", ""));
+				salaryDetail.setSubLunch(salaryDetail.getSubLunch().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubPhone() != null && salaryDetail.getSubPhone().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubPhone().replaceAll(",", ""));
+				salaryDetail.setSubPhone(salaryDetail.getSubPhone().replaceAll(",", ""));
+			}
+			if (salaryDetail.getSubGas() != null && salaryDetail.getSubGas().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubGas().replaceAll(",", ""));
+				salaryDetail.setSubGas(salaryDetail.getSubGas().replaceAll(",", ""));
+			}
+			if (salaryDetail.getOverWork() != null && salaryDetail.getOverWork().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOverWork().replaceAll(",", ""));
+				salaryDetail.setOverWork(salaryDetail.getOverWork().replaceAll(",", ""));
+			}
+			if (salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaketingSalary().replaceAll(",", ""));
+				salaryDetail.setMaketingSalary(salaryDetail.getMaketingSalary().replaceAll(",", ""));
+			}	
+			salaryDetail.setTotalIncome(String.valueOf(finalSalary));
+			
 			// Giảm
-			if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
+			if (salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0) {
+				finalSalary = finalSalary - Float.valueOf(salaryDetail.getArrears().replaceAll(",", ""));
+				salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
+			}	
+			if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0) {
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getTaxPersonal().replaceAll(",", ""));
-			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
+				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+			}	
+			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0) {
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+			}	
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0) {
 				//System.err.println(salaryDetail.getSalaryInsurance());
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
 			}
-
+			salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
+			
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
 			//System.err.println("year " + salaryDetail.getYear());
 			//System.err.println("Luong thuc nhan " + finalSalary);
 			
-			if(salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
-				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
-			if(salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
-				salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
-			if(salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
-				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
-			if(salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
-				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
-			
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
-					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
-					salaryDetail.getFinalSalary(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(),
-					salaryDetail.getWorkComplete(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getMaketingSalary(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
+					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getOverWork(),
+					salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), 
+					salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 
+					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
+					salaryDetail.getArrears(), salaryDetail.getPayStatus(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e, e);
 			throw e;
 		}

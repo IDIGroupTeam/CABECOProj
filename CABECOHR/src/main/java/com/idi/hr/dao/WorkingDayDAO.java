@@ -61,7 +61,7 @@ public class WorkingDayDAO extends JdbcDaoSupport {
 			String sql = hr.get("GET_WORKING_DAY_FOR_MONTH").toString();
 			log.info("GET_WORKING_DAY_FOR_MONTH query: " + sql);
 			Object[] params = new Object[] { month, forCompany };
-			System.out.println(month +"|"+ forCompany ); 
+			System.out.println(month + "|" + forCompany ); 
 			WorkingDayMapper mapper = new WorkingDayMapper();
 	
 			workingDay = jdbcTmpl.queryForObject(sql, params, mapper);

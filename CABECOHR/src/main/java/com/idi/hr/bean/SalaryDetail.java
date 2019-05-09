@@ -11,13 +11,19 @@ public class SalaryDetail implements Serializable {
 	
 	private int employeeId; 
 	private String finalSalary;
+	private String basicSalary;
 	private String overTimeN;
 	private String overTimeW;
 	private String overTimeH;
 	private String overTimeSalary;
 	private float salaryPerHour;
 	private String bounus;
+	private String maketingSalary;
 	private String subsidize;
+	private String subLunch;
+	private String subPhone;
+	private String subGas;
+	private String overWork;
 	private String advancePayed;
 	private String taxPersonal;
 	private int month;
@@ -36,26 +42,43 @@ public class SalaryDetail implements Serializable {
 	private String percentCompanyPay;
 	private String percentEmployeePay;
 	private int workComplete;
+	private String workedDay;
+	private String salaryForWorkedDay;
+	private String other;
+	private String arrears;
+	private String payStatus;
+	private String totalReduce;
+	private String totalIncome;
 	
 	public SalaryDetail() {
 		
 	}
 
-	public SalaryDetail(int employeeId, String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
-		String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	String description,
-		String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch, String salary, 
-		String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, int workComplete) {
+	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
+			String overTimeSalary, String bounus, String maketingSalary, String subsidize, String subLunch, String subPhone, String subGas, 
+			String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
+			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
+			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
+			int workComplete, String workedDay, String other, String arrears, String payStatus) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
+		this.basicSalary = basicSalary;
 		this.overTimeN = overTimeN;
 		this.overTimeW = overTimeW;
 		this.overTimeH = overTimeH;
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
+		this.maketingSalary = maketingSalary;
 		this.subsidize = subsidize;
+		this.subLunch = subLunch;
+		this.subPhone = subPhone;
+		this.subGas = subGas;
+		this.overWork = overWork;
 		this.advancePayed = advancePayed;
 		this.taxPersonal = taxPersonal;
+		this.totalIncome = totalIncome;
+		this.totalReduce = totalReduce;
 		this.month = month;
 		this.year = year;
 		this.desc = description;		
@@ -73,8 +96,19 @@ public class SalaryDetail implements Serializable {
 		this.percentCompanyPay = percentCompanyPay;
 		this.percentEmployeePay = percentEmployeePay;
 		this.workComplete = workComplete;
-		
+		this.workedDay = workedDay;
+		this.other = other;
+		this.arrears = arrears;
+		this.payStatus = payStatus;
 	}	
+
+	public String getBasicSalary() {
+		return basicSalary;
+	}
+
+	public void setBasicSalary(String basicSalary) {
+		this.basicSalary = basicSalary;
+	}
 
 	public String getFinalSalary() {
 		return finalSalary;
@@ -296,4 +330,100 @@ public class SalaryDetail implements Serializable {
 		this.workComplete = workComplete;
 	}
 
+	public String getWorkedDay() {
+		return workedDay;
+	}
+
+	public void setWorkedDay(String workedDay) {
+		this.workedDay = workedDay;
+	}
+
+	public String getSalaryForWorkedDay() {
+		return salaryForWorkedDay;
+	}
+
+	public void setSalaryForWorkedDay(String salaryForWorkedDay) {
+		this.salaryForWorkedDay = salaryForWorkedDay;
+	}
+
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
+	}
+
+	public String getArrears() {
+		return arrears;
+	}
+
+	public void setArrears(String arrears) {
+		this.arrears = arrears;
+	}
+
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
+
+	public String getSubLunch() {
+		return subLunch;
+	}
+
+	public void setSubLunch(String subLunch) {
+		this.subLunch = subLunch;
+	}
+
+	public String getSubPhone() {
+		return subPhone;
+	}
+
+	public void setSubPhone(String subPhone) {
+		this.subPhone = subPhone;
+	}
+
+	public String getSubGas() {
+		return subGas;
+	}
+
+	public void setSubGas(String subGas) {
+		this.subGas = subGas;
+	}
+
+	public String getOverWork() {
+		return overWork;
+	}
+
+	public void setOverWork(String overWork) {
+		this.overWork = overWork;
+	}
+
+	public String getTotalReduce() {
+		return totalReduce;
+	}
+
+	public void setTotalReduce(String totalReduce) {
+		this.totalReduce = totalReduce;
+	}
+
+	public String getTotalIncome() {
+		return totalIncome;
+	}
+
+	public void setTotalIncome(String totalIncome) {
+		this.totalIncome = totalIncome;
+	}
+
+	public String getMaketingSalary() {
+		return maketingSalary;
+	}
+
+	public void setMaketingSalary(String maketingSalary) {
+		this.maketingSalary = maketingSalary;
+	}
+		
 }
