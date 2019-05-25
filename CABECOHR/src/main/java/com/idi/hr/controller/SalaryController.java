@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.LeaveReport;
+import com.idi.hr.bean.Product;
+import com.idi.hr.bean.ProductSold;
 import com.idi.hr.bean.Salary;
 import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryReport;
@@ -29,7 +32,9 @@ import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.bean.WorkingDay;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.Utils;
+import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
+import com.idi.hr.dao.ProductSoldDAO;
 import com.idi.hr.dao.SalaryDAO;
 import com.idi.hr.dao.WorkingDayDAO;
 import com.idi.hr.form.SalaryForm;
@@ -46,11 +51,17 @@ public class SalaryController {
 
 	@Autowired
 	private WorkingDayDAO workingDayDAO;
+	
+	@Autowired
+	private DepartmentDAO departmentDAO;
+	
+	@Autowired
+	private ProductSoldDAO productSoldDAO;
 
 	PropertiesManager hr = new PropertiesManager("cabecohr.properties");
 
 	@RequestMapping(value = { "/salary/" })
-	public String ListSalarys(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
+	public String listSalarys(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
 		try {
 			// Paging:
 			// Number records of a Page: Default: 25
@@ -65,6 +76,65 @@ public class SalaryController {
 			}
 
 			List<Salary> list = salaryDAO.getSalarys();
+
+			form.setTotalRecords(list.size());
+
+			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+					? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+					: form.getTotalRecords() / form.getNumberRecordsOfPage();
+			form.setTotalPages(totalPages);
+
+			List<Salary> listSalaryForPage = new ArrayList<Salary>();
+
+			if (form.getPageIndex() < totalPages) {
+				if (form.getPageIndex() == 1) {
+					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+						Salary salary = new Salary();
+						salary = list.get(i);
+						listSalaryForPage.add(salary);
+					}
+				} else if (form.getPageIndex() > 1) {
+					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+							* form.getNumberRecordsOfPage(); i++) {
+						Salary salary = new Salary();
+						salary = list.get(i);
+						listSalaryForPage.add(salary);
+					}
+				}
+			} else if (form.getPageIndex() == totalPages) {
+				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+						.getTotalRecords(); i++) {
+					Salary salary = new Salary();
+					salary = list.get(i);
+					listSalaryForPage.add(salary);
+				}
+			}
+			model.addAttribute("salaryForm", form);
+			model.addAttribute("salarys", listSalaryForPage);
+			model.addAttribute("formTitle", "Danh sách lương của nhân viên ");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listSalaryInfo";
+	}
+	
+	@RequestMapping(value = { "/salary/listSalarysByDepartment" })
+	public String listSalarysByDepartment(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
+		try {
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (form.getNumberRecordsOfPage() == 0) {
+				form.setNumberRecordsOfPage(25);
+			}
+			if (form.getPageIndex() == 0) {
+				form.setPageIndex(1);
+			}
+System.err.println("deprt list ... " + form.getDepartment());
+			List<Salary> list = salaryDAO.getSalarysByDepartment(form.getDepartment());
 
 			form.setTotalRecords(list.size());
 
@@ -150,7 +220,7 @@ public class SalaryController {
 		try {
 			salaryDAO.insertSalary(salary);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Thêm thông lương nhân viên thành công!");
+			redirectAttributes.addFlashAttribute("message", "Thêm thông tin lương nhân viên thành công!");
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -192,6 +262,7 @@ public class SalaryController {
 	@RequestMapping("/salary/insertSalary")
 	public String addSalary(Model model) {
 		Salary salary = new Salary();
+		salary.setConstSalary("100");
 		return this.salaryForm(model, salary);
 	}
 
@@ -200,6 +271,7 @@ public class SalaryController {
 		Salary salary = null;
 		if (employeeId > 0) {
 			salary = salaryDAO.getSalary(employeeId);
+			System.err.println("he so luong: " + salary.getConstSalary());
 		}
 		if (salary == null) {
 			return "redirect:/salary/";
@@ -438,7 +510,9 @@ public class SalaryController {
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
-
+			if(salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
+				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaketingSalary()));
+			}
 			// ting toan luong over time
 			double overTimeSalary = 0;
 			// float salaryPerHour = salaryDetail.getSalaryPerHour();
@@ -521,6 +595,9 @@ public class SalaryController {
 				model.addAttribute("workDayDefine",
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}
+			if(salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
+				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaketingSalary()));
+			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			model.addAttribute("salaryPerHour", salaryPerHour);
 			model.addAttribute("salaryDetail", salaryDetail);
@@ -575,15 +652,20 @@ public class SalaryController {
 				if (workedDay != null && workedDay.length() > 0) {
 					log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
 					float currentSalary = (Float.parseFloat(workedDay) / workingDayOfMonth)
-							* Float.valueOf(Float.parseFloat(salaryDetail.getBasicSalary()));
+							* (Float.valueOf(salaryDetail.getSalary())
+									* Float.valueOf(hr.getProperty("BASIC_SALARY")));
 					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
 				}
+			
 			} else {
 				model.addAttribute("workDayDefine",
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
-
+			if(salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
+				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaketingSalary()));
+			}
+			
 			// ting toan luong over time
 			double overTimeSalary = 0;
 			String overTimeN = salaryDetail.getOverTimeN();
@@ -621,6 +703,23 @@ public class SalaryController {
 		return "updateSalaryDetail";
 	}
 
+	@RequestMapping(value = "/salary/prepareSalary", method = RequestMethod.GET)
+	public String pepareSalary(Model model, SalaryForm salaryForm) {
+		try {
+			// System.out.println("PepareSummarySalary 0");
+			model.addAttribute("salaryReportForm", salaryForm);
+			Map<String, String> departmentMap = this.departments();
+			model.addAttribute("departmentMap", departmentMap);			
+
+			model.addAttribute("formTitle", "Tùy chọn bộ phận cần tính lương");
+			// System.out.println("PepareSummarySalary 1");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "prepareSalary";
+	}
+	
 	@RequestMapping(value = "/salary/prepareSummarySalary", method = RequestMethod.GET)
 	public String pepareSummarySalary(Model model, LeaveReport leaveReport) {
 		try {
@@ -793,18 +892,165 @@ public class SalaryController {
 		}
 		return "summarySalaryReport";
 	}
+	
+	
+	//-------------------------------------------------------------------------
+	
+	@RequestMapping(value = "/salary/prepareProductSold", method = RequestMethod.GET)
+	public String pepareProductSold(Model model, LeaveReport leaveReport) {
+		try {
+			// System.out.println("PepareSummarySalary 0");
+			model.addAttribute("salaryReportForm", leaveReport);
+			Map<String, String> departmentMap = this.departments();
+			model.addAttribute("departmentMap", departmentMap);			
 
-	/*
-	 * private Map<String, String> dataForDepartments() { Map<String, String>
-	 * departmentMap = new LinkedHashMap<String, String>(); try { List<Department>
-	 * list = departmentDAO.getDepartments(); Department department = new
-	 * Department(); for (int i = 0; i < list.size(); i++) { department =
-	 * (Department) list.get(i); departmentMap.put(department.getDepartmentId(),
-	 * department.getDepartmentName()); }
-	 * 
-	 * } catch (Exception e) { log.error(e, e); e.printStackTrace(); } return
-	 * departmentMap; }
-	 */
+			model.addAttribute("formTitle", "Tùy chọn tháng cần tính sản lượng, cho tính lương sản phẩm");
+			// System.out.println("PepareSummarySalary 1");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "prepareProductSold";
+	}
+	
+	@RequestMapping(value = { "/salary/listProductSold" })
+	public String ListProductSold(Model model, @ModelAttribute("salaryReportForm") @Validated LeaveReport leaveReport, @RequestParam(required = false, name="month") String month,
+			@RequestParam(required = false, name="department") String department, @RequestParam(required = false, name="message") String message) {
+		try {
+			if(month == null || month.isEmpty())
+				month = leaveReport.getYearReport() + "-" + leaveReport.getMonthReport();
+			List<ProductSold> list = productSoldDAO.getProductSoldByMonth(department, month);	
+			String totalMoneyIncome = productSoldDAO.getMoneyIncome(month, department);
+			if(list.size() < 1)
+				model.addAttribute("message1", "Chưa có thông tin sản lượng sản phẩm trong tháng " + month + ", bộ phận " + department);
+			model.addAttribute("month", month);
+			model.addAttribute("message", message);
+			model.addAttribute("totalMoneyIncome", totalMoneyIncome);
+			model.addAttribute("productSold", list);
+			model.addAttribute("formTitle", "Danh sách sản phẩm đã bán trong tháng " + month + ", bộ phận " + department);
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listProductSold";
+	}
+	
+	@RequestMapping(value = "/salary/addProductSold", method = RequestMethod.POST)
+	public String addProductSold(Model model, @ModelAttribute("productSoldForm") @Validated ProductSold productSold,
+			final RedirectAttributes redirectAttributes) {
+		LeaveReport leaveReport = new LeaveReport();
+		String message = null;
+		try {			
+			int rowInsert = productSoldDAO.insertProductSold(productSold);
+			// Add message to flash scope
+			System.err.println("rowInsert = " + rowInsert);
+			
+			if(rowInsert > 0)
+				message = "Thêm thông tin sản phẩm đã bán thành công!";
+			else
+				message = "Không thêm được thông tin cho sản phẩm mã " + productSold.getCode() + ", cho tháng " + productSold.getMonth() + " . Vui lòng kiểm tra lại, có thể sản phẩm đó đã tồn tại ...";
+			leaveReport.setMonthReport(productSold.getMonth().substring(4, 5));
+			leaveReport.setYearReport(productSold.getMonth().substring(0, 3));
+		} catch (Exception e) {
+			log.error(e, e);
+		}		
+		
+		return ListProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
+	}
+
+	@RequestMapping(value = "/salary/updateProductSold", method = RequestMethod.POST)
+	public String updateProductSold(Model model, @ModelAttribute("productSoldForm") @Validated ProductSold productSold,
+			final RedirectAttributes redirectAttributes) {
+		LeaveReport leaveReport = new LeaveReport();
+		String message = null;
+		try {
+			int rowUpdate = productSoldDAO.updateProductSold(productSold);
+			// Add message to flash scope			
+			if(rowUpdate > 0)
+				message = "Cập nhật thông tin sản phẩm đã bán thành công!";
+			else
+				message = "Không thể cập nhật thông tin sản phẩm " + productSold.getCode() + ", cho tháng " + productSold.getMonth() + ". Vui lòng kiểm tra lại";
+			leaveReport.setMonthReport(productSold.getMonth().substring(4, 5));
+			leaveReport.setYearReport(productSold.getMonth().substring(0, 3));
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return ListProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
+	}
+
+	private String productSoldForm(Model model, ProductSold productSold) {
+		
+		// get list product id
+		Map<String, String> productMap = this.products();
+		model.addAttribute("productMap", productMap);
+
+		String actionform = "";
+		if (productSold.getCode() != null) {
+			model.addAttribute("formTitle", "Sửa thông tin sản phẩm đã bán ");
+			actionform = "editProductSold";
+		} else {
+			model.addAttribute("formTitle", "Thêm mới thông tin sản phẩm đã bán tháng " + productSold.getMonth());
+			productSold.setScale("100");
+			actionform = "insertProductSold";
+		}
+		model.addAttribute("productSoldForm", productSold);
+		return actionform;
+	}
+
+	@RequestMapping("/salary/insertProductSold")
+	public String insertProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department) {
+		ProductSold productSold = new ProductSold();
+		productSold.setMonth(month);
+		productSold.setDepartment(department);
+		return this.productSoldForm(model, productSold);
+	}
+
+	@RequestMapping("/salary/editProductSold")
+	public String editProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department, @RequestParam("productCode") String productCode) {
+		ProductSold productSold = null;
+		if (productCode != null && productCode.length() > 0 && month != null && month.length() > 0) {
+			productSold = productSoldDAO.getProductSold(department, month, productCode);
+		}
+		if (productSold == null) {
+			return "redirect:/salary/listProductSold/";
+		}
+
+		return this.productSoldForm(model, productSold);
+	}
+	
+	private Map<String, String> products() {
+		Map<String, String> productMap = new LinkedHashMap<String, String>();
+		try {
+			List<Product> list = productSoldDAO.getProducts();
+			Product product = new Product();
+			for (int i = 0; i < list.size(); i++) {
+				product = (Product) list.get(i);
+				productMap.put(product.getCode(), product.getName());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return productMap;
+	}
+
+	private Map<String, String> departments() {
+		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
+		try {
+			List<Department> list = departmentDAO.getDepartments();
+			Department department = new Department();
+			for (int i = 0; i < list.size(); i++) {
+				department = (Department) list.get(i);
+				departmentMap.put(department.getDepartmentId(), department.getDepartmentName());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return departmentMap;
+	}
 
 	// For Ajax
 	/*

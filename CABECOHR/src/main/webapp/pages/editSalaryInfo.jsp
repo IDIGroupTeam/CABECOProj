@@ -37,10 +37,13 @@
 				<tr>
 					<form:hidden path="employeeId"/>
 					<td bgcolor="#FAFAFA">Họ tên:</td>
-					<td colspan="3">Mã NV ${salaryForm.employeeId}, ${salaryForm.fullName}</td>	
+					<td>Mã NV ${salaryForm.employeeId}, ${salaryForm.fullName}</td>	
 					<%-- <td colspan="3"><form:select path="employeeId" class="form-control animated" disabled="true">
 							<form:options items="${employeeMap}" />
-						</form:select></td>	 --%>					
+						</form:select></td>	 --%>	
+					<td bgcolor="#FAFAFA">% lương:</td>
+						<td><form:input path="constSalary" maxlength="8" type="number"
+								class="form-control animated"/></td>						
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Hệ số lương:(*)</td>

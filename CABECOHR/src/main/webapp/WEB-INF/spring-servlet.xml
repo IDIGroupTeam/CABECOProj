@@ -40,9 +40,9 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://localhost:3306/CABECO?useUnicode=true&amp;characterEncoding=UTF-8" />
+			value="jdbc:mysql://localhost:3306/cabeco?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
-		<property name="password" value="xxx" />
+		<property name="password" value="" />
 	</bean>
 	
 	<!-- Spring Email Sender Bean Configuration -->
@@ -98,7 +98,13 @@
 	<bean id="workingDayDAO" class="com.idi.hr.dao.WorkingDayDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
-		<bean id="salaryDAO" class="com.idi.hr.dao.SalaryDAO">
+	
+	<bean id="salaryDAO" class="com.idi.hr.dao.SalaryDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	
+	<bean id="productSoldDAO" class="com.idi.hr.dao.ProductSoldDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
 </beans>

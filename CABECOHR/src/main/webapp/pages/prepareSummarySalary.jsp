@@ -57,26 +57,19 @@
 </head>
 <body>
 	<a href="${url}/salary/"><button
-			class="btn btn-lg btn-primary btn-sm">Quay lại thông tin
+			class="btn btn-lg btn-primary btn-sm">Thông tin
 			lương nhân viên</button></a>
-	<br />
-	<br />
+	<a href="${url}/salary/prepareSalary"><button
+			class="btn btn-lg btn-primary btn-sm">Chọn bộ phận cần tính lương</button></a>		
+	<a href="${url}/salary/prepareProductSold"><button
+			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>		
 	<form:form action="generateSalaryReport"
-		modelAttribute="salaryReportForm" method="POST">
-		<input class="btn btn-lg btn-primary btn-sm" type="submit"
-			value="Thống kê" name="Thống kê" /> &nbsp;		
-		<br />
+		modelAttribute="salaryReportForm" method="POST">		
 		<br />
 		<table class="table table-bordered">
 			<jsp:useBean id="now" class="java.util.Date" />
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 			<tr>
-				<%-- 				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn phòng ban:</td>
-				<td><form:select path="department"
-						class="form-control animated">
-						<form:option value="all" label="Cả công ty"></form:option>
-						<form:options items="${departmentMap}" var="department" />
-					</form:select></td> --%>
 				<td bgcolor="#FAFAFA" width="30%">Chọn năm:</td>
 				<td><form:select path="yearReport"
 						class="form-control animated">
@@ -115,8 +108,8 @@
 					</form:select></td>
 			</tr>
 		</table>
-		<!-- <input class="btn btn-lg btn-primary btn-sm" type="submit"
-			value="Thống kê" name="Thống kê" /> -->
+		<input class="btn btn-lg btn-primary btn-sm" type="submit"
+			value="Thống kê" name="Thống kê" />
 	</form:form>
 	<%--<br />
 	<a href="${url}/salary/"><button

@@ -11,6 +11,7 @@ public class Salary implements Serializable {
 	
 	private String salary;
 	private int employeeId; 
+	private String constSalary;
 	private String bankNo;
 	private String bankName;
 	private String bankBranch;
@@ -23,11 +24,12 @@ public class Salary implements Serializable {
 		
 	}
 
-	public Salary(int employeeId, String fullName, String salary, String bankNo, String bankName,
-			String bankBranch, String department, String jobTitle, String description) {
+	public Salary(int employeeId, String fullName, String salary, String constSalary, String bankNo, 
+			String bankName, String bankBranch, String department, String jobTitle, String description) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
 		this.salary = salary;
+		this.constSalary = constSalary;
 		this.bankNo = bankNo;
 		this.bankName = bankName;
 		this.bankBranch = bankBranch;
@@ -105,6 +107,14 @@ public class Salary implements Serializable {
 
 	public void setBankBranch(String bankBranch) {
 		this.bankBranch = bankBranch;
+	}
+
+	public String getConstSalary() {
+		return constSalary;
+	}
+
+	public void setConstSalary(String constSalary) {
+		this.constSalary = constSalary;
 	}
 
 }

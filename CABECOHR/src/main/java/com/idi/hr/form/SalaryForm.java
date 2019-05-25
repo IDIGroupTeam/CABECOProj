@@ -13,6 +13,7 @@ public class SalaryForm implements Serializable {
 	private int employeeId; 
 	private int monthReport;
 	private int yearReport;	
+	private String department       ;
 
 	//Paging
 	private int pageIndex;
@@ -74,6 +75,14 @@ public class SalaryForm implements Serializable {
 
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
 	}	
 
 }

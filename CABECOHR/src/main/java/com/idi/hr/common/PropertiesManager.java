@@ -94,10 +94,7 @@ public class PropertiesManager extends Properties {
 
 			if (!fileExists) {
 				logger.debug("Can not load the properties file from the relative path: " + propPath);
-				//This is for Window
-				//propPath = "C:/home/idi/properties/";
-				//This is for Linux
-				propPath = "/home/idi/properties/";
+				propPath = "C:/home/idi/properties/";
 				logger.debug("Try to load the properties file directly from the absolute path: " + propPath);
 				file = new File(propPath + propertiesFileName);
 				fileExists = file.exists();

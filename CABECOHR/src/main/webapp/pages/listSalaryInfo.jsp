@@ -74,6 +74,8 @@ tr:nth-child(even) {
 <body>
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
 			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
+	<a href="${url}/salary/prepareProductSold"><button
+			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>			
 	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 	<br />
@@ -184,7 +186,7 @@ tr:nth-child(even) {
 				<th>Họ tên</th>
 				<th>Phòng</th>
 				<th>Chức danh</th>
-			    <th>HS Lương</th>				
+			    <th>HS lương</th>				
 				<th>Sửa thông tin</th>
 				<th>Lương chi tiết</th>
 				<th>Ghi chú</th>
@@ -197,7 +199,7 @@ tr:nth-child(even) {
 					<td>${salary.jobTitle}</td>
 					<td>${salary.salary}</td> 				
 					<td><a href="editSalary?employeeId=${salary.employeeId}">Sửa</a></td>
-					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Chi tiết theo tháng</a></td>
+					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Lương hàng tháng</a></td>
 					<td>${salary.desc}</td>
 				</tr>
 			</c:forEach>
@@ -207,7 +209,9 @@ tr:nth-child(even) {
 		</c:if>
 	</div>
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
-			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>		
+			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
+	<a href="${url}/salary/prepareProductSold"><button
+			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>				
 	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 </body>
