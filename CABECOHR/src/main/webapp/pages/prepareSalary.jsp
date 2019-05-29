@@ -24,15 +24,17 @@
 <title>Tùy chọn bộ phận tính lương</title>
 </head>
 <body>
-	<a href="${url}/salary/"><button
-			class="btn btn-lg btn-primary btn-sm">Thông tin	lương nhân viên</button></a>
+<%-- 	<a href="${url}/salary/"><button
+			class="btn btn-lg btn-primary btn-sm">Thông tin	lương nhân viên</button></a> --%>
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
+		<button	class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>		
 	<form:form action="listSalarysByDepartment"
 		modelAttribute="salaryReportForm" method="POST">		
 		<br />
 		<table class="table table-bordered">			
 			<tr>
 				<td bgcolor="#FAFAFA">Chọn bộ phận cần tính lương:</td>
-				<form:hidden path="department"/>
+				<%-- <form:hidden path="department"/> --%>
 				<td><form:select path="department"
 						class="form-control animated">
 						<%-- <form:option value="0" label="Cả năm" /> --%>

@@ -72,11 +72,13 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
-			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
+		<button	class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
+	<a href="${pageContext.request.contextPath}/salary/prepareSalary">
+		<button class="btn btn-primary btn-sm">Chọn lại bộ phận cần tính lương</button></a>
 	<a href="${url}/salary/prepareProductSold"><button
 			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>			
-	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
+	<a href="${pageContext.request.contextPath}/salary/insertSalary?department=${salaryForm.department}"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 	<br />
 	<br />
@@ -198,8 +200,8 @@ tr:nth-child(even) {
 					<td>${salary.department}</td>					
 					<td>${salary.jobTitle}</td>
 					<td>${salary.salary}</td> 				
-					<td><a href="editSalary?employeeId=${salary.employeeId}">Sửa</a></td>
-					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Lương hàng tháng</a></td>
+					<td><a href="editSalary?employeeId=${salary.employeeId}&department=${salaryForm.department}">Sửa</a></td>
+					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}&department=${salaryForm.department}">Lương hàng tháng</a></td>
 					<td>${salary.desc}</td>
 				</tr>
 			</c:forEach>
@@ -210,9 +212,11 @@ tr:nth-child(even) {
 	</div>
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
 			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
+	<a href="${pageContext.request.contextPath}/salary/prepareSalary">
+		<button class="btn btn-primary btn-sm">Chọn lại bộ phận cần tính lương</button></a>		
 	<a href="${url}/salary/prepareProductSold"><button
 			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>				
-	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
+	<a href="${pageContext.request.contextPath}/salary/insertSalary?department=${salaryForm.department}"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 </body>
 </html>

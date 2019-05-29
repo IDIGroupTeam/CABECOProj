@@ -72,7 +72,7 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/salary/">
+	<a href="${pageContext.request.contextPath}/salary/listSalarysByDepartment?department=${salaryForm.department}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách thông tin lương chung</button></a>
 	
 	<a href="${pageContext.request.contextPath}/salary/insertSalaryDetailForm?employeeId=${employeeId}"><button
@@ -221,7 +221,7 @@ tr:nth-child(even) {
 			<div class="alert alert-success">${message}</div>
 		</c:if>
 	</div>
-	<a href="${pageContext.request.contextPath}/salary/">
+	<a href="${pageContext.request.contextPath}/salary/listSalarysByDepartment?department=${salaryForm.department}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách thông tin lương chung</button></a>
 	<a href="${pageContext.request.contextPath}/salary/insertSalaryDetailForm?employeeId=${employeeId}"><button
 			class="btn btn-primary btn-sm">Tính lương tháng này </button></a>

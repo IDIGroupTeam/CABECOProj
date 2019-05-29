@@ -25,7 +25,7 @@
 </script>
 </head>
 <body>
-	<a href="${url}/salary/"><button class="btn btn-primary btn-sm">Quay lại danh sách lương nhân viên</button></a>
+	<a href="${url}/salary/listSalarysByDepartment?department=${salaryForm.department}"><button class="btn btn-primary btn-sm">Quay lại danh sách lương nhân viên</button></a>
 	<br/><br/>
 	<form:form modelAttribute="salaryForm" method="POST" action="updateSalary">		
 		<table class="table table-bordered">

@@ -68,6 +68,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 		String sql = hr.getProperty("GET_LIST_SALARY_INFO_BY_DEPARTMENT").toString();
 		log.info("GET_LIST_SALARY_INFO_BY_DEPARTMENT query: " + sql);
 		SalaryMapper mapper = new SalaryMapper();
+		//System.err.println("dept in dao: " + dept);
 		Object[] params = new Object[] { dept };
 		List<Salary> list = jdbcTmpl.query(sql, params, mapper);
 		return list;

@@ -24,8 +24,8 @@
 <title>Tùy chọn tháng cần tính sản lượng, cho tính lương sản phẩm</title>
 </head>
 <body>
-	<a href="${url}/salary/"><button
-			class="btn btn-lg btn-primary btn-sm">Thông tin	lương nhân viên</button></a>
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
+		<button	class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>
 	<form:form action="listProductSold"
 		modelAttribute="salaryReportForm" method="POST">		
 		<br />

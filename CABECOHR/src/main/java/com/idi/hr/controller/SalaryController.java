@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.idi.hr.bean.Department;
@@ -133,7 +134,7 @@ public class SalaryController {
 			if (form.getPageIndex() == 0) {
 				form.setPageIndex(1);
 			}
-System.err.println("deprt list ... " + form.getDepartment());
+			//System.err.println("deprt list = " + form.getDepartment());
 			List<Salary> list = salaryDAO.getSalarysByDepartment(form.getDepartment());
 
 			form.setTotalRecords(list.size());
@@ -168,9 +169,10 @@ System.err.println("deprt list ... " + form.getDepartment());
 					listSalaryForPage.add(salary);
 				}
 			}
+			
 			model.addAttribute("salaryForm", form);
 			model.addAttribute("salarys", listSalaryForPage);
-			model.addAttribute("formTitle", "Danh sách lương của nhân viên ");
+			model.addAttribute("formTitle", "Danh sách lương của nhân viên thuộc bộ phận " + departments().get(form.getDepartment()));
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -260,18 +262,20 @@ System.err.println("deprt list ... " + form.getDepartment());
 	}
 
 	@RequestMapping("/salary/insertSalary")
-	public String addSalary(Model model) {
+	public String addSalary(Model model, @RequestParam(required = false, name="department") String department) {
 		Salary salary = new Salary();
 		salary.setConstSalary("100");
+		salary.setDepartment(department);
 		return this.salaryForm(model, salary);
 	}
 
 	@RequestMapping("/salary/editSalary")
-	public String editSalary(Model model, @RequestParam("employeeId") int employeeId) {
+	public String editSalary(Model model, @RequestParam("employeeId") int employeeId, @RequestParam(required = false, name="department") String department) {
 		Salary salary = null;
 		if (employeeId > 0) {
 			salary = salaryDAO.getSalary(employeeId);
-			System.err.println("he so luong: " + salary.getConstSalary());
+			salary.setDepartment(department);
+			//System.err.println("he so luong: " + salary.getConstSalary());
 		}
 		if (salary == null) {
 			return "redirect:/salary/";
@@ -727,8 +731,8 @@ System.err.println("deprt list ... " + form.getDepartment());
 			model.addAttribute("salaryReportForm", leaveReport);
 
 			// get list department
-			// Map<String, String> departmentMap = this.dataForDepartments();
-			// model.addAttribute("departmentMap", departmentMap);
+			Map<String, String> departmentMap = this.departments();
+			model.addAttribute("departmentMap", departmentMap);	
 
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
@@ -1041,7 +1045,7 @@ System.err.println("deprt list ... " + form.getDepartment());
 			List<Department> list = departmentDAO.getDepartments();
 			Department department = new Department();
 			for (int i = 0; i < list.size(); i++) {
-				department = (Department) list.get(i);
+				department = (Department) list.get(i);				
 				departmentMap.put(department.getDepartmentId(), department.getDepartmentName());
 			}
 
@@ -1053,13 +1057,16 @@ System.err.println("deprt list ... " + form.getDepartment());
 	}
 
 	// For Ajax
-	/*
-	 * @RequestMapping("/salary/selection") public @ResponseBody List<EmployeeInfo>
-	 * employeesByDepartment(@RequestParam("department") String department) {
-	 * List<EmployeeInfo> list = null; if (!department.equalsIgnoreCase("all")) list
-	 * = employeeDAO.getEmployeesByDepartment(department); else list =
-	 * employeeDAO.getEmployees();
-	 * 
-	 * return list; }
-	 */
+	
+	@RequestMapping("/salary/selection")
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) {
+		List<EmployeeInfo> list = null;
+		if (!department.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByDepartment(department);
+		else
+			list = employeeDAO.getEmployees();
+
+		return list;
+	}
+	 
 }

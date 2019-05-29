@@ -26,12 +26,12 @@ tr:nth-child(even) {
 </head>
 <body>
 	<div class="table-responsive">
-		<a href="${url}/salary/"><button
+		<a href="${url}/salary/listSalarysByDepartment?department=${productSold[0].department}"><button
 			class="btn btn-lg btn-primary btn-sm">Thông tin
 			lương nhân viên</button></a>
 		<a href="${url}/salary/prepareProductSold"><button
 			class="btn btn-lg btn-primary btn-sm">Chọn lại tháng khác</button></a>		
-		<a href="${url}/salary/insertProductSold?month=${month}"><button
+		<a href="${url}/salary/insertProductSold?month=${month}&department=${productSold[0].department}"><button
 				class="btn btn-primary btn-sm">Thêm sản phẩm đã bán tháng này</button></a> <br />
 		<br />
 		<table class="table table-bordered">
