@@ -198,15 +198,28 @@ public class SalaryController {
 		return employeeMap;
 	}
 
-	private Map<String, String> employeesNoInfo() {
+	/*
+	 * private Map<String, String> employeesNoInfo() { Map<String, String>
+	 * employeeMap = new LinkedHashMap<String, String>(); try { List<EmployeeInfo>
+	 * list = employeeDAO.getEmployeesForInsertSalary(); EmployeeInfo employee = new
+	 * EmployeeInfo(); for (int i = 0; i < list.size(); i++) { employee =
+	 * (EmployeeInfo) list.get(i); Integer id = employee.getEmployeeId();
+	 * employeeMap.put(id.toString(), employee.getFullName() + ", phòng " +
+	 * employee.getDepartment()); }
+	 * 
+	 * } catch (Exception e) { log.error(e, e); e.printStackTrace(); } return
+	 * employeeMap; }
+	 */
+	
+	private Map<String, String> employeesNoInfoByDept(String dept) {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
-			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertSalary();
+			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertSalaryByDept(dept);
 			EmployeeInfo employee = new EmployeeInfo();
 			for (int i = 0; i < list.size(); i++) {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
-				employeeMap.put(id.toString(), employee.getFullName() + ", phòng " + employee.getDepartment());
+				employeeMap.put(id.toString(), employee.getFullName());
 			}
 
 		} catch (Exception e) {
@@ -218,44 +231,48 @@ public class SalaryController {
 
 	@RequestMapping(value = "/salary/insertSalary", method = RequestMethod.POST)
 	public String addSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception{
+		SalaryForm form = new SalaryForm();
 		try {
+			form.setDepartment(salary.getDepartment());
 			salaryDAO.insertSalary(salary);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Thêm thông tin lương nhân viên thành công!");
+			model.addAttribute("message", "Thêm thông tin lương nhân viên thành công!");
 
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return "redirect:/salary/";
+		return listSalarysByDepartment(model, form);
 	}
 
 	@RequestMapping(value = "/salary/updateSalary", method = RequestMethod.POST)
 	public String updateSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception{
+		SalaryForm form = new SalaryForm();
 		try {
+			form.setDepartment(salary.getDepartment());			
 			salaryDAO.updateSalary(salary);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin lương nhân viên thành công!");
+			model.addAttribute("message", "Cập nhật thông tin lương nhân viên thành công!");
 
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return "redirect:/salary/";
+		return listSalarysByDepartment(model, form);
 	}
 
 	private String salaryForm(Model model, Salary salary) {
 		model.addAttribute("salaryForm", salary);
 		// get list employee id
-		Map<String, String> employeeMap = this.employeesNoInfo();
+		Map<String, String> employeeMap = this.employeesNoInfoByDept(salary.getDepartment());
 		model.addAttribute("employeeMap", employeeMap);
 
 		String actionform = "";
 		if (salary.getEmployeeId() > 0) {
-			model.addAttribute("formTitle", "Sửa thông tin lương nhân viên ");
+			model.addAttribute("formTitle", "Sửa thông tin lương nhân viên thuộc bộ phận " + departments().get(salary.getDepartment()));
 			actionform = "editSalaryInfo";
 		} else {
-			model.addAttribute("formTitle", "Thêm mới thông tin lương nhân viên");
+			model.addAttribute("formTitle", "Thêm mới thông tin lương nhân viên thuộc bộ phận " + departments().get(salary.getDepartment()));
 			actionform = "insertSalaryInfo";
 		}
 		return actionform;

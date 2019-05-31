@@ -29,13 +29,14 @@
 	<br/><br/>
 	<form:form modelAttribute="salaryForm" method="POST" action="updateSalary">		
 		<table class="table table-bordered">
+			<form:hidden path="department" />
+			<form:hidden path="employeeId"/>
 			<tbody>
 				<tr>
 					<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
 						lương nhân viên</td>
 				</tr>
-				<tr>
-					<form:hidden path="employeeId"/>
+				<tr>					
 					<td bgcolor="#FAFAFA">Họ tên:</td>
 					<td>Mã NV ${salaryForm.employeeId}, ${salaryForm.fullName}</td>	
 					<%-- <td colspan="3"><form:select path="employeeId" class="form-control animated" disabled="true">
