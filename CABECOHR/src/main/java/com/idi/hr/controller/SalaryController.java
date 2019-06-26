@@ -27,6 +27,7 @@ import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.Product;
 import com.idi.hr.bean.ProductSold;
 import com.idi.hr.bean.Salary;
+import com.idi.hr.bean.Salary4List;
 import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryReport;
 import com.idi.hr.bean.SalaryReportPerEmployee;
@@ -121,8 +122,13 @@ public class SalaryController {
 	}
 	
 	@RequestMapping(value = { "/salary/listSalarysByDepartment" })
-	public String listSalarysByDepartment(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
+	public String listSalarysByDepartment(Model model, @ModelAttribute("salaryForm") SalaryForm form,
+			@RequestParam(required = false, name="month", defaultValue = "0") int month, @RequestParam(required = false, name="year", defaultValue = "0") int year) throws Exception {
 		try {
+			if(year > 0)
+				form.setYearReport(year);
+			if(month > 0)
+				form.setMonthReport(month);				
 			// Paging:
 			// Number records of a Page: Default: 25
 			// Page Index: Default: 1
@@ -134,9 +140,13 @@ public class SalaryController {
 			if (form.getPageIndex() == 0) {
 				form.setPageIndex(1);
 			}
-			//System.err.println("deprt list = " + form.getDepartment());
-			List<Salary> list = salaryDAO.getSalarysByDepartment(form.getDepartment());
-
+			
+			List<Salary4List> list = null;
+			if (form.getMonthReport() < 10)
+				list = salaryDAO.getSalarysByDepartmentAndMonth(form.getDepartment(), "0" + String.valueOf(form.getMonthReport()), String.valueOf(form.getYearReport()));
+			else
+				list = salaryDAO.getSalarysByDepartmentAndMonth(form.getDepartment(), String.valueOf(form.getMonthReport()), String.valueOf(form.getYearReport()));			
+			
 			form.setTotalRecords(list.size());
 
 			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
@@ -144,19 +154,19 @@ public class SalaryController {
 					: form.getTotalRecords() / form.getNumberRecordsOfPage();
 			form.setTotalPages(totalPages);
 
-			List<Salary> listSalaryForPage = new ArrayList<Salary>();
+			List<Salary4List> listSalaryForPage = new ArrayList<Salary4List>();
 
 			if (form.getPageIndex() < totalPages) {
 				if (form.getPageIndex() == 1) {
 					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
-						Salary salary = new Salary();
+						Salary4List salary = new Salary4List();
 						salary = list.get(i);
 						listSalaryForPage.add(salary);
 					}
 				} else if (form.getPageIndex() > 1) {
 					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
 							* form.getNumberRecordsOfPage(); i++) {
-						Salary salary = new Salary();
+						Salary4List salary = new Salary4List();
 						salary = list.get(i);
 						listSalaryForPage.add(salary);
 					}
@@ -164,7 +174,7 @@ public class SalaryController {
 			} else if (form.getPageIndex() == totalPages) {
 				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
 						.getTotalRecords(); i++) {
-					Salary salary = new Salary();
+					Salary4List salary = new Salary4List();
 					salary = list.get(i);
 					listSalaryForPage.add(salary);
 				}
@@ -172,7 +182,7 @@ public class SalaryController {
 			
 			model.addAttribute("salaryForm", form);
 			model.addAttribute("salarys", listSalaryForPage);
-			model.addAttribute("formTitle", "Danh sách lương của nhân viên thuộc bộ phận " + departments().get(form.getDepartment()));
+			model.addAttribute("formTitle", "Danh sách lương của nhân viên bộ phận " + departments().get(form.getDepartment()) + " tháng " + form.getMonthReport() + ", " + form.getYearReport());
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -230,8 +240,8 @@ public class SalaryController {
 	}
 
 	@RequestMapping(value = "/salary/insertSalary", method = RequestMethod.POST)
-	public String addSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary,
-			final RedirectAttributes redirectAttributes) throws Exception{
+	public String addSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary, @RequestParam(required = false, name="month") int month, 
+			@RequestParam(required = false, name="year") int year,	final RedirectAttributes redirectAttributes) throws Exception{
 		SalaryForm form = new SalaryForm();
 		try {
 			form.setDepartment(salary.getDepartment());
@@ -242,12 +252,12 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return listSalarysByDepartment(model, form);
+		return listSalarysByDepartment(model, form, month, year);
 	}
 
 	@RequestMapping(value = "/salary/updateSalary", method = RequestMethod.POST)
-	public String updateSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary,
-			final RedirectAttributes redirectAttributes) throws Exception{
+	public String updateSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary, @RequestParam(required = false, name="month") int month, 
+			@RequestParam(required = false, name="year") int year, final RedirectAttributes redirectAttributes) throws Exception{
 		SalaryForm form = new SalaryForm();
 		try {
 			form.setDepartment(salary.getDepartment());			
@@ -258,7 +268,7 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return listSalarysByDepartment(model, form);
+		return listSalarysByDepartment(model, form, month, year);
 	}
 
 	private String salaryForm(Model model, Salary salary) {
@@ -279,19 +289,25 @@ public class SalaryController {
 	}
 
 	@RequestMapping("/salary/insertSalary")
-	public String addSalary(Model model, @RequestParam(required = false, name="department") String department) {
+	public String addSalary(Model model, @RequestParam(required = false, name="department") String department,
+			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year) {
 		Salary salary = new Salary();
 		salary.setConstSalary("100");
 		salary.setDepartment(department);
+		salary.setMonth(month);
+		salary.setYear(year);
 		return this.salaryForm(model, salary);
 	}
 
 	@RequestMapping("/salary/editSalary")
-	public String editSalary(Model model, @RequestParam("employeeId") int employeeId, @RequestParam(required = false, name="department") String department) {
+	public String editSalary(Model model, @RequestParam("employeeId") int employeeId, @RequestParam(required = false, name="department") String department,
+			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year) {
 		Salary salary = null;
 		if (employeeId > 0) {
 			salary = salaryDAO.getSalary(employeeId);
 			salary.setDepartment(department);
+			salary.setMonth(month);
+			salary.setYear(year);
 			//System.err.println("he so luong: " + salary.getConstSalary());
 		}
 		if (salary == null) {
@@ -411,7 +427,7 @@ public class SalaryController {
 				salaryDetail.setOverTimeN("");
 				salaryDetail.setOverTimeW("");
 				salaryDetail.setSubsidize("");
-				salaryDetail.setMaketingSalary("");
+				salaryDetail.setMaintainDay("");
 				salaryDetail.setSubGas("");
 				salaryDetail.setSubLunch("");
 				salaryDetail.setSubPhone("");
@@ -419,13 +435,15 @@ public class SalaryController {
 				salaryDetail.setArrears("");
 				salaryDetail.setTotalIncome("");
 				salaryDetail.setTotalReduce("");
+				salaryDetail.setWorkedDay(null);
 			}
-			salaryDetail.setWorkedDay(null);
-			WorkingDay workingDay = null;
-			if (month < 10)
-				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "Cabeco");
-			else
-				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "Cabeco");
+			
+			
+			/*
+			 WorkingDay workingDay = null; if (month < 10) workingDay =
+			 workingDayDAO.getWorkingDay(year + "-0" + month, "Cabeco"); else workingDay =
+			 workingDayDAO.getWorkingDay(year + "-" + month, "Cabeco");
+			 
 
 			float salaryPerHour = 0;
 			if (workingDay.getWorkDayOfMonth() != null) {
@@ -455,9 +473,12 @@ public class SalaryController {
 				model.addAttribute("workDayDefine",
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}
+			
+			
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			model.addAttribute("salaryPerHour", salaryPerHour);
-
+			 */
+			
 			Map<String, String> employeeMap = this.employees();
 			String name = "";
 			name = employeeMap.get(String.valueOf(employeeId));
@@ -466,7 +487,7 @@ public class SalaryController {
 			model.addAttribute("salaryDetail", salaryDetail);
 			model.addAttribute("employeeId", employeeId);
 
-			model.addAttribute("formTitle", "Thêm thông tin lương chi tiết của " + name);
+			model.addAttribute("formTitle", "Thông tin lương chi tiết của " + name + " tháng " + salaryDetail.getMonth() + ", " + salaryDetail.getYear());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -476,7 +497,7 @@ public class SalaryController {
 	@RequestMapping(value = "/salary/insertSalaryDetail", method = RequestMethod.POST)
 	public String insertSalaryDetail(Model model,
 			@ModelAttribute("salaryDetailForm") @Validated SalaryDetail salaryDetail,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 			// System.err.println(salaryDetail.getMonth());
 			if (salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0
@@ -485,10 +506,11 @@ public class SalaryController {
 				salaryDetail.setBasicSalary(String.valueOf(s));
 				
 			}
+			/*
 			WorkingDay workingDay = null;
 			int month = salaryDetail.getMonth();
 			int year = salaryDetail.getYear();
-			int employeeId = salaryDetail.getEmployeeId();
+			int employeeId = salaryDetail.getEmployeeId();			
 			if (month < 10)
 				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "Cabeco");
 			else
@@ -556,7 +578,7 @@ public class SalaryController {
 			// System.err.println("salaryPerHour: " + salaryPerHour + " overTimeSalary: " +
 			// overTimeSalary);
 			overTimeSalary = Math.round(overTimeSalary);
-			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
+			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary)); */
 
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				salaryDetail.setPayedInsurance(
@@ -565,15 +587,19 @@ public class SalaryController {
 			salaryDAO.insertSalaryDetail(salaryDetail);
 			model.addAttribute("salaryDetail", salaryDetail);
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
-			model.addAttribute("salaryPerHour", salaryPerHour);
+			//model.addAttribute("salaryPerHour", salaryPerHour);
 			
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Thêm thông tin lương chi tiết của thành công!");
+			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin lương chi tiết của thành công!");
+			
 
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return "updateSalaryDetail"; // editSalaryDetailForm(model, salaryDetail);
+		SalaryForm form = new SalaryForm();
+		form.setDepartment(salaryDetail.getDepartment());
+		 
+		return listSalarysByDepartment(model, form, salaryDetail.getMonth(), salaryDetail.getYear()); //"updateSalaryDetail"; // editSalaryDetailForm(model, salaryDetail); 
 	}
 
 	@RequestMapping("/salary/editSalaryDetailForm")
@@ -616,8 +642,8 @@ public class SalaryController {
 				model.addAttribute("workDayDefine",
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}
-			if(salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
-				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaketingSalary()));
+			if(salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
+				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaintainDay()));
 			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			model.addAttribute("salaryPerHour", salaryPerHour);
@@ -683,8 +709,8 @@ public class SalaryController {
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
-			if(salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
-				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaketingSalary()));
+			if(salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
+				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaintainDay()));
 			}
 			
 			// ting toan luong over time
@@ -727,7 +753,13 @@ public class SalaryController {
 	@RequestMapping(value = "/salary/prepareSalary", method = RequestMethod.GET)
 	public String pepareSalary(Model model, SalaryForm salaryForm) {
 		try {
-			// System.out.println("PepareSummarySalary 0");
+			Calendar now = Calendar.getInstance();
+			int month = now.get(Calendar.MONTH) + 1;			
+			int year = now.get(Calendar.YEAR);			
+			salaryForm.setMonthReport(month);
+			salaryForm.setYearReport(year);
+			
+			System.err.println(month + "|" + year);
 			model.addAttribute("salaryReportForm", salaryForm);
 			Map<String, String> departmentMap = this.departments();
 			model.addAttribute("departmentMap", departmentMap);			
@@ -918,15 +950,16 @@ public class SalaryController {
 	//-------------------------------------------------------------------------
 	
 	@RequestMapping(value = "/salary/prepareProductSold", method = RequestMethod.GET)
-	public String pepareProductSold(Model model, LeaveReport leaveReport) {
-		try {
-			// System.out.println("PepareSummarySalary 0");
-			model.addAttribute("salaryReportForm", leaveReport);
+	public String pepareProductSold(Model model, SalaryForm salaryForm) {
+		try {			
+			Calendar now = Calendar.getInstance();
+			int month = now.get(Calendar.MONTH) + 1;
+			salaryForm.setMonthReport(month);
+			model.addAttribute("salaryReportForm", salaryForm);
 			Map<String, String> departmentMap = this.departments();
-			model.addAttribute("departmentMap", departmentMap);			
-
+			model.addAttribute("departmentMap", departmentMap);		
 			model.addAttribute("formTitle", "Tùy chọn tháng cần tính sản lượng, cho tính lương sản phẩm");
-			// System.out.println("PepareSummarySalary 1");
+
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -935,7 +968,7 @@ public class SalaryController {
 	}
 	
 	@RequestMapping(value = { "/salary/listProductSold" })
-	public String ListProductSold(Model model, @ModelAttribute("salaryReportForm") @Validated LeaveReport leaveReport, @RequestParam(required = false, name="month") String month,
+	public String listProductSold(Model model, @ModelAttribute("salaryReportForm") @Validated LeaveReport leaveReport, @RequestParam(required = false, name="month") String month,
 			@RequestParam(required = false, name="department") String department, @RequestParam(required = false, name="message") String message) {
 		try {
 			if(month == null || month.isEmpty())
@@ -945,10 +978,13 @@ public class SalaryController {
 			if(list.size() < 1)
 				model.addAttribute("message1", "Chưa có thông tin sản lượng sản phẩm trong tháng " + month + ", bộ phận " + department);
 			model.addAttribute("month", month);
+			model.addAttribute("monthR", leaveReport.getMonthReport());
+			model.addAttribute("yearR", leaveReport.getYearReport());	
 			model.addAttribute("message", message);
 			model.addAttribute("totalMoneyIncome", totalMoneyIncome);
 			model.addAttribute("productSold", list);
-			model.addAttribute("formTitle", "Danh sách sản phẩm đã bán trong tháng " + month + ", bộ phận " + department);
+			model.addAttribute("formTitle", "Danh sách sản phẩm đã bán trong tháng " + month.substring(5, 7) + ", " + month.substring(0, 4) + ", bộ phận " + department);
+			model.addAttribute("department", department);
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -969,14 +1005,14 @@ public class SalaryController {
 			if(rowInsert > 0)
 				message = "Thêm thông tin sản phẩm đã bán thành công!";
 			else
-				message = "Không thêm được thông tin cho sản phẩm mã " + productSold.getCode() + ", cho tháng " + productSold.getMonth() + " . Vui lòng kiểm tra lại, có thể sản phẩm đó đã tồn tại ...";
-			leaveReport.setMonthReport(productSold.getMonth().substring(4, 5));
-			leaveReport.setYearReport(productSold.getMonth().substring(0, 3));
+				message = "Không thêm được thông tin cho sản phẩm mã " + productSold.getCode() + ", cho tháng " + productSold.getMonth().substring(5, 7) + ", " + productSold.getMonth().substring(0, 4) + " . Vui lòng kiểm tra lại, có thể sản phẩm đó đã tồn tại ...";
+			leaveReport.setMonthReport(productSold.getMonth().substring(5, 7));
+			leaveReport.setYearReport(productSold.getMonth().substring(0, 4));
 		} catch (Exception e) {
 			log.error(e, e);
 		}		
 		
-		return ListProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
+		return listProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
 	}
 
 	@RequestMapping(value = "/salary/updateProductSold", method = RequestMethod.POST)
@@ -996,7 +1032,7 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return ListProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
+		return listProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
 	}
 
 	private String productSoldForm(Model model, ProductSold productSold) {
@@ -1007,13 +1043,15 @@ public class SalaryController {
 
 		String actionform = "";
 		if (productSold.getCode() != null) {
-			model.addAttribute("formTitle", "Sửa thông tin sản phẩm đã bán ");
+			model.addAttribute("formTitle", "Sửa thông tin sản phẩm đã bán tháng " + productSold.getMonth().substring(5, 7) + ", " + productSold.getMonth().substring(0, 4) + " của bộ phận " + productSold.getDepartment());
 			actionform = "editProductSold";
 		} else {
-			model.addAttribute("formTitle", "Thêm mới thông tin sản phẩm đã bán tháng " + productSold.getMonth());
+			model.addAttribute("formTitle", "Thêm mới thông tin sản phẩm đã bán tháng " + productSold.getMonth().substring(5, 7) + ", " + productSold.getMonth().substring(0, 4) + " của bộ phận " + productSold.getDepartment());
 			productSold.setScale("100");
 			actionform = "insertProductSold";
 		}
+		model.addAttribute("m", productSold.getMonth().substring(5, 7));
+		model.addAttribute("y", productSold.getMonth().substring(0, 4));
 		model.addAttribute("productSoldForm", productSold);
 		return actionform;
 	}

@@ -13,7 +13,7 @@ public class SalaryForm implements Serializable {
 	private int employeeId; 
 	private int monthReport;
 	private int yearReport;	
-	private String department       ;
+	private String department;
 
 	//Paging
 	private int pageIndex;

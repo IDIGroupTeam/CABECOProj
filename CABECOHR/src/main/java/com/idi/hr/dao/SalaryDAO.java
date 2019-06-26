@@ -10,10 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.Salary;
+import com.idi.hr.bean.Salary4List;
 import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryReport;
 import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.mapper.Salary4ListMapper;
 import com.idi.hr.mapper.SalaryDetailMapper;
 import com.idi.hr.mapper.SalaryMapper;
 import com.idi.hr.mapper.SalaryReportMapper;
@@ -74,6 +76,24 @@ public class SalaryDAO extends JdbcDaoSupport {
 		return list;
 	}	
 
+	/**
+	 * Get list Salary by department from DB
+	 * 
+	 * @param dept
+	 * @return List of Salary
+	 * @throws Exception
+	 */
+	public List<Salary4List> getSalarysByDepartmentAndMonth(String dept, String month, String year) {
+
+		String sql = hr.getProperty("GET_LIST_SALARY_INFO_BY_DEPARTMENT_AND_MONTH").toString();
+		log.info("GET_LIST_SALARY_INFO_BY_DEPARTMENT_AND_MONTH query: " + sql);
+		Salary4ListMapper mapper = new Salary4ListMapper();
+		Object[] params = new Object[] { dept, month, year };
+		List<Salary4List> list = jdbcTmpl.query(sql, params, mapper);
+		System.err.println("dept list dao = " + dept +"|" + month + "|" + year + "|" + list.size());
+		return list;
+	}
+	
 	/**
 	 * get Salary by employeeId
 	 * 
@@ -252,7 +272,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("INSERT_SALARY_DETAIL query: " + sql);
 			//System.err.println("salary " + salaryDetail.getSalary());
 			// Tính lương thực nhận
-			float finalSalary = 0;
+			/*float finalSalary = 0;
 			if(salaryDetail.getSalaryForWorkedDay() != null) {
 				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
 			}else {
@@ -313,9 +333,9 @@ public class SalaryDAO extends JdbcDaoSupport {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOverWork().replaceAll(",", ""));
 				salaryDetail.setOverWork(salaryDetail.getOverWork().replaceAll(",", ""));
 			}
-			if (salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
-				finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaketingSalary().replaceAll(",", ""));
-				salaryDetail.setMaketingSalary(salaryDetail.getMaketingSalary().replaceAll(",", ""));
+			if (salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaintainDay().replaceAll(",", ""));
+				salaryDetail.setMaintainDay(salaryDetail.getMaintainDay().replaceAll(",", ""));
 			}	
 			if(rSalary > 0) {
 				finalSalary = finalSalary + rSalary;
@@ -338,11 +358,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 			salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
+			*/
+			
 				
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
-					salaryDetail.getBounus(), salaryDetail.getMaketingSalary(), salaryDetail.getSubsidize(),
+					salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
 					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), 
 					salaryDetail.getOverWork(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getSalary(), salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(),
@@ -437,9 +459,9 @@ public class SalaryDAO extends JdbcDaoSupport {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOverWork().replaceAll(",", ""));
 				salaryDetail.setOverWork(salaryDetail.getOverWork().replaceAll(",", ""));
 			}
-			if (salaryDetail.getMaketingSalary() != null && salaryDetail.getMaketingSalary().length() > 0) {
-				finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaketingSalary().replaceAll(",", ""));
-				salaryDetail.setMaketingSalary(salaryDetail.getMaketingSalary().replaceAll(",", ""));
+			if (salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaintainDay().replaceAll(",", ""));
+				salaryDetail.setMaintainDay(salaryDetail.getMaintainDay().replaceAll(",", ""));
 			}	
 			if(rSalary > 0) {
 				finalSalary = finalSalary + rSalary;
@@ -471,7 +493,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
-					salaryDetail.getMaketingSalary(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
+					salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
 					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getOverWork(),
 					salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), 
 					salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 

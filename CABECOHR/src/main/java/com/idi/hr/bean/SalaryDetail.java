@@ -18,7 +18,7 @@ public class SalaryDetail implements Serializable {
 	private String overTimeSalary;
 	private float salaryPerHour;
 	private String bounus;
-	private String maketingSalary;
+	private String maintainDay;
 	private String subsidize;
 	private String subLunch;
 	private String subPhone;
@@ -56,7 +56,7 @@ public class SalaryDetail implements Serializable {
 	}
 
 	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
-			String overTimeSalary, String bounus, String maketingSalary, String subsidize, String subLunch, String subPhone, String subGas, 
+			String overTimeSalary, String bounus, String maintainDay, String subsidize, String subLunch, String subPhone, String subGas, 
 			String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
 			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
@@ -70,7 +70,7 @@ public class SalaryDetail implements Serializable {
 		this.overTimeH = overTimeH;
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
-		this.maketingSalary = maketingSalary;
+		this.maintainDay = maintainDay;
 		this.subsidize = subsidize;
 		this.subLunch = subLunch;
 		this.subPhone = subPhone;
@@ -420,12 +420,12 @@ public class SalaryDetail implements Serializable {
 		this.totalIncome = totalIncome;
 	}
 
-	public String getMaketingSalary() {
-		return maketingSalary;
+	public String getMaintainDay() {
+		return maintainDay;
 	}
 
-	public void setMaketingSalary(String maketingSalary) {
-		this.maketingSalary = maketingSalary;
+	public void setMaintainDay(String maintainDay) {
+		this.maintainDay = maintainDay;
 	}
 
 	public String getrSalary() {

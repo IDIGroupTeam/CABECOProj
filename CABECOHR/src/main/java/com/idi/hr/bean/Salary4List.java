@@ -2,12 +2,12 @@ package com.idi.hr.bean;
 
 import java.io.Serializable;
 
-public class Salary implements Serializable {
+public class Salary4List implements Serializable {
 		
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1871003330726286155L;
+	private static final long serialVersionUID = -1871007330726286155L;
 	
 	private String salary;
 	private int employeeId; 
@@ -19,15 +19,16 @@ public class Salary implements Serializable {
 	private String department;
 	private String jobTitle;
 	private String desc;
-	private int month;
-	private int year;
+	private String workedDay;
+	private String actualSalary;
 	
-	public Salary() {
+	public Salary4List() {
 		
 	}
 
-	public Salary(int employeeId, String fullName, String salary, String constSalary, String bankNo, 
-			String bankName, String bankBranch, String department, String jobTitle, String description) {
+	public Salary4List(int employeeId, String fullName, String salary, String constSalary, String bankNo, 
+			String bankName, String bankBranch, String department, String jobTitle, String description,
+			String workedDay, String actualSalary) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
 		this.salary = salary;
@@ -37,7 +38,9 @@ public class Salary implements Serializable {
 		this.bankBranch = bankBranch;
 		this.department = department;
 		this.jobTitle = jobTitle;
-		this.desc = description;		
+		this.desc = description;	
+		this.workedDay = workedDay;
+		this.actualSalary = actualSalary;
 	}	
 
 	public String getSalary() {
@@ -119,20 +122,20 @@ public class Salary implements Serializable {
 		this.constSalary = constSalary;
 	}
 
-	public int getMonth() {
-		return month;
+	public String getWorkedDay() {
+		return workedDay;
 	}
 
-	public void setMonth(int month) {
-		this.month = month;
+	public void setWorkedDay(String workedDay) {
+		this.workedDay = workedDay;
 	}
 
-	public int getYear() {
-		return year;
+	public String getActualSalary() {
+		return actualSalary;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public void setActualSalary(String actualSalary) {
+		this.actualSalary = actualSalary;
 	}
 
 }

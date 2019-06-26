@@ -32,22 +32,7 @@
 		<table class="table table-bordered">
 			<jsp:useBean id="now" class="java.util.Date" />
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
-			<tr>
-				<td bgcolor="#FAFAFA">Bộ phận:</td>
-				<td><form:select path="department"
-						class="form-control animated">
-						<%-- <form:option value="0" label="Cả năm" /> --%>
-						<form:options items="${departmentMap}" var="department" />
-					</form:select></td>
-				<td bgcolor="#FAFAFA">Chọn năm:</td>
-				<td><form:select path="yearReport"
-						class="form-control animated">
-						<c:forEach begin="0" end="3" varStatus="loop">
-							<c:set var="currentYear" value="${year - loop.index}" />
-							<option value="${currentYear}"
-								${form.yearReport == currentYear ? 'selected="selected"' : ''}>${currentYear}</option>
-						</c:forEach>
-					</form:select></td>
+			<tr>				
 				<td bgcolor="#FAFAFA">Chọn tháng:</td>
 				<td><form:select path="monthReport"
 						class="form-control animated">
@@ -64,6 +49,23 @@
 						<form:option value="10" label="Tháng 10" />
 						<form:option value="11" label="Tháng 11" />
 						<form:option value="12" label="Tháng 12" />
+					</form:select>
+				</td>					
+				<td bgcolor="#FAFAFA">Chọn năm:</td>
+				<td><form:select path="yearReport"
+						class="form-control animated">
+						<c:forEach begin="0" end="2" varStatus="loop">
+							<c:set var="currentYear" value="${year - loop.index}" />
+							<option value="${currentYear}"
+								${form.yearReport == currentYear ? 'selected="selected"' : ''}>${currentYear}</option>
+						</c:forEach>
+					</form:select>
+				</td>	
+				<td bgcolor="#FAFAFA">Bộ phận:</td>
+				<td><form:select path="department"
+						class="form-control animated">
+						<%-- <form:option value="0" label="Cả năm" /> --%>
+						<form:options items="${departmentMap}" var="department" />
 					</form:select></td>
 			</tr>			
 		</table>

@@ -25,7 +25,7 @@
 </script>
 </head>
 <body>
-	<a href="${url}/salary/"><button class="btn btn-primary btn-sm">Danh sách lương nhân viên</button></a>
+	<a href="${url}/salary/listSalarysByDepartment?department=${productSoldForm.department}&month=${m}&year=${y}"><button class="btn btn-primary btn-sm">Danh sách lương nhân viên</button></a>
 	<a href="${url}/salary/listProductSold?month=${productSoldForm.month}&department=${productSoldForm.department}"><button class="btn btn-primary btn-sm">Danh sách sản phẩm đã bán trong tháng</button></a>
 	<br/><br/>
 	<form:form modelAttribute="productSoldForm" method="POST"

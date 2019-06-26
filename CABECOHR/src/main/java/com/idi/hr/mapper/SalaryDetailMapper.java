@@ -18,7 +18,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String overTimeH = rs.getString("OVER_TIME_H");
 		String overTimeSalary = rs.getString("OVER_TIME_SALARY");
 		String bounus = rs.getString("BOUNUS");
-		String maketingSalary = rs.getString("MAINTAIN_SALARY");
+		String maintainDay = rs.getString("MAINTAIN_DAY");
 		String subsidize = rs.getString("SUBSIDIZE");
 		String subLunch = rs.getString("SUB_LUNCH");
 		String subPhone = rs.getString("SUB_PHONE");
@@ -49,8 +49,9 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String arrears = rs.getString("ARREARS");
 		String payStatus = rs.getString("PAY_STATUS");
 		String rSalary = rs.getString("R_SALARY");
+		
 		return new SalaryDetail(employeeId, basicSalary, finalSalary, overTimeN, overTimeW, overTimeH, 
-				overTimeSalary, bounus, maketingSalary, subsidize, subLunch, subPhone, subGas, overWork,
+				overTimeSalary, bounus, maintainDay, subsidize, subLunch, subPhone, subGas, overWork,
 				advancePayed, taxPersonal, month, year, totalIncome, totalReduce, desc,
 				payedInsurance, fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
 				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 

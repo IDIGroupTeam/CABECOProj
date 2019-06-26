@@ -25,12 +25,14 @@
 </script>
 </head>
 <body>
-	<a href="${url}/salary/listSalarysByDepartment?department=${salaryForm.department}"><button class="btn btn-primary btn-sm">Quay lại danh sách lương nhân viên</button></a>
+	<a href="${url}/salary/listSalarysByDepartment?department=${salaryForm.department}&month=${salaryForm.month}&year=${salaryForm.year}"><button class="btn btn-primary btn-sm">Quay lại danh sách lương nhân viên</button></a>
 	<br/><br/>
 	<form:form modelAttribute="salaryForm" method="POST"
 		action="insertSalary">		
 			<table class="table table-bordered">
 			<form:hidden path="department" />
+			<form:hidden path="month"/>
+			<form:hidden path="year"/>
 				<tbody>
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
