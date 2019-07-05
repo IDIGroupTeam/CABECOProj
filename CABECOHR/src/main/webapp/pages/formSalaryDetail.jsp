@@ -114,8 +114,8 @@
 						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.005" type="number" required="required" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
 						<td bgcolor="#FAFAFA">Ngày công bảo trì:</td>
 						<td><form:input path="maintainDay" class="form-control animated" min="0" max="31" step="0.005" type="number" /></td>						
-						<td>Điều tiết:</td>
-						<td></td>
+						<td colspan="3">Lương điều tiết: (điều tiết x ngày công) = ${salaryDetail.rSalary}</td>
+						
 					</tr>				 
 					<tr>
 						<td colspan="3" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/thưởng/tăng ca/lễ/tết</td>

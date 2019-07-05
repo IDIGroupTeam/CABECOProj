@@ -64,6 +64,9 @@
 			class="btn btn-lg btn-primary btn-sm">Chọn bộ phận cần tính lương</button></a>		
 	<a href="${url}/salary/prepareProductSold"><button
 			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>		
+	<a href="${url}/salary/salaryRe"><button
+			class="btn btn-lg btn-primary btn-sm">Điều tiết</button></a>
+					
 	<form:form action="generateSalaryReport"
 		modelAttribute="salaryReportForm" method="POST">		
 		<br />

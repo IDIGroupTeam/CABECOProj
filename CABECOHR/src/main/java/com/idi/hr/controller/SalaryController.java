@@ -29,6 +29,7 @@ import com.idi.hr.bean.ProductSold;
 import com.idi.hr.bean.Salary;
 import com.idi.hr.bean.Salary4List;
 import com.idi.hr.bean.SalaryDetail;
+import com.idi.hr.bean.SalaryRe;
 import com.idi.hr.bean.SalaryReport;
 import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.bean.WorkingDay;
@@ -38,6 +39,7 @@ import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.ProductSoldDAO;
 import com.idi.hr.dao.SalaryDAO;
+import com.idi.hr.dao.SalaryReDAO;
 import com.idi.hr.dao.WorkingDayDAO;
 import com.idi.hr.form.SalaryForm;
 
@@ -59,9 +61,130 @@ public class SalaryController {
 	
 	@Autowired
 	private ProductSoldDAO productSoldDAO;
+	
+	@Autowired
+	private SalaryReDAO salaryReDAO;
 
 	PropertiesManager hr = new PropertiesManager("cabecohr.properties");
+	
+	@RequestMapping(value = { "/salary/salaryRe" })
+	public String listSalarysRe(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
+		try {
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (form.getNumberRecordsOfPage() == 0) {
+				form.setNumberRecordsOfPage(25);
+			}
+			if (form.getPageIndex() == 0) {
+				form.setPageIndex(1);
+			}
 
+			List<SalaryRe> list = salaryReDAO.getListSalaryRe();
+
+			form.setTotalRecords(list.size());
+
+			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+					? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+					: form.getTotalRecords() / form.getNumberRecordsOfPage();
+			form.setTotalPages(totalPages);
+
+			List<SalaryRe> listSalaryForPage = new ArrayList<SalaryRe>();
+
+			if (form.getPageIndex() < totalPages) {
+				if (form.getPageIndex() == 1) {
+					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+						SalaryRe salary = new SalaryRe();
+						salary = list.get(i);
+						listSalaryForPage.add(salary);
+					}
+				} else if (form.getPageIndex() > 1) {
+					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+							* form.getNumberRecordsOfPage(); i++) {
+						SalaryRe salary = new SalaryRe();
+						salary = list.get(i);
+						listSalaryForPage.add(salary);
+					}
+				}
+			} else if (form.getPageIndex() == totalPages) {
+				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+						.getTotalRecords(); i++) {
+					SalaryRe salary = new SalaryRe();
+					salary = list.get(i);
+					listSalaryForPage.add(salary);
+				}
+			}
+			model.addAttribute("salaryForm", form);
+			model.addAttribute("salarys", listSalaryForPage);
+			model.addAttribute("formTitle", "Danh sách lương điều tiết theo công của các bộ phận");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listSalaryReInfo";
+	}
+	
+	@RequestMapping(value = "/salary/insertSalaryRe", method = RequestMethod.POST)
+	public String insertSalaryRe(Model model, @ModelAttribute("salaryForm") @Validated SalaryRe salaryRe, final RedirectAttributes redirectAttributes) throws Exception{
+		
+		try {		
+			int rowInsert = salaryReDAO.insertSalaryRe(salaryRe);
+			// Add message to flash scope
+			if(rowInsert > 0)
+				model.addAttribute("message", "Thêm thông tin điều tiết thành công!");
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		SalaryForm form = new SalaryForm();
+		return listSalarysRe(model, form);	
+	}
+
+	@RequestMapping(value = "/salary/updateSalaryRe", method = RequestMethod.POST)
+	public String updateSalaryRe(Model model, @ModelAttribute("salaryForm") @Validated SalaryRe salaryRe, final RedirectAttributes redirectAttributes) throws Exception{		
+		try {					
+			int rowUpdated = salaryReDAO.updateSalaryRe(salaryRe);
+			// Add message to flash scope
+			if(rowUpdated > 0)
+				model.addAttribute("message", "Cập nhật thông điều tiết thành công!");			
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		SalaryForm form = new SalaryForm();
+		return listSalarysRe(model, form);
+	}
+
+	@RequestMapping(value = "/salary/insertSalaryReForm")
+	public String insertSalaryReForm(Model model, SalaryRe salaryRe) {
+		
+		Calendar now = Calendar.getInstance();
+		int month = now.get(Calendar.MONTH) + 1;
+		int year = now.get(Calendar.YEAR);				
+		salaryRe.setMonth(month);
+		salaryRe.setYear(year);		
+		Map<String, String> departmentMap = this.departments();
+		model.addAttribute("departmentMap", departmentMap);	
+		model.addAttribute("salaryForm", salaryRe);
+		model.addAttribute("formTitle", "Thêm mới thông tin điều tiết");
+
+		return "insertSalaryReInfo";
+	}
+	
+	@RequestMapping(value = "/salary/updateSalaryReForm")
+	public String updateSalaryReForm(Model model, @RequestParam(required = false, name="department") String department,
+			@RequestParam(required = false, name="month", defaultValue = "0") int month, 
+			@RequestParam(required = false, name="year", defaultValue = "0") int year) {
+		Map<String, String> departmentMap = this.departments();
+		model.addAttribute("departmentMap", departmentMap);		
+		SalaryRe salaryRe = new SalaryRe();
+		salaryRe = salaryReDAO.getSalaryRe(department, month, year);
+		model.addAttribute("salaryForm", salaryRe);
+		model.addAttribute("formTitle", "Sửa thông tin điều tiết");
+
+		return "editSalaryReInfo";
+	}
+	
 	@RequestMapping(value = { "/salary/" })
 	public String listSalarys(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
 		try {
@@ -179,7 +302,17 @@ public class SalaryController {
 					listSalaryForPage.add(salary);
 				}
 			}
-			
+			if(list.size() > 0) {
+				if(employeeDAO.getEmployeesIdByDepartment(form.getDepartment()).size() != salaryDAO.countMembers(form.getMonthReport(), form.getYearReport(), form.getDepartment())) {
+					model.addAttribute("filled", null);
+					System.err.println("chua dien het ngay cong: " + list.size());
+				}else {
+					model.addAttribute("filled", "YES");
+					System.err.println("da dien het ngay cong: " + list.size() + "|" + salaryDAO.countMembers(form.getMonthReport(), form.getYearReport(), form.getDepartment()));
+				}	
+			}else {
+				model.addAttribute("message", "Hiện tại bộ phận này không có nhân viên nào!");
+			}
 			model.addAttribute("salaryForm", form);
 			model.addAttribute("salarys", listSalaryForPage);
 			model.addAttribute("formTitle", "Danh sách lương của nhân viên bộ phận " + departments().get(form.getDepartment()) + " tháng " + form.getMonthReport() + ", " + form.getYearReport());
@@ -276,6 +409,8 @@ public class SalaryController {
 		// get list employee id
 		Map<String, String> employeeMap = this.employeesNoInfoByDept(salary.getDepartment());
 		model.addAttribute("employeeMap", employeeMap);
+		if(employeeMap.size() == 0)
+			model.addAttribute("addedAll", " >>> Đã thêm mới thông tin lương cho toàn bộ nhân viên thuộc bộ phận này <<< ");
 
 		String actionform = "";
 		if (salary.getEmployeeId() > 0) {
@@ -504,7 +639,7 @@ public class SalaryController {
 					&& hr.getProperty("BASIC_SALARY") != null && hr.getProperty("BASIC_SALARY").length() > 0) {
 				float s = Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(hr.getProperty("BASIC_SALARY"));
 				salaryDetail.setBasicSalary(String.valueOf(s));
-				
+				System.err.println("BasicSalary: " + s);
 			}
 			/*
 			WorkingDay workingDay = null;
@@ -657,97 +792,169 @@ public class SalaryController {
 		return "updateSalaryDetail";
 	}
 
-	@RequestMapping(value = "/salary/updateSalaryDetail", method = RequestMethod.POST)
-	public String updateSalaryDetail(Model model, @ModelAttribute("salaryDetail") @Validated SalaryDetail salaryDetail,
-			final RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "/salary/calculatesSalary")
+	public String calculatesSalary(Model model,  @RequestParam(required = false, name="department") String department,
+			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year,
+			final RedirectAttributes redirectAttributes) throws Exception{
 		try {
-			// System.err.println(salaryDetail.getSalary());
-			WorkingDay workingDay = null;
-			int month = salaryDetail.getMonth();
-			int year = salaryDetail.getYear();
-			int employeeId = salaryDetail.getEmployeeId();
-			if (month < 10)
-				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "Cabeco");
+			//san luong cua phong/bo phan
+			String totalMoneyIncome = "0";
+			float totalMoney = 0;
+			if(month < 10)
+				totalMoneyIncome = productSoldDAO.getMoneyIncome(String.valueOf(year + "-0" + month), department);
 			else
-				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "Cabeco");
-
-			float salaryPerHour = salaryDetail.getSalaryPerHour();
-			// System.err.println(workingDay.getWorkDayOfMonth());
-			if (workingDay.getWorkDayOfMonth() != null) {
-				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
-
-				String carDriver = "";
-				carDriver = hr.getProperty("WORK_SATURDAY");
-				// System.err.println(workingDayOfMonth + " thang " + month);
-				// System.err.println(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle()
-				// +"|" + carDriver);
-				if (carDriver.contains(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle())) {
-					log.info(salaryDetail.getFullName() + " la lai xe");
-					log.info("Thang " + month + " co " + Utils.countWeekendDays(year, month) + " ngay thu 7 ");
-					workingDayOfMonth = workingDayOfMonth + Utils.countWeekendDays(year, month);
-					log.info("Cong them " + Utils.countWeekendDays(year, month) + " vao ngay cong chuan");
-				}
-				
-				if (salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
-					salaryPerHour = (Float.valueOf(salaryDetail.getSalary())
-							* Float.valueOf(hr.getProperty("BASIC_SALARY"))) / workingDayOfMonth / 8;
-					salaryPerHour = Math.round(salaryPerHour);					
-				}
-
-				// Không lv đủ cả tháng
-				String workedDay = salaryDetail.getWorkedDay();
-				if (workedDay != null && workedDay.length() > 0) {
-					log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
-					float currentSalary = (Float.parseFloat(workedDay) / workingDayOfMonth)
-							* (Float.valueOf(salaryDetail.getSalary())
-									* Float.valueOf(hr.getProperty("BASIC_SALARY")));
-					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
-				}
-			
-			} else {
-				model.addAttribute("workDayDefine",
-						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
-			}
-			salaryDetail.setSalaryPerHour(salaryPerHour);
-			if(salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
-				model.addAttribute("maintainSalary", salaryPerHour*Float.valueOf(salaryDetail.getMaintainDay()));
+				totalMoneyIncome = productSoldDAO.getMoneyIncome(String.valueOf(year + "-" + month), department); 
+			System.err.println("totalMoneyIncome 1: " + totalMoneyIncome);
+			try {
+				totalMoney = Float.valueOf(totalMoneyIncome);
+			}catch(Exception e) {
+				totalMoney = 0;
 			}
 			
-			// ting toan luong over time
-			double overTimeSalary = 0;
-			String overTimeN = salaryDetail.getOverTimeN();
-			if (overTimeN != null && overTimeN.length() > 0 && Float.parseFloat(overTimeN) > 0)
-				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeN) * salaryPerHour * 1.5;
-			String overTimeW = salaryDetail.getOverTimeW();
-			if (overTimeW != null && overTimeW.length() > 0 && Float.parseFloat(overTimeW) > 0)
-				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeW) * salaryPerHour * 2;
-			String overTimeH = salaryDetail.getOverTimeH();
-			if (overTimeH != null && overTimeH.length() > 0 && Float.parseFloat(overTimeH) > 0)
-				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeH) * salaryPerHour * 3;
-
-			overTimeSalary = Math.round(overTimeSalary);
-			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
-			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
-				salaryDetail.setPayedInsurance(
-						String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance()) * 10.5 / 100));
-
-			// update ... lay salary o bang salary info sang bang salary detail lam basic
-			// salary
-			if (salaryDetail.getBasicSalary() == null) {
-				salaryDetail.setBasicSalary(String.valueOf(
-						Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(hr.getProperty("BASIC_SALARY"))));
-			}
-
-			model.addAttribute("salaryPerHour", salaryPerHour);
-			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
-			salaryDAO.updateSalaryDetail(salaryDetail);
+			//dieu tiet /cong
+			String r = salaryReDAO.getSalaryRe(department, month, year).getValue();
+			 
+			System.err.println("totalMoneyIncome 2: " + totalMoney);
+			//luong dieu tiet (x ngay cong)
+						
+			//lay ds nv cua phong
+			List<Integer> eIds = employeeDAO.getEmployeesIdByDepartment(department);
+			if(eIds.size() > 0) {
+				float sumHSL = 0;
+				// tinh hs luong cho tung nv
+				for(int i=0; i<eIds.size(); i++) {
+					System.err.println(eIds.get(i) +"|"+ month+"|"+ year);
+					SalaryDetail salaryDetail = salaryDAO.getSalaryDetail(eIds.get(i), month, year);
+					
+					//he so luong cong
+				    Float hsl =	Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay());
+				    
+				    sumHSL = sumHSL + hsl;
+				}
+				System.err.println("sumHSL " + sumHSL);
+				//he so chung
+				float hsc = totalMoney/sumHSL;
+				System.err.println("hsc " + hsc);
+				//tinh luong cho tung nv
+				for(int j=0; j<eIds.size(); j++) {
+					SalaryDetail salaryDetail = salaryDAO.getSalaryDetail(eIds.get(j), month, year);					
+					
+					// Tính lương thực nhận
+					float finalSalary = 0;
+					finalSalary = Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay())*hsc ;			
+					System.err.println("finalSalary luong sp: " + finalSalary);
+					float luongsp = finalSalary;
+					
+					//tinh he so hoan thanh cong viec --> chac cabeco ko can?
+					if(salaryDetail.getWorkComplete() >= 0) {
+						finalSalary = finalSalary*salaryDetail.getWorkComplete()/100;				
+					}
+					
+					//luong thoi gian - ngay cong bao tri
+					float luongtg = 0;
+					if(salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
+						luongtg = Float.valueOf(salaryDetail.getMaintainDay())*(luongsp/Float.valueOf(salaryDetail.getWorkedDay()));
+						System.err.println("luong thoi gian: " + luongtg);
+						finalSalary = finalSalary + luongtg;
+					}
+					
+					//get from other table --> luong dieu tiet	
+					float rSalary = 0;
+					if(r != null && r.length() > 0) {
+						rSalary = Float.valueOf(salaryDetail.getWorkedDay())*Float.valueOf(r);
+						rSalary = rSalary*100/100;
+						salaryDetail.setrSalary(String.valueOf(rSalary));						
+					}					
+					
+					// Tang		
+					// float salaryPerHour = 0; if (salaryDetail.getSalaryPerHour() > 0)
+					//  salaryPerHour = salaryDetail.getSalaryPerHour();					 
+					
+					if (salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getBounus().replaceAll(",", ""));
+						salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
+					}	
+					if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubsidize().replaceAll(",", ""));
+						salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
+					}	
+					
+					/*
+					if (salaryDetail.getOverTimeN() != null && salaryDetail.getOverTimeN().length() > 0) {
+						finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeN()) * (float) 1.5;
+					}
+					if (salaryDetail.getOverTimeW() != null && salaryDetail.getOverTimeW().length() > 0) {
+						finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeW()) * 2;
+					}
+					if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
+						finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
+					}
+					*/
+					
+					if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
+						salaryDetail.setOther(salaryDetail.getOther().replaceAll(",", ""));
+					}
+					if (salaryDetail.getSubLunch() != null && salaryDetail.getSubLunch().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubLunch().replaceAll(",", ""));
+						salaryDetail.setSubLunch(salaryDetail.getSubLunch().replaceAll(",", ""));
+					}
+					if (salaryDetail.getSubPhone() != null && salaryDetail.getSubPhone().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubPhone().replaceAll(",", ""));
+						salaryDetail.setSubPhone(salaryDetail.getSubPhone().replaceAll(",", ""));
+					}
+					if (salaryDetail.getSubGas() != null && salaryDetail.getSubGas().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubGas().replaceAll(",", ""));
+						salaryDetail.setSubGas(salaryDetail.getSubGas().replaceAll(",", ""));
+					}
+					if (salaryDetail.getOverWork() != null && salaryDetail.getOverWork().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getOverWork().replaceAll(",", ""));
+						salaryDetail.setOverWork(salaryDetail.getOverWork().replaceAll(",", ""));
+					}
+					if (salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getMaintainDay().replaceAll(",", ""));
+						salaryDetail.setMaintainDay(salaryDetail.getMaintainDay().replaceAll(",", ""));
+					}	
+					if(rSalary > 0) {
+						finalSalary = finalSalary + rSalary;
+					}
+					salaryDetail.setTotalIncome(String.valueOf(finalSalary));
+					
+					// Giảm
+					if (salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0) {
+						finalSalary = finalSalary - Float.valueOf(salaryDetail.getArrears().replaceAll(",", ""));
+						salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
+					}	
+					if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0) {
+						finalSalary = finalSalary - Float.valueOf(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+						salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+					}	
+					if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0) {
+						finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+						salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+					}	
+					if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0) {
+						//System.err.println(salaryDetail.getSalaryInsurance());
+						finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
+					}
+					salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
+					
+					salaryDetail.setFinalSalary(String.valueOf((double) Math.round(finalSalary)));
+					
+					System.err.println("finalSalary: " + eIds.get(j) + "|" + finalSalary);
+					salaryDAO.updateSalaryDetail(salaryDetail);
+				}					
+			}			
+			
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Tính lại lương thành công!");
+			redirectAttributes.addFlashAttribute("message", "Tính lương thành công!");
 
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return "updateSalaryDetail";
+		SalaryForm form = new SalaryForm();
+		form.setDepartment(department);
+		return  listSalarysByDepartment(model, form, month, year);
 	}
 
 	@RequestMapping(value = "/salary/prepareSalary", method = RequestMethod.GET)
@@ -812,13 +1019,15 @@ public class SalaryController {
 							"Thông tin thông kê lương của " + name + " năm " + leaveReport.getYearReport());
 					SalaryReport salaryReport = new SalaryReport();
 					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(),
-							leaveReport.getYearReport());
+							leaveReport.getYearReport(), null);
 					model.addAttribute("salaryReport", salaryReport);
 					return "summarySalaryReport";
 				} else {
-					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport());
-					model.addAttribute("formTitle",
-							"Thông tin thông kê lương nhân viên năm " + leaveReport.getYearReport());
+					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport(), leaveReport.getDepartment());
+					if(leaveReport.getDepartment() !=null && leaveReport.getDepartment().equalsIgnoreCase("all"))
+						model.addAttribute("formTitle",	"Thông tin thông kê lương nhân viên năm " + leaveReport.getYearReport());
+					else
+						model.addAttribute("formTitle",	"Thông tin thông kê lương nhân viên phòng " + departments().get(leaveReport.getDepartment()) + " năm " + leaveReport.getYearReport());
 					// System.err.println("fan trang");
 					// System.err.println("fan trang" + form.getYearReport());
 					// System.err.println("fan trang" + leaveReport.getYearReport());
@@ -864,11 +1073,10 @@ public class SalaryController {
 					// form.setYearReport(Integer.parseInt(leaveReport.getYearReport()));
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
-					model.addAttribute("formTitle",
-							"Thông tin thông kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
+					//model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
 					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
 					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
-							leaveReport.getMonthReport(), leaveReport.getYearReport());
+							leaveReport.getMonthReport(), leaveReport.getYearReport(), leaveReport.getDepartment());
 					model.addAttribute("salaryReport", salaryReport);
 					// model.addAttribute("yearReport", leaveReport.getYearReport());
 					return "listSalarySumaryDetail";
@@ -881,13 +1089,13 @@ public class SalaryController {
 							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
 					SalaryReport salaryReport = new SalaryReport();
 					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(),
-							leaveReport.getYearReport());
+							leaveReport.getYearReport(), null);
 					model.addAttribute("salaryReport", salaryReport);
 
 					return "summarySalaryReport";
 				} else {
 					List<SalaryDetail> list = salaryDAO.getSalaryReportDetail(leaveReport.getMonthReport(),
-							leaveReport.getYearReport());
+							leaveReport.getYearReport(), leaveReport.getDepartment());
 
 					if (form.getNumberRecordsOfPage() == 0) {
 						form.setNumberRecordsOfPage(25);
@@ -929,12 +1137,18 @@ public class SalaryController {
 						}
 					}
 					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
-							leaveReport.getMonthReport(), leaveReport.getYearReport());
+							leaveReport.getMonthReport(), leaveReport.getYearReport(), leaveReport.getDepartment());
 					model.addAttribute("salaryReport", salaryReport);
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
-					model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tháng "
-							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
+					if(leaveReport.getDepartment() !=null && leaveReport.getDepartment().equalsIgnoreCase("all"))
+						model.addAttribute("formTitle",	"Thông tin thông kê lương nhân viên tháng "
+								+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
+					else
+						model.addAttribute("formTitle",	"Thông tin thông kê lương nhân viên tháng "
+								+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport() + " phòng " 
+								+ departments().get(leaveReport.getDepartment()));
+
 					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
 					return "listSalarySumaryDetail";
 				}
@@ -944,8 +1158,7 @@ public class SalaryController {
 			e.printStackTrace();
 		}
 		return "summarySalaryReport";
-	}
-	
+	}	
 	
 	//-------------------------------------------------------------------------
 	
@@ -978,8 +1191,8 @@ public class SalaryController {
 			if(list.size() < 1)
 				model.addAttribute("message1", "Chưa có thông tin sản lượng sản phẩm trong tháng " + month + ", bộ phận " + department);
 			model.addAttribute("month", month);
-			model.addAttribute("monthR", leaveReport.getMonthReport());
-			model.addAttribute("yearR", leaveReport.getYearReport());	
+			model.addAttribute("monthR", month.substring(5, 7));
+			model.addAttribute("yearR", month.substring(0, 4));	
 			model.addAttribute("message", message);
 			model.addAttribute("totalMoneyIncome", totalMoneyIncome);
 			model.addAttribute("productSold", list);

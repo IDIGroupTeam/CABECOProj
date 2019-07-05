@@ -49,8 +49,8 @@ public class SalaryDetail implements Serializable {
 	private String payStatus;
 	private String totalReduce;
 	private String totalIncome;
-	private String rSalary;
-	
+	private String rSalary; //hs luong
+		
 	public SalaryDetail() {
 		
 	}

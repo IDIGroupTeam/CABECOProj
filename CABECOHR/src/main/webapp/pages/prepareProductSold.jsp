@@ -30,6 +30,14 @@
 		modelAttribute="salaryReportForm" method="POST">		
 		<br />
 		<table class="table table-bordered">
+			<tr>	
+				<td bgcolor="#FAFAFA">Bộ phận:</td>
+				<td><form:select path="department"
+						class="form-control animated">
+						<%-- <form:option value="0" label="Cả năm" /> --%>
+						<form:options items="${departmentMap}" var="department" />
+					</form:select></td>
+			</tr>
 			<jsp:useBean id="now" class="java.util.Date" />
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 			<tr>				
@@ -50,7 +58,9 @@
 						<form:option value="11" label="Tháng 11" />
 						<form:option value="12" label="Tháng 12" />
 					</form:select>
-				</td>					
+				</td>	
+			</tr>
+			<tr>					
 				<td bgcolor="#FAFAFA">Chọn năm:</td>
 				<td><form:select path="yearReport"
 						class="form-control animated">
@@ -61,13 +71,7 @@
 						</c:forEach>
 					</form:select>
 				</td>	
-				<td bgcolor="#FAFAFA">Bộ phận:</td>
-				<td><form:select path="department"
-						class="form-control animated">
-						<%-- <form:option value="0" label="Cả năm" /> --%>
-						<form:options items="${departmentMap}" var="department" />
-					</form:select></td>
-			</tr>			
+			</tr>						
 		</table>
 		<input class="btn btn-lg btn-primary btn-sm" type="submit"
 			value="Xem sản lượng" name="Xem sản lượng" />

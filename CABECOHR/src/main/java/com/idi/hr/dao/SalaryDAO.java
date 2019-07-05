@@ -205,7 +205,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public SalaryReport getSalaryReport(int employeeId, String month, String year) {
+	public SalaryReport getSalaryReport(int employeeId, String month, String year, String dept) {
 
 		SalaryReport salaryReport = null;
 		String sql = hr.get("GET_SUMMARY_SALARY").toString();
@@ -215,6 +215,11 @@ public class SalaryDAO extends JdbcDaoSupport {
 		if (employeeId > 0) {
 			sql = sql + " AND EMPLOYEE_ID=" + employeeId;
 		}
+		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept + "'");
+		else
+			sql = sql.replaceAll("%DEPT%", " ");
+		
 		log.info("GET_SUMMARY_SALARY query: " + sql);
 		
 		Object[] params = new Object[] { year };
@@ -229,11 +234,14 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year) {
-
+	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year, String dept) {
+		System.err.println("dept: " + dept);
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR").toString();
 		log.info("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR query: " + sql);
-		
+		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept + "'");
+		else
+			sql = sql.replaceAll("%DEPT%", " ");
 		Object[] params = new Object[] { year };
 		SalaryReportPerEmployeeMapper mapper = new SalaryReportPerEmployeeMapper();
 		List<SalaryReportPerEmployee> list = jdbcTmpl.query(sql, params, mapper); 
@@ -247,9 +255,14 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public List<SalaryDetail> getSalaryReportDetail(String month, String year) {
-
+	public List<SalaryDetail> getSalaryReportDetail(String month, String year, String dept) {
+		System.err.println("dept: " + dept);
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL").toString();
+		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept +"'");
+		else
+			sql = sql.replaceAll("%DEPT%", " ");
+		
 		log.info("GET_SUMMARY_SALARY_DETAIL query: " + sql);
 		
 		Object[] params = new Object[] { month, year };
@@ -367,7 +380,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
 					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), 
 					salaryDetail.getOverWork(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
-					salaryDetail.getSalary(), salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(),
+					salaryDetail.getBasicSalary(), salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(),
 					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(),
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(),
 					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus(), salaryDetail.getrSalary() };
@@ -375,7 +388,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 
 		} catch (Exception e) {
 			try {
-				e.printStackTrace();
+				//e.printStackTrace();
 				log.warn("Insert has error ... trying to update");
 				updateSalaryDetail(salaryDetail);
 			} catch (Exception ex) {
@@ -398,6 +411,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("UPDATE_SALARY_DETAIL").toString();
 			log.info("UPDATE_SALARY_DETAIL query: " + sql);
 
+			/*
 			// Tính lương thực nhận
 			float finalSalary = 0;
 			if(salaryDetail.getSalaryForWorkedDay() != null) {
@@ -412,7 +426,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if(salaryDetail.getWorkComplete() >= 0) {
 				finalSalary = finalSalary*salaryDetail.getWorkComplete()/100;				
 			}
-			//get from other table
+			//get from other table --> luong dieu tiet
 			float r = 1;
 			float rSalary = Float.valueOf(salaryDetail.getWorkedDay())*r;
 			rSalary = rSalary*100/100;
@@ -488,6 +502,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
 			
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
+			*/
 			//System.err.println("year " + salaryDetail.getYear());
 			//System.err.println("Luong thuc nhan " + finalSalary);
 			
@@ -531,4 +546,19 @@ public class SalaryDAO extends JdbcDaoSupport {
 		}
 	}
 
+	/**
+	 * Count member in department filled worked day
+	 * @param month, year, department 
+	 * @return number
+	 */
+	public int countMembers( int month, int year, String department) {
+
+		String sql = hr.get("GET_COUNT_SALARY_FILLED").toString();
+		log.info("GET_COUNT_SALARY_FILLED query: " + sql);
+		Object[] params = new Object[] { month, year, department };
+		
+		String numberEmployee = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		return Integer.parseInt(numberEmployee);
+	}
 }

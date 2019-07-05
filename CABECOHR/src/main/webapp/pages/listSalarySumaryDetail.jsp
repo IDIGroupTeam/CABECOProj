@@ -151,7 +151,7 @@ tr:nth-child(even) {
 						</c:choose>
 						<c:choose>
 							<c:when
-								test="${salaryForm.pageIndex==salaryForm.totalPages}">
+								test="${salaryForm.pageIndex==salaryForm.totalPages || salaryForm.totalPages == 0}">
 								<button id="nextPage" type="button"
 									class="btn btn-default disabled">Sau</button>
 								<button id="lastPage" type="button"

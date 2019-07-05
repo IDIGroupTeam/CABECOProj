@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	$(function() {
 		// Khởi tạo action/method cho salaryForm form
-		$("#salaryForm").attr("action", "${url}/salary/");
+		$("#salaryForm").attr("action", "${url}/salary/salaryRe");
 		$("#salaryForm").attr("method", "POST");		
 		$("button[id^=page]").each(function(i, el) {
 			$(this).click(function() {
@@ -52,7 +52,7 @@
 	});
 </script>
 
-<title>Danh sách lương của nhân viên</title>
+<title>Danh sách lương điều tiết theo công của các bộ phận</title>
 <style>
 table {
     font-family: arial, sans-serif;
@@ -75,12 +75,11 @@ tr:nth-child(even) {
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
 		<button	class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
 	<a href="${pageContext.request.contextPath}/salary/prepareSalary">
-		<button class="btn btn-primary btn-sm">Chọn lại bộ phận cần tính lương</button></a>
+		<button class="btn btn-primary btn-sm">Chọn bộ phận cần tính lương</button></a>
 	<a href="${url}/salary/prepareProductSold"><button
-			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>			
-	<a href="${url}/salary/salaryRe"><button class="btn btn-primary btn-sm">Điều tiết</button></a>		
-	<a href="${pageContext.request.contextPath}/salary/insertSalary?department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button
-			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
+			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>	
+	<a href="${url}/salary/insertSalaryReForm"><button
+			class="btn btn-lg btn-primary btn-sm">Thêm mới thông tin điều tiết</button></a>			
 	<br />
 	<br />
 	<form:form modelAttribute="salaryForm" method="POST">
@@ -158,7 +157,7 @@ tr:nth-child(even) {
 						</c:choose>
 						<c:choose>
 							<c:when
-								test="${salaryForm.pageIndex==salaryForm.totalPages || salaryForm.totalPages == 0}">
+								test="${salaryForm.pageIndex==salaryForm.totalPages}">
 								<button id="nextPage" type="button"
 									class="btn btn-default disabled">Sau</button>
 								<button id="lastPage" type="button"
@@ -180,32 +179,26 @@ tr:nth-child(even) {
 					</form:select></td>
 			</tr>
 		</table>	
-	</form:form>
-	
+	</form:form>	
 	<div class="table-responsive">		
 		<table class="table table-striped">
 			<tr>
-				<th>Mã NV</th>
-				<th>Họ tên</th>				
-				<th>Chức danh</th>
-			    <th>HS lương</th>	
-			    <th>Ngày công</th>		
-			    <th>Lương</th>	
-				<th>Thông tin lương cb</th>
-				<th>Lương chi tiết tháng</th>
+				<th>Bộ phận</th>
+				<th>Tháng</th>				
+				<th>Năm</th>
+			    <th>Điều tiết/công</th>
+			    <th>Sửa</th>
 				<th>Ghi chú</th>
 			</tr>
 			<c:forEach var="salary" items="${salarys}">
 				<tr>
-					<td>${salary.employeeId}</td>
-					<td>${salary.fullName}</td>										
-					<td>${salary.jobTitle}</td>
-					<td>${salary.salary}</td> 	
-					<td>${salary.workedDay}</td>
-					<td><fmt:formatNumber value="${salary.actualSalary}" type="number"/></td>				
-					<td><a href="editSalary?employeeId=${salary.employeeId}&department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Sửa</a></td>
-					<td><a href="insertSalaryDetailForm?employeeId=${salary.employeeId}&department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Cập nhật/xem chi tiết</a></td>
-					<td>${salary.desc}</td>
+					<td>${salary.department}</td>
+					<td>${salary.month}</td>										
+					<td>${salary.year}</td>
+					<td><fmt:formatNumber value="${salary.value}" type="number"/></td> 
+					<td><a href="updateSalaryReForm?department=${salary.department}&month=${salary.month}&year=${salary.year}">Sửa</a></td>						
+					<td>${salary.des}</td>			
+					
 				</tr>
 			</c:forEach>
 		</table>
@@ -213,22 +206,5 @@ tr:nth-child(even) {
 			<div class="alert alert-success">${message}</div>
 		</c:if>
 	</div>
-	<c:if test="${empty message}">
-		<c:if test="${not empty filled}">
-			<a href="${pageContext.request.contextPath}/salary/calculatesSalary?department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button title="Vui lòng nhập ngày công cho toàn bộ nhân viên của phòng trước khi tính lương"
-			class="btn btn-primary btn-sm">Tính lương </button></a>
-		</c:if>
-		<c:if test="${empty filled}">
-			<div class="alert alert-warning">Vui lòng thêm đầy đủ thông tin lương nhân viên và nhập ngày công cho toàn bộ nhân viên của phòng trước khi tính lương</div>
-		</c:if>
-	</c:if>
-	
-		
-	<%-- <a href="${pageContext.request.contextPath}/salary/prepareSalary">
-		<button class="btn btn-primary btn-sm">Chọn lại bộ phận cần tính lương</button></a>		
-	<a href="${url}/salary/prepareProductSold"><button
-			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>				
-	<a href="${pageContext.request.contextPath}/salary/insertSalary?&department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button
-			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a> --%>
 </body>
 </html>

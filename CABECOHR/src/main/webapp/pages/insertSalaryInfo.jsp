@@ -34,6 +34,15 @@
 			<form:hidden path="month"/>
 			<form:hidden path="year"/>
 				<tbody>
+				
+					<c:if test="${not empty addedAll }">
+						<tr>
+							<td colspan="4" nowrap="nowrap" bgcolor="D3F7F7">${addedAll}</td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+					</c:if>	
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
 							lương nhân viên</td>

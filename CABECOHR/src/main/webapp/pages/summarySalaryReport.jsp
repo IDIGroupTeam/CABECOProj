@@ -51,7 +51,7 @@
 				<td bgcolor="#E6E6E6">Tổng lương làm thêm ngoài giờ:</td>
 				<td colspan="3"><fmt:formatNumber value="${salaryReport.overTimeSalary}" /> đ</td>
 			</tr>	
-			<tr><td colspan="4" bgcolor="#FAFAFA"><i>Trong đó chi tiết gồm</i></td></tr>	
+			<%-- <tr><td colspan="4" bgcolor="#FAFAFA"><i>Trong đó chi tiết gồm</i></td></tr>	
 			<tr>					
 				<td bgcolor="#FAFAFA">Tổng giờ làm ngoài giờ ngày thường:</td>
 				<td colspan="3"><fmt:formatNumber value="${salaryReport.overTimeN}" /> giờ</td>
@@ -63,7 +63,7 @@
 			<tr>					
 				<td bgcolor="#FAFAFA">Tổng giờ làm ngoài giờ ngày lễ:</td>
 				<td colspan="3"><fmt:formatNumber value="${salaryReport.overTimeH}" /> giờ</td>
-			</tr>				
+			</tr>		 --%>		
 		</table>		
 	</body>
 </html>

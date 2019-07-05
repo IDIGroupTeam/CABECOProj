@@ -311,6 +311,30 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * Get employees id from DB
+	 * @param department
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<Integer> getEmployeesIdByDepartment(String department) {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_ID_BY_DEPARTMENT").toString();
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES_ID_BY_DEPARTMENT query: " + sqlUnicode);
+		Object[] params = new Object[] {department};		
+
+		List<Integer> list = jdbcTmpl.queryForList(sqlUnicode, params, Integer.class);
+
+		return list;
+	}
+	
+	/**
 	 * Get employees from DB
 	 * @param search value
 	 * @return List of employee
