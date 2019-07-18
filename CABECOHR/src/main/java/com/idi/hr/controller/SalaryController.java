@@ -814,7 +814,7 @@ public class SalaryController {
 			//dieu tiet /cong
 			String r = salaryReDAO.getSalaryRe(department, month, year).getValue();
 			 
-			System.err.println("totalMoneyIncome 2: " + totalMoney);
+			//System.err.println("totalMoneyIncome 2: " + totalMoney);
 			//luong dieu tiet (x ngay cong)
 						
 			//lay ds nv cua phong
