@@ -831,7 +831,7 @@ public class SalaryController {
 				    
 				    sumHSL = sumHSL + hsl;
 				}
-				System.err.println("sumHSL " + sumHSL);
+				//System.err.println("sumHSL " + sumHSL);
 				//he so chung
 				float hsc = totalMoney/sumHSL;
 				System.err.println("hsc " + hsc);
