@@ -20,6 +20,7 @@ import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.JobTitle;
 import com.idi.hr.bean.WorkHistory;
+import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
@@ -82,6 +83,8 @@ public class WorkHistoryController {
 					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
 						WorkHistory workHistory = new WorkHistory();
 						workHistory = list.get(i);
+						workHistory.setfDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+						workHistory.settDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 						listWorkHistoryForPage.add(workHistory);
 					}
 				} else if (form.getPageIndex() > 1) {
@@ -89,6 +92,8 @@ public class WorkHistoryController {
 							* form.getNumberRecordsOfPage(); i++) {
 						WorkHistory workHistory = new WorkHistory();
 						workHistory = list.get(i);
+						workHistory.setfDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+						workHistory.settDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 						listWorkHistoryForPage.add(workHistory);
 					}
 				}
@@ -97,6 +102,8 @@ public class WorkHistoryController {
 						.getTotalRecords(); i++) {
 					WorkHistory workHistory = new WorkHistory();
 					workHistory = list.get(i);
+					workHistory.setfDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+					workHistory.settDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 					listWorkHistoryForPage.add(workHistory);
 				}
 			}
@@ -247,7 +254,7 @@ public class WorkHistoryController {
 	}
 
 	@RequestMapping("/workHistory/viewWorkHistory")
-	public String viewWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) {
+	public String viewWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) throws Exception{
 		WorkHistory workHistory = null;
 		 //add username 
 		 CommonFunctions comFun  = new CommonFunctions();
@@ -266,7 +273,7 @@ public class WorkHistoryController {
 	}
 
 	@RequestMapping("/workHistory/editWorkHistory")
-	public String editWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) {
+	public String editWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) throws Exception{
 		WorkHistory workHistory = null;
 		 //add username 
 		 CommonFunctions comFun  = new CommonFunctions();

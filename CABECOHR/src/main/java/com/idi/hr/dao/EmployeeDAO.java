@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.common.Utils;
 import com.idi.hr.mapper.EmployeeMapper;
 
 public class EmployeeDAO extends JdbcDaoSupport {
@@ -49,7 +50,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @param employeeId
 	 * @return employee object
 	 */
-	public EmployeeInfo getEmployee(String employeeId) {
+	public EmployeeInfo getEmployee(String employeeId) throws Exception{
 
 		String sql = hr.get("GET_EMPLOYEE_INFO").toString();
 		log.info("GET_EMPLOYEE_INFO query: " + sql);
@@ -57,7 +58,16 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		EmployeeMapper mapper = new EmployeeMapper();
 		EmployeeInfo employee = jdbcTmpl.queryForObject(sql, params, mapper);
-
+		
+		if(employee.getDOB() != null && employee.getDOB().length() > 0 && employee.getDOB().contains("-"))
+			employee.setDOB(Utils.convertDateToDisplay(employee.getDOB()));
+		if(employee.getJoinDate() != null && employee.getJoinDate().length() > 0 && employee.getJoinDate().contains("-"))
+			employee.setJoinDate(Utils.convertDateToDisplay(employee.getJoinDate()));
+		if(employee.getOfficalJoinDate() != null && employee.getOfficalJoinDate().length() > 0 && employee.getOfficalJoinDate().contains("-"))
+			employee.setOfficalJoinDate(Utils.convertDateToDisplay(employee.getOfficalJoinDate()));
+		if(employee.getIssueDate() != null && employee.getIssueDate().length() > 0 && employee.getIssueDate().contains("-"))
+			employee.setIssueDate(Utils.convertDateToDisplay(employee.getIssueDate()));
+		
 		return employee;
 	}
 	
@@ -106,6 +116,17 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 */
 	public void insertOrUpdateEmployee(EmployeeInfo employeeInfo) throws Exception {
 		try {
+			
+			if(employeeInfo.getDOB() != null && employeeInfo.getDOB().length() > 0)
+				employeeInfo.setDOB(Utils.convertDateToStore(employeeInfo.getDOB()));
+			if(employeeInfo.getJoinDate() != null && employeeInfo.getJoinDate().length() > 0)
+				employeeInfo.setJoinDate(Utils.convertDateToStore(employeeInfo.getJoinDate()));
+			if(employeeInfo.getOfficalJoinDate() != null && employeeInfo.getOfficalJoinDate().length() > 0)
+				employeeInfo.setOfficalJoinDate(Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()));
+			if(employeeInfo.getIssueDate() != null && employeeInfo.getIssueDate().length() > 0)
+				employeeInfo.setIssueDate(Utils.convertDateToStore(employeeInfo.getIssueDate()));
+			
+			
 			if (employeeInfo.getEmployeeId() > 0) {
 				// update
 				String sql = hr.getProperty("UPDATE_EMPLOYEE_INFO").toString();

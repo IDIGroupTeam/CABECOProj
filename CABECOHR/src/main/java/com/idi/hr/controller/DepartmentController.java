@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +55,7 @@ public class DepartmentController {
 			
 			//Start to add username for login 
 			CommonFunctions comFun  = new CommonFunctions();
-			if  (comFun.returnUserName().length() > 0 ) {
+			if(comFun.returnUserName() != null && comFun.returnUserName().length() > 0 ) {
 				log.info("username is " + comFun.returnUserName());
 				model.addAttribute("username", comFun.returnUserName());
 			}
@@ -198,11 +200,13 @@ public class DepartmentController {
 
 	@RequestMapping(value = { "/department/listEmployeeOfDepartment" }, method = RequestMethod.GET)
 	public String listEmployeeOfDepartment(Model model, @RequestParam("departmentId") String departmentId) {
-		try {
-			 //add username 
-			 CommonFunctions comFun  = new CommonFunctions();
-			 model.addAttribute("username", comFun.returnUserName());
-			 
+		try {			
+			Date date = new Date();// your date
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);		
+			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
+			model.addAttribute("quarter", currentQuarter);
+			
 			List<EmployeeInfo> list = employeeDAO.getEmployeesByDepartment(departmentId);
 			model.addAttribute("employees", list);
 			EmployeeForm employeeForm = new EmployeeForm();

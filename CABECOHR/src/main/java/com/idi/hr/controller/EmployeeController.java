@@ -188,11 +188,7 @@ public class EmployeeController {
 	public String listEmployeeBirth(Model model, @RequestParam("quarter") int quarter,
 			@ModelAttribute("bithForm") EmployeeForm bith, final RedirectAttributes redirectAttributes) throws Exception{
 		try {
-			 //add username 
-			 CommonFunctions comFun  = new CommonFunctions();
-			 model.addAttribute("username", comFun.returnUserName());
-					
-			System.err.println(bith.getQuarter());
+			//System.err.println(bith.getQuarter());
 			List<EmployeeInfo> list = employeeDAO.getEmployeesBirth(quarter);
 			if (list.size() < 1)
 				redirectAttributes.addFlashAttribute("message", "Không có nhân viên nào SN quý " + bith.getQuarter());
@@ -207,6 +203,8 @@ public class EmployeeController {
 				String joinDate = employee.getJoinDate();
 				int seniority = Utils.monthsBetween(dateFormat.parse(joinDate), dateFormat.parse(currentDate));
 				employee.setSeniority(seniority);
+				employee.setDOB(Utils.convertDateToDisplay(employee.getDOB()));
+				employee.setJoinDate(Utils.convertDateToDisplay(employee.getJoinDate()));
 				/* System.err.println("tham nien " + seniority); */
 				listEmployee.add(employee);
 			}
