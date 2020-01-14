@@ -67,6 +67,8 @@ public class EmployeeDAO extends JdbcDaoSupport {
 			employee.setOfficalJoinDate(Utils.convertDateToDisplay(employee.getOfficalJoinDate()));
 		if(employee.getIssueDate() != null && employee.getIssueDate().length() > 0 && employee.getIssueDate().contains("-"))
 			employee.setIssueDate(Utils.convertDateToDisplay(employee.getIssueDate()));
+		if(employee.getExpiryDate() != null && employee.getExpiryDate().length() > 0 && employee.getExpiryDate().contains("-"))
+			employee.setExpiryDate(Utils.convertDateToDisplay(employee.getExpiryDate()));
 		
 		return employee;
 	}
@@ -125,7 +127,8 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				employeeInfo.setOfficalJoinDate(Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()));
 			if(employeeInfo.getIssueDate() != null && employeeInfo.getIssueDate().length() > 0)
 				employeeInfo.setIssueDate(Utils.convertDateToStore(employeeInfo.getIssueDate()));
-			
+			if(employeeInfo.getExpiryDate() != null && employeeInfo.getExpiryDate().length() > 0)
+				employeeInfo.setExpiryDate(Utils.convertDateToStore(employeeInfo.getExpiryDate()));
 			
 			if (employeeInfo.getEmployeeId() > 0) {
 				// update
@@ -139,9 +142,8 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 
-						employeeInfo.getEmerName(),
-						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
-						employeeInfo.getBankBranch(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getEmerName(),	employeeInfo.getEmerPhoneNo(), employeeInfo.geteUnion(), employeeInfo.getTaxCode(),
+						employeeInfo.getExpiryDate(), employeeInfo.getAcademyLevel(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu(), employeeInfo.getEmployeeId()};
 				jdbcTmpl.update(sql, params);
@@ -158,8 +160,8 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 
 						employeeInfo.getEmerName(),
-						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
-						employeeInfo.getBankBranch(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getEmerPhoneNo(), employeeInfo.geteUnion(), employeeInfo.getTaxCode(),
+						employeeInfo.getExpiryDate(), employeeInfo.getAcademyLevel(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu() };
 				jdbcTmpl.update(sql, params);

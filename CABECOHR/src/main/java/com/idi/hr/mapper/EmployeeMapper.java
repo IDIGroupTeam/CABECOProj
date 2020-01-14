@@ -39,9 +39,12 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 
 		String workStatus = rs.getString("WORK_STATUS");
 		String statusName = rs.getString("STATUS_NAME");
-		String bankNo = rs.getString("BANK_NO");
-		String bankName = rs.getString("BANK_NAME");
-		String bankBranch = rs.getString("BANK_BRANCH");
+		
+		String eUnion = rs.getString("E_UNION");
+		String taxCode = rs.getString("TAX_CODE");
+		String expiryDate = rs.getString("EXPIRY_DATE");
+		String academyLevel = rs.getString("ACADEMIC_LEVEL");
+
 		String imagePath = rs.getString("IMAGE_PATH");
 		String salarySocicalInsu = rs.getString("SALA_SOCI_INSU");
 		String socicalInsuNo = rs.getString("SOCIAL_INSU_NO");
@@ -50,8 +53,8 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 
 		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus, jobTitle, department, DOB,
 				personalId, issueDate, issuePlace, phoneNo, joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
-				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, workStatus, statusName, bankNo, bankName,
-				bankBranch, imagePath, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
+				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, workStatus, statusName, eUnion, 
+				taxCode, expiryDate, academyLevel, imagePath, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
 
 	}
 }

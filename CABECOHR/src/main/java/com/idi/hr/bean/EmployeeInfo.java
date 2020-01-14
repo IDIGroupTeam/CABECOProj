@@ -34,9 +34,10 @@ public class EmployeeInfo implements Serializable {
 	//private File image;
 	private String workStatus;
 	private String statusName;
-	private String bankNo;
-	private String bankName;
-	private String bankBranch;
+	private String eUnion;
+	private String expiryDate;
+	private String taxCode;
+	private String academyLevel;
 	private String imagePath;
 	private String salarySocicalInsu;
 	private String socicalInsuNo;
@@ -52,7 +53,7 @@ public class EmployeeInfo implements Serializable {
 			String jobTitle, String department, String DOB, String personalId, String issueDate, String issuePlace, String phoneNo,
 			String joinDate, String officalJoinDate, String email, String terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
-			String nation, String workStatus, String statusName, String bankNo, String bankName, String bankBranch,
+			String nation, String workStatus, String statusName, String eUnion, String taxCode, String expiryDate, String academyLevel,
 			String imagePath, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
 			String percentSocicalInsu) {
 
@@ -82,9 +83,10 @@ public class EmployeeInfo implements Serializable {
 		//this.image = image;
 		this.workStatus = workStatus;
 		this.statusName = statusName;
-		this.bankNo = bankNo;
-		this.bankName = bankName;
-		this.bankBranch = bankBranch;
+		this.eUnion = eUnion;
+		this.taxCode = taxCode;
+		this.expiryDate = expiryDate;
+		this.academyLevel = academyLevel;
 		this.imagePath = imagePath;
 		this.salarySocicalInsu = salarySocicalInsu;
 		this.socicalInsuNo = socicalInsuNo;
@@ -304,36 +306,44 @@ public class EmployeeInfo implements Serializable {
 		this.nation = nation;
 	}
 
-	public String getBankNo() {
-		return bankNo;
-	}
-
-	public void setBankNo(String bankNo) {
-		this.bankNo = bankNo;
-	}
-
-	public String getBankName() {
-		return bankName;
-	}
-
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
-	}
-
-	public String getBankBranch() {
-		return bankBranch;
-	}
-
-	public void setBankBranch(String bankBranch) {
-		this.bankBranch = bankBranch;
-	}
-
 	public String getImagePath() {
 		return imagePath;
 	}
 
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+		
+	public String geteUnion() {
+		return eUnion;
+	}
+
+	public void seteUnion(String eUnion) {
+		this.eUnion = eUnion;
+	}
+
+	public String getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(String expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public String getTaxCode() {
+		return taxCode;
+	}
+
+	public void setTaxCode(String taxCode) {
+		this.taxCode = taxCode;
+	}
+
+	public String getAcademyLevel() {
+		return academyLevel;
+	}
+
+	public void setAcademyLevel(String academyLevel) {
+		this.academyLevel = academyLevel;
 	}
 
 	public String getSalarySocicalInsu() {

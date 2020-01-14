@@ -24,12 +24,9 @@
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 
-
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
-	//alert($j.fn.jquery);
 	$j(function() {
-		//alert($j.fn.jquery);
 		$j(".datetime").datetimepicker({
 			//language : 'vi',
 			format : 'dd/mm/yyyy',
@@ -45,8 +42,7 @@
 </script>
 
 </head>
-<%-- <fmt:formatDate value="${today}" pattern="dd/MM/yyyy" type="Date"
-	dateStyle="SHORT" var="today" /> --%>
+
 <body>
 	<a href="${pageContext.request.contextPath}/">
 			<button class="btn btn-lg btn-primary btn-sm">Quay lại danh
@@ -76,18 +72,6 @@
 			</table>
 			<table class="table">
 				<tbody>
-					<%-- <tr>
-						<td>Mã NV:</td>
-						<td><form:input path="employeeId" size="5" disabled="true"
-								title="Tự động tăng" /></td>
-								
-						<td>Ngày vào cty:</td>
-						<td><form:input path="joinDate" type="date" /></td>
-
-						<td>Lương:</td>
-						<td><form:input path="salary" size="12" /></td>
-					</tr> --%>
-
 					<tr>
 						<td nowrap="nowrap"><input type="file" accept="image/jpeg"
 							name="image" class="form-control animated" /></td>
@@ -97,12 +81,9 @@
 						<td bgcolor="#EEEEEE">Số điện thoại:</td>
 						<td><form:input path="phoneNo" type="tel"
 								class="form-control animated" /></td>
-						<%-- <td>Lương đóng BHXH:</td>
-						<td><form:input path="salarySocicalInsu" size="12" /></td> --%>
 					</tr>
-
 					<tr>
-						<td rowspan="5"><form:hidden path="imagePath" /> <c:if
+						<td rowspan="7"><form:hidden path="imagePath" /> <c:if
 								test="${ not empty employeeForm.imagePath}">
 								<img src="${employeeForm.imagePath}" height="170px"
 									width="145px" />
@@ -122,10 +103,6 @@
 								<form:option value="Đã lập gia đình" label="Đã lập gia đình" />
 								<form:option value="Guá" label="Góa" />
 							</form:select></td>
-
-						<%-- 
-						<td>Tỉ lệ đóng BHXH:</td>
-						<td><form:input path="percentSocicalInsu" size="6" /></td> --%>
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Account(*):</td>
@@ -137,8 +114,6 @@
 								class="form-control animated">
 								<form:options items="${workStatusMap}" />
 							</form:select></td>
-						<%--<td>Số sổ BHXH:</td>
-						<td><form:input path="socicalInsuNo" size="12" /></td> --%>
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Giới tính:</td>
@@ -190,6 +165,31 @@
 						</td>						
 					</tr>
 					<tr>
+						<td bgcolor="#EEEEEE" nowrap="nowrap">Ngày hết hạn hợp đồng:</td>
+						<td>
+							<div class="input-group date datetime">
+								<form:input path="expiryDate" class="form-control"
+									placeholder="dd/mm/yyyy" autocomplete="off" />
+								<span class="input-group-addon"><span
+									class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</td>
+						<td bgcolor="#EEEEEE" nowrap="nowrap">Mã số thuế:</td>
+						<td>							
+							<form:input path="taxCode" class="form-control"	size="12" maxlength="12" />							
+						</td>						
+					</tr>
+					<tr>
+						<td bgcolor="#EEEEEE" nowrap="nowrap">Trình độ/bằng cấp:</td>
+						<td>
+							<form:input path="academyLevel" class="form-control" size="32" maxlength="32" />	
+						</td>
+						<td bgcolor="#EEEEEE" nowrap="nowrap">Đoàn thể:</td>
+						<td>							
+							<form:input path="eUnion" class="form-control" size="32" maxlength="32"	/>							
+						</td>						
+					</tr>
+					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#C4C4C4"></td>						
 					</tr>
 					<tr>
@@ -217,18 +217,14 @@
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Đ/c hiện tại:</td>
-						<td colspan="2"><form:input path="currentAdress" maxlength="255"
-								class="form-control animated" /></td>
+						<td colspan="2"><form:input path="currentAdress" maxlength="255" class="form-control animated" /></td>
 
 						<td bgcolor="#EEEEEE" nowrap="nowrap">Đ/c thường trú:</td>
 						<td colspan="2"><form:input path="permanentAdress"
 								class="form-control animated" /></td>
 					</tr>
 					<tr>
-						<td colspan="6" nowrap="nowrap" bgcolor="#C4C4C4">Liên lạc
-							khẩn cấp:</td>
-						<%-- <td bgcolor="#9F81F7">Ngày thôi việc:</td>
-						<td><form:input path="terminationDate" type="date" /></td> --%>
+						<td colspan="6" nowrap="nowrap" bgcolor="#C4C4C4">Liên lạc	khẩn cấp:</td>
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Tên người liên lạc:</td>
@@ -237,33 +233,16 @@
 						<td bgcolor="#EEEEEE">Số đt:</td>
 						<td><form:input path="emerPhoneNo" size="12" maxlength="20"
 								class="form-control animated" /></td>
-						<%--<td bgcolor="#9F81F7">Lý do thôi việc:</td>
-						<td><form:input path="reasonforLeave" /></td> --%>
 					</tr>
-					<%--<tr>
-						<td colspan="6" nowrap="nowrap" bgcolor="999999">Tài khoản
-							ngân hàng</td>
-					</tr>
-					<tr>
-						<td>Tên NH:</td>
-						<td><form:input path="bankName" /></td>
-						<td>Số TK:</td>
-						<td><form:input path="bankNo" size="12" /></td>
-						<td>Chi nhánh:</td>
-						<td><form:input path="bankBranch" /></td>
-					</tr> --%>
 					<tr>
 						<td bgcolor="#EEEEEE">Ghi chú:</td>
-						<td colspan="5"><form:textarea path="note" cols="100"
-								class="form-control animated" /></td>
+						<td colspan="5"><form:textarea path="note" cols="100"	class="form-control animated" /></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
-			name="Lưu" />
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"	name="Lưu" />
 		<br />
 	</form:form>
-
 </body>
 </html>

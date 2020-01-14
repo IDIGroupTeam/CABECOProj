@@ -6,7 +6,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CommonFunctions implements Serializable {
- public String returnUserName () {
+ /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4095628083004583534L;
+
+public String returnUserName () {
 	
 	 String username =null;
 	 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
