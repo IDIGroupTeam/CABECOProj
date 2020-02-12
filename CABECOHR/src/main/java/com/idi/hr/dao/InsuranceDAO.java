@@ -88,7 +88,8 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSocicalInsuNo(),
 					insurance.getSalarySocicalInsu().replaceAll(",", ""), insurance.getPercentSInsuC(), insurance.getPercentSInsuE(),
 					insurance.getPayType(), insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(),
-					insurance.gethInsuNo(), insurance.gethInsuPlace(), insurance.getComment() };
+					insurance.gethInsuNo(), insurance.gethInsuPlace(), insurance.getComment(), insurance.getConstSalary(), 
+					insurance.getSalaryLevel(), insurance.getSubSalary() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -112,7 +113,8 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSalarySocicalInsu().replaceAll(",", ""),
 					insurance.getPercentSInsuC(), insurance.getPercentSInsuE(), insurance.getPayType(),
 					insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(), insurance.gethInsuNo(),
-					insurance.gethInsuPlace(), insurance.getComment(), insurance.getSocicalInsuNo() };
+					insurance.gethInsuPlace(), insurance.getComment(), insurance.getConstSalary(), insurance.getSalaryLevel(),
+					insurance.getSubSalary(), insurance.getSocicalInsuNo() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -132,7 +134,8 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_INSURANCE_SALARY").toString();
 			log.info("UPDATE_INSURANCE_SALARY query: " + sql);
-			Object[] params = new Object[] {insurance.getSalarySocicalInsu().replaceAll(",", ""), insurance.getSocicalInsuNo() };
+			Object[] params = new Object[] {insurance.getSalarySocicalInsu().replaceAll(",", ""), insurance.getConstSalary(), 
+					insurance.getSalaryLevel(),	insurance.getSubSalary(), insurance.getSocicalInsuNo() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -198,15 +201,23 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			if(processInsurance.getToDate() != null && processInsurance.getToDate().length() > 0 && processInsurance.getToDate().contains("/"))
 				processInsurance.setToDate(Utils.convertDateToStore(processInsurance.getToDate()));
 			Object[] params = new Object[] { processInsurance.getSocicalInsuNo(),
-					processInsurance.getSalarySocicalInsu().replaceAll(",", ""), processInsurance.getCompanyPay(),
-					processInsurance.getFromDate(), processInsurance.getToDate(), processInsurance.getComment() };
+					processInsurance.getSalarySocicalInsu().replaceAll(",", ""), 
+					processInsurance.getFromDate(), processInsurance.getToDate(), processInsurance.getComment(),
+					processInsurance.getConstSalary(), processInsurance.getSalaryLevel(), processInsurance.getSubSalary()};
 			jdbcTmpl.update(sql, params);
 			
 			//update Insurance
 
 			Insurance insurance= new Insurance();
-			insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
+			insurance = getInsurance(processInsurance.getSocicalInsuNo());
+			//insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
 			insurance.setSalarySocicalInsu(processInsurance.getSalarySocicalInsu().replaceAll(",", ""));
+			if(processInsurance.getConstSalary() !=null && processInsurance.getConstSalary().length() > 0)
+				insurance.setConstSalary(processInsurance.getConstSalary());
+			if(processInsurance.getSubSalary() !=null && processInsurance.getSubSalary().length() > 0)
+				insurance.setSubSalary(processInsurance.getSubSalary());
+			if(processInsurance.getSalaryLevel() != null && processInsurance.getSalaryLevel().length() > 0)
+				insurance.setSalaryLevel(processInsurance.getSalaryLevel());
 			updateSalaryInsurance(insurance);
 		} catch (Exception e) {
 			log.error(e, e);
@@ -232,14 +243,21 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			if(processInsurance.getToDate() != null && processInsurance.getToDate().length() > 0 && processInsurance.getToDate().contains("/"))
 				processInsurance.setToDate(Utils.convertDateToStore(processInsurance.getToDate()));
 			
-			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu().replaceAll(",", ""), processInsurance.getCompanyPay(),
-					processInsurance.getToDate(), processInsurance.getComment(), processInsurance.getSocicalInsuNo(),
-					processInsurance.getFromDate() };
+			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu().replaceAll(",", ""),
+					processInsurance.getToDate(), processInsurance.getComment(), processInsurance.getConstSalary(), processInsurance.getSalaryLevel(), 
+					processInsurance.getSubSalary(), processInsurance.getSocicalInsuNo(), processInsurance.getFromDate() };
 			jdbcTmpl.update(sql, params);
 
 			Insurance insurance= new Insurance();
-			insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
+			insurance = getInsurance(processInsurance.getSocicalInsuNo());
+			//insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
 			insurance.setSalarySocicalInsu(processInsurance.getSalarySocicalInsu().replaceAll(",", ""));
+			if(processInsurance.getConstSalary() !=null && processInsurance.getConstSalary().length() > 0)
+				insurance.setConstSalary(processInsurance.getConstSalary());
+			if(processInsurance.getSubSalary() !=null && processInsurance.getSubSalary().length() > 0)
+				insurance.setSubSalary(processInsurance.getSubSalary());
+			if(processInsurance.getSalaryLevel() != null && processInsurance.getSalaryLevel().length() > 0)
+				insurance.setSalaryLevel(processInsurance.getSalaryLevel());			
 			updateSalaryInsurance(insurance);			
 		} catch (Exception e) {
 			log.error(e, e);

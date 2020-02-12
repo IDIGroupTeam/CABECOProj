@@ -26,8 +26,12 @@ public class InsuranceMapper implements RowMapper<Insurance> {
 		String hInsuPlace = rs.getString("HEALTH_INSU_PLACE");
 		String comment = rs.getString("COMMENT");
 
-		return new Insurance(employeeId, employeeName, socicalInsuNo, salarySocicalInsu, percentSInsuC, 
-				percentSInsuE, payType,	salaryZone, place, status, hInsuNo, hInsuPlace, comment);
+		String constSalary = rs.getString("CONST_SALARY"); 
+		String salaryLevel = rs.getString("SALARY_LEVEL"); 
+		String subSalary = rs.getString("SUB_SALARY");
+		
+		return new Insurance(employeeId, employeeName, socicalInsuNo, salarySocicalInsu, percentSInsuC,	percentSInsuE, 
+				payType, salaryZone, place, status, hInsuNo, hInsuPlace, comment, constSalary, salaryLevel, subSalary);
 	}
 
 }

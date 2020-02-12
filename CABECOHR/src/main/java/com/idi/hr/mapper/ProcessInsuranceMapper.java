@@ -13,12 +13,16 @@ public class ProcessInsuranceMapper implements RowMapper<ProcessInsurance> {
 
 		String socicalInsuNo = rs.getString("SOCIAL_INSU_NO");
 		String salarySocicalInsu = rs.getString("SALA_SOCI_INSU");
-		String companyPay = rs.getString("COMPANY_PAY");
+
 		String fromDate = rs.getString("FROM_DATE");
 		String toDate = rs.getString("TO_DATE");
 		String comment = rs.getString("COMMENT");
-
-		return new ProcessInsurance(socicalInsuNo, salarySocicalInsu, companyPay, fromDate, toDate, comment);
+		
+		String constSalary = rs.getString("CONST_SALARY"); 
+		String salaryLevel = rs.getString("SALARY_LEVEL"); 
+		String subSalary = rs.getString("SUB_SALARY");
+		
+		return new ProcessInsurance(socicalInsuNo, salarySocicalInsu,  
+				fromDate, toDate, comment, constSalary, salaryLevel, subSalary);
 	}
-
 }

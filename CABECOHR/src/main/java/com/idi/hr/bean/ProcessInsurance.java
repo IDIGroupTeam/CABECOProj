@@ -14,7 +14,10 @@ public class ProcessInsurance implements Serializable {
 
 	private String socicalInsuNo;
 	private String salarySocicalInsu;	
-	private String companyPay;
+	private String constSalary;
+	private String salaryLevel;
+	private String subSalary;
+
 	private String fromDate;
 	private String toDate;
 	private String fDate;
@@ -25,14 +28,17 @@ public class ProcessInsurance implements Serializable {
 
 	}
 
-	public ProcessInsurance(String socicalInsuNo, String salarySocicalInsu, String companyPay, String fromDate, String toDate, String comment) {
+	public ProcessInsurance(String socicalInsuNo, String salarySocicalInsu, String fromDate,
+			String toDate, String comment, String constSalary, String salaryLevel, String subSalary) {
 
 		this.socicalInsuNo = socicalInsuNo;
 		this.salarySocicalInsu = salarySocicalInsu;
-		this.companyPay = companyPay;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 		this.comment = comment;
+		this.constSalary = constSalary;
+		this.salaryLevel = salaryLevel;
+		this.subSalary = subSalary;
 	}
 
 	public String getSalarySocicalInsu() {
@@ -50,15 +56,31 @@ public class ProcessInsurance implements Serializable {
 	public void setSocicalInsuNo(String socicalInsuNo) {
 		this.socicalInsuNo = socicalInsuNo;
 	}
-
-	public String getCompanyPay() {
-		return companyPay;
-	}
-
-	public void setCompanyPay(String companyPay) {
-		this.companyPay = companyPay;
-	}
 	
+	public String getConstSalary() {
+		return constSalary;
+	}
+
+	public void setConstSalary(String constSalary) {
+		this.constSalary = constSalary;
+	}
+
+	public String getSalaryLevel() {
+		return salaryLevel;
+	}
+
+	public void setSalaryLevel(String salaryLevel) {
+		this.salaryLevel = salaryLevel;
+	}
+
+	public String getSubSalary() {
+		return subSalary;
+	}
+
+	public void setSubSalary(String subSalary) {
+		this.subSalary = subSalary;
+	}
+
 	public String getFromDate() {
 		return fromDate;
 	}

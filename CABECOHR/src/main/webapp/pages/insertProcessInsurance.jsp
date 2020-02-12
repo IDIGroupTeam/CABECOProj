@@ -81,8 +81,16 @@
 					<td bgcolor="#EEEEEE">Lương BH(*):</td>
 					<td><form:input path="salarySocicalInsu" size="12"
 							maxlength="12" required="required" class="form-control animated"/></td>
-					<td bgcolor="#EEEEEE">Cty đóng(*):</td>
-					<td><form:input path="companyPay" required="required" class="form-control animated"/></td>							
+					<td bgcolor="#EEEEEE">Phụ cấp lương:</td>
+					<td><form:input path="subSalary" class="form-control animated" size="12" maxlength="12"/></td> 							
+				</tr>
+				<tr>
+					<td bgcolor="#EEEEEE">Hệ số lương:</td>
+					<td><form:input path="constSalary" size="8"
+							class="form-control animated" maxlength="8" /></td>
+					<td bgcolor="#EEEEEE">Bậc lương:</td>
+					<td><form:input path="salaryLevel" size="8"
+							class="form-control animated" maxlength="8" /></td>	
 				</tr>
 				<tr>
 					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thời gian	đóng</td>

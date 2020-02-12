@@ -13,6 +13,9 @@ public class Insurance implements Serializable {
 	private String employeeName;
 	private String socicalInsuNo;
 	private String salarySocicalInsu;	
+	private String constSalary;
+	private String salaryLevel;
+	private String subSalary;
 	private String percentSInsuC;
 	private String percentSInsuE;
 	private String payType;
@@ -28,7 +31,8 @@ public class Insurance implements Serializable {
 	}
 
 	public Insurance(int employeeId, String employeeName, String socicalInsuNo, String salarySocicalInsu, String percentSInsuC, String percentSInsuE,
-			String payType, String salaryZone, String place, String status, String hInsuNo, String hInsuPlace, String comment) {
+			String payType, String salaryZone, String place, String status, String hInsuNo, String hInsuPlace, String comment, String constSalary, 
+			String salaryLevel, String subSalary) {
 
 		this.employeeId = employeeId;		
 		this.employeeName = employeeName;
@@ -44,6 +48,10 @@ public class Insurance implements Serializable {
 		this.hInsuNo = hInsuNo;
 		this.hInsuPlace = hInsuPlace;	
 		this.comment = comment;
+		
+		this.constSalary = constSalary;
+		this.salaryLevel = salaryLevel;
+		this.subSalary = subSalary;
 	}
 
 	public int getEmployeeId() {
@@ -68,6 +76,30 @@ public class Insurance implements Serializable {
 
 	public void setSalarySocicalInsu(String salarySocicalInsu) {
 		this.salarySocicalInsu = salarySocicalInsu;
+	}
+
+	public String getConstSalary() {
+		return constSalary;
+	}
+
+	public void setConstSalary(String constSalary) {
+		this.constSalary = constSalary;
+	}
+
+	public String getSalaryLevel() {
+		return salaryLevel;
+	}
+
+	public void setSalaryLevel(String salaryLevel) {
+		this.salaryLevel = salaryLevel;
+	}
+
+	public String getSubSalary() {
+		return subSalary;
+	}
+
+	public void setSubSalary(String subSalary) {
+		this.subSalary = subSalary;
 	}
 
 	public String getSocicalInsuNo() {

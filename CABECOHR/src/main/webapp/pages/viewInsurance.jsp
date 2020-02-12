@@ -23,8 +23,7 @@
 		<table class="table">
 			<tbody>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin
-						Bảo hiểm xã hội</td>
+					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin	Bảo hiểm xã hội</td>
 				</tr>
 				<tr>
 					<td bgcolor="#EEEEEE">Mã NV:</td>
@@ -45,18 +44,23 @@
 					<td><c:out value="${insuranceForm.salaryZone}" /></td>
 				</tr>
 				<tr>
-					<%--<td bgcolor="#E6E6E6">Cty đóng:</td>
-						<td><c:out value="${insuranceForm.companyPay}" /></td> --%>
-
-					<td bgcolor="#EEEEEE">Nơi đóng:</td>
-					<td><c:out value="${insuranceForm.place}" /></td>
+					<td bgcolor="#EEEEEE">Hệ số lương:</td>
+					<td><c:out value="${insuranceForm.constSalary}" /></td>
+					<td bgcolor="#EEEEEE">Bậc lương:</td>
+					<td><c:out value="${insuranceForm.salaryLevel}" /></td>	
+				</tr>
+				<tr>					
+					<td bgcolor="#EEEEEE">Phụ cấp lương:</td>
+					<td><c:out value="${insuranceForm.subSalary}" /></td> 
+					
 					<td bgcolor="#EEEEEE">Phương thức đóng:</td>
 					<td><c:out value="${insuranceForm.payType}" /></td>
 				</tr>
 				<tr>
+					<td bgcolor="#EEEEEE">Nơi đóng:</td>
+					<td><c:out value="${insuranceForm.place}" /></td>
 					<td bgcolor="#EEEEEE">Tình trạng đóng:</td>
 					<td><c:out value="${insuranceForm.status}" /></td>
-
 				</tr>
 				<tr>
 					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin

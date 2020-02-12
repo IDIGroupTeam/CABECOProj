@@ -103,11 +103,24 @@ public class InsuranceController {
 		return "listInsurance";
 	}
 
-	private Map<String, String> employees() {
+	/*
+	 * private Map<String, String> employees() { Map<String, String> employeeMap =
+	 * new LinkedHashMap<String, String>(); try { //note: nhung List<EmployeeInfo>
+	 * list = employeeDAO.getEmployees(); EmployeeInfo employee = new
+	 * EmployeeInfo(); for (int i = 0; i < list.size(); i++) { employee =
+	 * (EmployeeInfo) list.get(i); Integer id = employee.getEmployeeId();
+	 * employeeMap.put(id.toString(), "Mã NV " + id + ", " + employee.getFullName()
+	 * + ", phòng " + employee.getDepartment()); }
+	 * 
+	 * } catch (Exception e) { log.error(e, e); e.printStackTrace(); } return
+	 * employeeMap; }
+	 */
+	
+	private Map<String, String> allEmployees() {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
 			//note: nhung 
-			List<EmployeeInfo> list = employeeDAO.getEmployees();
+			List<EmployeeInfo> list = employeeDAO.getAllEmployees();
 			EmployeeInfo employee = new EmployeeInfo();
 			for (int i = 0; i < list.size(); i++) {
 				employee = (EmployeeInfo) list.get(i);
@@ -123,17 +136,17 @@ public class InsuranceController {
 		return employeeMap;
 	}
 	
-	private Map<String, String> allEmployees() {
+	private Map<String, String> employeesForInsert() {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
 			//note: nhung 
-			List<EmployeeInfo> list = employeeDAO.getAllEmployees();
+			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertInsurrance();
 			EmployeeInfo employee = new EmployeeInfo();
 			for (int i = 0; i < list.size(); i++) {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						employee.getFullName() + ", phòng " + employee.getDepartment() + ", mã NV " + id);
 			}
 
 		} catch (Exception e) {
@@ -182,17 +195,20 @@ public class InsuranceController {
 	private String insuranceForm(Model model, Insurance insurance) {
 		model.addAttribute("insuranceForm", insurance);
 		// get list employee id
-		Map<String, String> employeeMap = this.employees();
-		model.addAttribute("employeeMap", employeeMap);
+		Map<String, String> employeeMap = null;		
 
 		String actionform = "";
 		if (insurance.getSocicalInsuNo() != null) {
+			employeeMap = this.allEmployees();
 			model.addAttribute("formTitle", "Sửa thông tin bảo hiểm ");
 			actionform = "editInsurance";
 		} else {
+			employeeMap = this.employeesForInsert();
 			model.addAttribute("formTitle", "Thêm mới thông tin bảo hiểm");
 			actionform = "insertInsurance";
 		}
+		model.addAttribute("employeeMap", employeeMap);
+		
 		//System.err.println(actionform);
 		return actionform;
 	}
@@ -217,7 +233,7 @@ public class InsuranceController {
 		if (socicalInsuNo != null) {
 			insurance = this.insuranceDAO.getInsurance(socicalInsuNo);
 			model.addAttribute("insuranceForm", insurance);
-			model.addAttribute("formTitle", "Thông tin bảo hiểm");
+			model.addAttribute("formTitle", "Thông tin chi tiết bảo hiểm");
 			Map<String, String> employeeMap = this.allEmployees();
 			String name = "";
 			String id= String.valueOf(insurance.getEmployeeId());
@@ -380,12 +396,13 @@ public class InsuranceController {
 			
 			if(pInsurance.getToDate() != null && pInsurance.getToDate().contains("/")) {
 				tDate = sdf. parse(Utils.convertDateToStore(pInsurance.getToDate()));
-			}else
-				tDate = sdf. parse(pInsurance.getToDate());
+			}else if(pInsurance.getToDate() != null && pInsurance.getToDate().length() > 0) {
+				tDate = sdf. parse(pInsurance.getToDate());			
 			
-			if(fDate.compareTo(tDate) >= 0) {		
-				//System.err.println("Ngày kết thức phải lớn hơn ngày bắt đầu");
-				return processInsuranceForm(model, pInsurance, pInsurance.getSocicalInsuNo(), employeeId, "Vui lòng nhập ngày kết thức phải lớn hơn ngày bắt đầu");
+				if(fDate.compareTo(tDate) >= 0) {		
+					//System.err.println("Ngày kết thức phải lớn hơn ngày bắt đầu");
+					return processInsuranceForm(model, pInsurance, pInsurance.getSocicalInsuNo(), employeeId, "Vui lòng nhập ngày kết thức phải lớn hơn ngày bắt đầu");
+				}
 			}
 			
 			insuranceDAO.updateProcessInsurance(pInsurance);

@@ -68,19 +68,16 @@
 							</form:select></td>	
 					</tr>
 					<tr>
-						<%--<td bgcolor="#E6E6E6">Cty đóng:</td>
-						<td><form:input path="companyPay" maxlength="64"/></td> --%>
-						<td bgcolor="#EEEEEE">Nơi đóng:(*)</td>
-						<td><form:input path="place" required="required"
-								maxlength="64" class="form-control animated"/></td>
-						<td bgcolor="#EEEEEE">Phương thức đóng:</td>
-						<td><form:select path="payType" class="form-control animated">
-								<form:option value="T" label="Theo tháng" />
-								<form:option value="Q" label="Theo quý" />
-								<form:option value="N" label="Theo năm" />
-							</form:select></td>
-					</tr>
+						<td bgcolor="#EEEEEE">Hệ số lương:</td>
+						<td><form:input path="constSalary" size="8"
+								class="form-control animated" maxlength="8" /></td>
+						<td bgcolor="#EEEEEE">Bậc lương:</td>
+						<td><form:input path="salaryLevel" size="8"
+								class="form-control animated" maxlength="8" /></td>	
+					</tr>					
 					<tr>
+						<td bgcolor="#EEEEEE">Phụ cấp lương:</td>
+						<td><form:input path="subSalary" class="form-control animated" size="12" maxlength="12"/></td> 
 						<td bgcolor="#EEEEEE">Tình trạng đóng:</td>
 						<td><form:select path="status" class="form-control animated">
 								<form:option value="Dang nop" label="Đang nộp" />
@@ -91,10 +88,20 @@
 									label="Đang nghỉ không lương" />
 								<form:option value="Da nghi han" label="Đã nghỉ hẳn" />
 							</form:select></td>
-					</tr>
+					</tr>					
+					<tr>						
+						<td bgcolor="#EEEEEE">Nơi đóng:</td>
+						<td><form:input path="place" 
+								maxlength="64" class="form-control animated"/></td>
+						<td bgcolor="#EEEEEE">Phương thức đóng:</td>
+						<td><form:select path="payType" class="form-control animated">
+								<form:option value="T" label="Theo tháng" />
+								<form:option value="Q" label="Theo quý" />
+								<form:option value="N" label="Theo năm" />
+							</form:select></td>
+					</tr>					
 					<tr>
-						<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin
-							Bảo hiểm y tế</td>
+						<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin	bảo hiểm y tế</td>
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Số thẻ BHYT:(*)</td>

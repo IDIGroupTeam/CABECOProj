@@ -54,7 +54,6 @@ tr:nth-child(even) {
 				<tr>
 					<!-- <th>Số sổ BHXH</th> -->
 					<th>Lương BH</th>
-					<th>Công ty đóng</th>
 					<th>Từ ngày</th>
 					<th>Đến ngày</th>
 					<th>Ghi chú</th>
@@ -65,7 +64,6 @@ tr:nth-child(even) {
 					<tr>
 						<%-- <td>${insurance.socicalInsuNo}</td> --%>
 						<td><fmt:formatNumber value="${insurance.salarySocicalInsu.replaceAll(',', '')}"/></td>
-						<td>${insurance.companyPay}</td>
 						<td>${insurance.fDate}</td>
 						<c:if test="${empty insurance.toDate}">
 							<td>Đến nay</td>
