@@ -5,6 +5,11 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
+<script type="text/javascript">
+	function ConfirmDelete() {
+	  return confirm("Bạn có chắc chắn muốn xóa không?");
+	}
+</script>
 <title>Danh sách các sản phẩm đã bán trong tháng</title>
 <style>
 table {
@@ -42,7 +47,7 @@ tr:nth-child(even) {
 				<th>Đơn giá</th>
 				<th>Hệ số %</th>
 				<th>Thành tiền</th>
-				<th>Sửa</th>
+				<th>Xóa</th>
 				<th>Ghi chú</th>
 			</tr>
 			<c:forEach var="productSold" items="${productSold}">
@@ -53,8 +58,8 @@ tr:nth-child(even) {
 					<td><fmt:formatNumber value="${productSold.price}" type="number"/></td>
 					<td>${productSold.scale} %</td>
 					<td><fmt:formatNumber value="${productSold.moneyIncome}" type="number"/></td>
-					<td><a
-						href="editProductSold?month=${productSold.month}&department=${department}&productCode=${productSold.code}">Sửa</a>
+					<td><a style="color: red;"
+						href="deleteProductSold?month=${productSold.month}&department=${department}&productCode=${productSold.code}&price=${productSold.price}&scale=${productSold.scale}" Onclick="return ConfirmDelete()">Xóa</a>
 					</td>
 					<td>${productSold.comment}</td>
 				</tr>

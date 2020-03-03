@@ -72,12 +72,12 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 	 * @param month, forCompany
 	 * @return workingDay object
 	 */
-	public ProductSold getProductSold(String department, String month, String productCode) {
+	public ProductSold getProductSold(String department, String month, String productCode, String price, String scale) {
 		ProductSold productSold = new ProductSold();
 		try {
 			String sql = hr.get("GET_PRODUCT_SOLD").toString();
 			log.info("GET_PRODUCT_SOLD query: " + sql);
-			Object[] params = new Object[] { department, month, productCode };
+			Object[] params = new Object[] { department, month, productCode, price, scale };
 			System.out.println(month + "|" + productCode ); 
 			ProductSoldMapper mapper = new ProductSoldMapper();
 	
@@ -103,7 +103,7 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 			log.info("INSERT_PRODUCT_SOLD query: " + sql);
 			String moneyIncome;
 			if(productSold.getPrice() != null && productSold.getAmount() != null && productSold.getScale() != null) {
-				moneyIncome = String.valueOf(Integer.valueOf(productSold.getPrice())*Integer.valueOf(productSold.getAmount())*Integer.valueOf(productSold.getScale()));
+				moneyIncome = String.valueOf(Float.valueOf(productSold.getPrice())*Integer.valueOf(productSold.getAmount())*Integer.valueOf(productSold.getScale())/100);
 				productSold.setMoneyIncome(moneyIncome);
 			}
 			Object[] params = new Object[] { productSold.getCode(), productSold.getPrice(), productSold.getAmount(),
@@ -131,8 +131,8 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 			log.info("UPDATE_PRODUCT_SOLD query: " + sql);
 			String moneyIncome;
 			if(productSold.getPrice() != null && productSold.getAmount() != null && productSold.getScale() != null) {
-				moneyIncome = String.valueOf(Integer.valueOf(productSold.getPrice())*Integer.valueOf(productSold.getAmount())*Integer.valueOf(productSold.getScale()));
-				System.err.println(moneyIncome);
+				moneyIncome = String.valueOf(Float.valueOf(productSold.getPrice())*Integer.valueOf(productSold.getAmount())*Integer.valueOf(productSold.getScale())/100);
+				//System.err.println(moneyIncome);
 				productSold.setMoneyIncome(moneyIncome);
 			}
 			Object[] params = new Object[] {productSold.getPrice(), productSold.getAmount(), productSold.getScale(),
@@ -160,5 +160,29 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 		String moneyIncome = jdbcTmpl.queryForObject(sql, String.class, params);
 
 		return moneyIncome;
+	}
+	
+	/**
+	 * 
+	 * @param department
+	 * @param month
+	 * @param productCode
+	 * @param price
+	 * @param scale
+	 * @throws Exception
+	 */
+	public void deleteProductSold(String department, String month, String productCode, String price, String scale) throws Exception {
+		try {
+			log.info("Xóa thông tin san pam da ban trong thang ");
+			// delete
+			String sql = hr.getProperty("DELETE_PRODUCT_SOLD").toString();
+			log.info("DELETE_PRODUCT_SOLD query: " + sql);
+			Object[] params = new Object[] { department, month,  productCode,  price, scale };
+			jdbcTmpl.update(sql, params);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
 	}
 }

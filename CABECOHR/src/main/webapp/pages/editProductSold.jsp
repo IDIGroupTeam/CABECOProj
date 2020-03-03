@@ -25,7 +25,7 @@
 </script>
 </head>
 <body>
-	<a href="${url}/salary/"><button class="btn btn-primary btn-sm">Danh sách lương nhân viên</button></a>
+	
 	<a href="${url}/salary/listProductSold?month=${productSoldForm.month}&department=${productSoldForm.department}"><button class="btn btn-primary btn-sm">Danh sách sản phẩm đã bán trong tháng</button></a>
 	<br/><br/>
 	<form:form modelAttribute="productSoldForm" method="POST"
@@ -49,7 +49,7 @@
 					</tr>
 					<tr>		
 						<td bgcolor="#FAFAFA">Đơn giá:(*) </td>
-						<td><form:input path="price" maxlength="12" type="number" min="1" step="1"
+						<td><form:input path="price" maxlength="12" type="number" min="0.1" step="0.01"
 								required="required" class="form-control animated"/></td>
 						<td bgcolor="#FAFAFA">Hệ số %:(*)</td>
 						<td><form:input path="scale" maxlength="9" type="number" default="100"

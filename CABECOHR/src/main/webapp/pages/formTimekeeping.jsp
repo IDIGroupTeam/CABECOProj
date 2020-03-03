@@ -13,25 +13,35 @@
  --%>
 <head>
 <!-- Initialize the plugin: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<%-- <script language="JavaScript1.2" src="<%=request.getContextPath()%>/js/drag.js" type="text/javascript"></script>
-<script type='text/javascript' src='./js/common.js' type="text/javascript"></script> --%>
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="${url}/public/js/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 
 <script type="text/javascript">
 
-// Wait for window load
+/* // Wait for window load
 $(window).load(function(){
 	// Animate loader off screen
 	//$("button").click(function(){
 		$(".loader").fadeOut("slow");
 	//});	
-});
-
-	$(function() {
-		$("#dept")
+}); */
+	var $j = jQuery.noConflict();
+	$j(function() {
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+		
+		$j("#dept")
 				.change(
 						function() {
 
@@ -203,10 +213,24 @@ $(window).load(function(){
 		method="POST">
 		<table class="table">
 			<tr>
-				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date"
-						type="date" required="required" class="form-control animated" /></td>
-				<td>Đến ngày:(*) &nbsp;<form:input path="toDate" type="date"
-						required="required" class="form-control animated" /></td>
+				<td>Chọn xem từ ngày:(*) &nbsp;
+					<div class="input-group date datetime">
+						<form:input path="date" class="form-control"
+							placeholder="dd/mm/yyyy" autocomplete="off" required="required"/>
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>		
+				<%-- <form:input path="date" type="date"
+						required="required" class="form-control animated"/> --%>
+				</td>
+				<td>Đến ngày:(*) &nbsp;
+					<div class="input-group date datetime">
+						<form:input path="toDate" class="form-control"
+							placeholder="dd/mm/yyyy" autocomplete="off" required="required"/>
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>	
+				</td>	
 				<td>Phòng: &nbsp; <form:select path="dept"
 						class="form-control animated">
 						<form:option value="all" label="Tất cả phòng ban"></form:option>
@@ -235,9 +259,9 @@ $(window).load(function(){
 		<br/><br/>
 	</c:if>
 		
-	<div class="loader">
+<%-- 	<div class="loader">
 		<img src="${url}/public/images/loading1.gif" align="middle" vspace="5" alt="Import dữ liệu" />
-	</div>
+	</div> --%>
 <%-- 	<div id="waitingBox" class="msgBox"
 		onmousedown="dragStart(event, 'waitingBox')" style="cursor: move">
 		<div class="shadow"></div>
@@ -289,7 +313,7 @@ $(window).load(function(){
 						<td>${leaveInfo.employeeName}</td>
 						<td>${leaveInfo.department}</td>
 						<td>${leaveInfo.title}</td>
-						<td>${leaveInfo.date}</td>
+						<td><fmt:formatDate pattern="dd/MM/yyyy" value="${leaveInfo.date}" /></td>
 						<c:if test="${leaveInfo.timeValue == 4}">
 							<td>${leaveInfo.leaveName}nửa ngày</td>
 						</c:if>
@@ -325,7 +349,7 @@ $(window).load(function(){
 					<td>${timekeeping.employeeName}</td>
 					<td>${timekeeping.department}</td>
 					<td>${timekeeping.title}</td>
-					<td>${timekeeping.date}</td>
+					<td><fmt:formatDate pattern="dd/MM/yyyy" value="${timekeeping.date}" /></td>
 					<c:if test="${not empty timekeeping.timeIn}">
 						<td>${timekeeping.timeIn}</td>
 					</c:if>

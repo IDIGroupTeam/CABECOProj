@@ -16,6 +16,8 @@
 </style>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/timekeeping/listWorkingDay/"><button class="btn btn-primary btn-sm">Quay lại danh sách tháng đã định nghĩa</button></a>
+	<br/><br/>
 	<form:form modelAttribute="workingDayForm" method="POST"
 		action="updateWorkingDay">
 		<div class="table table-bordered" >
@@ -24,7 +26,6 @@
 					<tr>
 						<td bgcolor="#FAFAFA">Chọn tháng muốn định nghĩa:(*)</td>						
 						<td><form:input path="month" required="required" type="Month" class="form-control animated"/></td>
-						<td></td>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Chọn công ty áp dụng (mặc định chỉ áp dụng cho CABECO):</td>
@@ -36,13 +37,11 @@
 								<!-- se lay du lieu dong sau ... -->							
 							</form:select>		
 						</td>						
-						<td></td>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Số ngày làm viêc chuẩn:(*)</td>
 						<td><form:input path="workDayOfMonth" type="number" step="0.5" min="1" max="28" 
 								required="required" class="form-control animated"/></td>
-						<td></td>						
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Ghi chú:</td>
@@ -52,7 +51,6 @@
 			</table>
 		</div>
 		<input class="btn btn-primary btn-sm" type="submit" value="Lưu" /><br/><br/>
-	</form:form>
-	 <a href="${pageContext.request.contextPath}/timekeeping/listWorkingDay/"><button class="btn btn-primary btn-sm">Quay lại danh sách tháng đã định nghĩa</button></a>
+	</form:form>	 
 </body>
 </html>

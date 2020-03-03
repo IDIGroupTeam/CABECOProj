@@ -17,68 +17,36 @@
 }
 </style>
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="https://rawgit.com/danielfarrell/bootstrap-combobox/master/css/bootstrap-combobox.css" rel="stylesheet"/>
-
 </head>
 
 <body>
-<%-- <script src="${url}/public/js/jquery-3.3.1.js"></script> --%>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="${url}/public/js/bootstrap-combobox.js"></script>
-<script>
-/*     var $x = jQuery.noConflict(true);
-    alert($x.fn.jquery);
-	$(function() {
-		//alert("xxxx");
-		$('#employeeId').on('change', function(){
-			if($(this).val()){
-			  console.log("You selected: "+$(this).val());
-		      alert('Value is ' + $(this).val());
-		  }
-		});
-		
-		$('#leaveType').combobox();
-		$('#employeeId').combobox();
-		//alert("yyyy");
-	}); */
-	
-/* 	$(function() {
-	$('.combobox').on('click', function(){
-	  var option = $(this).find('option:selected');
-		if(option.length){
-	    alert('Value is ' + option.val());
-	  }
-	})
-	}); */
-</script> 
-<!-- 
-<script src="https://rawgit.com/danielfarrell/bootstrap-combobox/master/js/bootstrap-combobox.js"></script>
-
 <script src="${url}/public/js/jquery.min.js"></script>
-<script src="${url}/public/js/bootstrap.min.js"></script>
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 
-<link href="${url}/public/js/bootstrap.min.css" rel="stylesheet" /> 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
-<script>
-    var $i = jQuery.noConflict();
-    alert($i.fn.jquery);
+<script type="text/javascript">	
+	var $j = jQuery.noConflict();   
+	$j(function() {		
+		$j('#leaveType').combobox();		
+		$j('#employeeId').combobox();
+		
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+
+	}); 	
+ 
 </script> 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>
-    var $j = jQuery.noConflict();
-    alert($j.fn.jquery);
-</script> 
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script>
-    var $k = jQuery.noConflict();
-    alert($k.fn.jquery);
-</script> 
--->
 
 <a href="${pageContext.request.contextPath}/timekeeping/leaveInfo"><button class="btn btn-lg btn-primary btn-sm">Quay lại danh sách chấm công phát sinh</button></a>
 <br/><br/>
@@ -101,18 +69,18 @@
 		<table class="table table-bordered">
 			<tbody>
 				<tr>
-					<td colspan="2" nowrap="nowrap" bgcolor="#F6CED8">Thêm thông tin ngày nghỉ phép, nghỉ ốm, công tác, làm thêm, đi học ....</td>
+					<td colspan="2" nowrap="nowrap" bgcolor="#E6E6E6">Thêm thông tin ngày nghỉ phép, nghỉ ốm, công tác, làm thêm, đi học ....</td>
 				</tr>
 				<tr>
-					<td bgcolor="#FBEFF2">Chọn nhân viên(*):</td>
+					<td bgcolor="#FAFAFA">Chọn nhân viên(*):</td>
 					<td>						
-					<form:select path="employeeId"  class="form-control animated">
-							<!-- option>Nhập hoặc chọn nhân viên</option> -->
+						<form:select path="employeeId" class="form-control animated">
 							<form:options items="${employeeMap}" />
-						</form:select></td>						
+						</form:select>
+					</td>					
 				</tr>
 				<tr>
-					<td bgcolor="#FBEFF2">Chọn loại(*):</td>
+					<td bgcolor="#FAFAFA">Chọn loại(*):</td>
 					<td>
 						<form:select path="leaveType" class="form-control animated">
 							<form:options items="${leaveTypeMap}" />								
@@ -120,28 +88,36 @@
 					</td>
 				</tr>
 				<tr>
-					<td bgcolor="#FBEFF2">Chọn ngày/Từ ngày(*):						
+					<td bgcolor="#FAFAFA">Chọn ngày/Từ ngày(*):						
 					</td>
-					<td><%-- <div class="form-group">
-							<div class="input-group date datetime smallform">
-								<form:input path="date" class="form-control" readonly="true" />
-								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-						</div> --%>
-						<form:input path="date" type="date" required="required" class="form-control animated"/>
-					</td>
+					<td>
+						<div class="input-group date datetime smallform">
+							<form:input path="fDate" class="form-control"
+							 placeholder="dd/mm/yyyy" autocomplete="off" required="required"/>
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>						
+						<%-- <form:input path="date" type="date" required="required" class="form-control animated"/>--%>
+					</td> 
 				</tr>	
 				<tr>
-					<td bgcolor="#FBEFF2">Đến ngày(chỉ chọn khi nghỉ/công tác/học tập nhiều ngày):</td>
-					<td><form:input path="toDate" type="date" class="form-control animated"/></td>
+					<td bgcolor="#FAFAFA">Đến ngày(chỉ chọn khi nghỉ/công tác/học tập nhiều ngày):</td>
+					<td>
+						<div class="input-group date datetime smallform">
+							<form:input path="toDate" class="form-control"
+							 placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>	
+					<%-- <form:input path="toDate" type="date" class="form-control animated"/> --%>
+					</td>
 				</tr>			
 				<tr>	
-					<td bgcolor="#FBEFF2">Điền số giờ với những t/h tính thời gian như cv bên ngoài/ làm ngoài giờ (*):</td>					
+					<td bgcolor="#FAFAFA">Điền số giờ với những t/h tính thời gian như cv bên ngoài/ làm ngoài giờ (*):</td>					
 					<td><form:input path="timeValue" step="0.5" type="number" min="0" max="24" class="form-control animated"  required="required"/> (Mặc định để 0.0 => cả ngày = 8h, nửa ngày = 4h)</td>
 				</tr>
 				<tr>
-					<td bgcolor="#FBEFF2">Ghi chú:</td>
+					<td bgcolor="#FAFAFA">Ghi chú:</td>
 					<td colspan="3"><form:textarea path="comment" cols="64" class="form-control animated"/></td>
 				<tr>
 <%-- 					<tr>	

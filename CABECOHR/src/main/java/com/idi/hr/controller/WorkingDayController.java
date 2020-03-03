@@ -90,10 +90,10 @@ public class WorkingDayController {
 	@RequestMapping("/timekeeping/editWorkingDay")
 	public String editWorkingDay(Model model, @RequestParam("month") String month,
 			@RequestParam("forCompany") String forCompany) {
-		 //add username 
-		 CommonFunctions comFun  = new CommonFunctions();
-		 model.addAttribute("username", comFun.returnUserName());
-		 
+		// add username
+		CommonFunctions comFun = new CommonFunctions();
+		model.addAttribute("username", comFun.returnUserName());
+		model.addAttribute("formTitle", "Sửa số ngày công chuẩn");
 		
 		WorkingDay workingDay = null;
 		if (month != null && forCompany != null) {

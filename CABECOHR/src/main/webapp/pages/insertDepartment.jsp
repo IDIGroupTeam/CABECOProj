@@ -24,11 +24,11 @@
 			<table class="table">
 				<tbody>
 					<tr>
-						<td bgcolor="#FAFAFA">Mã phòng:</td>
+						<td bgcolor="#FAFAFA">Mã phòng(*):</td>
 						<td><form:input path="departmentId" size="12" required="required" class="form-control animated"/>	</td>						
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">Tên phòng:</td>
+						<td bgcolor="#FAFAFA">Tên phòng(*):</td>
 						<td><form:input path="departmentName" size="24" required="required" class="form-control animated"/></td>
 					</tr>	
 					<tr>
@@ -38,8 +38,7 @@
 				</tbody>
 			</table>
 		</div>
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /><br /><br />
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" />
 	</form:form>	
-	<a href="${pageContext.request.contextPath}/department/"><button class="btn btn-primary btn-sm">Quay lại danh sách phòng ban</button></a>
 </body>
 </html>

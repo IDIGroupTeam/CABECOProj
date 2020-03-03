@@ -211,7 +211,7 @@ tr:nth-child(even) {
 					
 					<%-- <td><a href="listWorkHistorysByEmployee?employeeId=${workHistory.employeeId}">Xem</a></td> --%>
 					<td><a href="editWorkHistory?employeeId=${workHistory.employeeId}&fromDate=${workHistory.fromDate}">Sửa</a></td>
-					<td><a href="deleteWorkHistory?employeeId=${workHistory.employeeId}&fromDate=${workHistory.fromDate}" Onclick="return ConfirmDelete()">Xóa</a></td>
+					<td><a style="color: red;" href="deleteWorkHistory?employeeId=${workHistory.employeeId}&fromDate=${workHistory.fromDate}" Onclick="return ConfirmDelete()">Xóa</a></td>
 				</tr>
 			</c:forEach>
 		</table>

@@ -1278,16 +1278,27 @@ public class SalaryController {
 	}
 
 	@RequestMapping("/salary/editProductSold")
-	public String editProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department, @RequestParam("productCode") String productCode) {
+	public String editProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department,
+			@RequestParam("productCode") String productCode, @RequestParam("price") String price, @RequestParam("scale") String scale) {
 		ProductSold productSold = null;
 		if (productCode != null && productCode.length() > 0 && month != null && month.length() > 0) {
-			productSold = productSoldDAO.getProductSold(department, month, productCode);
+			productSold = productSoldDAO.getProductSold(department, month, productCode, price, scale);
 		}
 		if (productSold == null) {
 			return "redirect:/salary/listProductSold/";
 		}
 
 		return this.productSoldForm(model, productSold);
+	}
+	
+	@RequestMapping("/salary/deleteProductSold")
+	public String deleteProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department,
+			@RequestParam("productCode") String productCode, @RequestParam("price") String price, @RequestParam("scale") String scale) throws Exception{
+		
+		LeaveReport leaveReport = new LeaveReport();
+		productSoldDAO.deleteProductSold(department, month, productCode, price, scale);			
+		
+		return listProductSold(model, leaveReport, month, department, "Xóa thông tin sản phẩm thành công" );
 	}
 	
 	private Map<String, String> products() {
