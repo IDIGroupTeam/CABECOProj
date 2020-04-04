@@ -25,7 +25,7 @@
 </script>
 </head>
 <body>
-	<a href="${url}/salary/listSalarysGroup?group=${productSoldForm.group}&month=${m}&year=${y}"><button class="btn btn-primary btn-sm">Danh sách lương nhân viên</button></a>
+	<a href="${url}/salary/listSalarysByGroup?group=${productSoldForm.group}&month=${m}&year=${y}"><button class="btn btn-primary btn-sm">Danh sách lương nhân viên</button></a>
 	<a href="${url}/salary/listProductSold?month=${productSoldForm.month}&group=${productSoldForm.group}"><button class="btn btn-primary btn-sm">Danh sách sản phẩm đã bán trong tháng</button></a>
 	<br/><br/>
 	<form:form modelAttribute="productSoldForm" method="POST"
