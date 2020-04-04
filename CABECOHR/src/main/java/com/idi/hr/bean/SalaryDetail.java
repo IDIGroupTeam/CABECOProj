@@ -23,6 +23,7 @@ public class SalaryDetail implements Serializable {
 	private String subLunch;
 	private String subPhone;
 	private String subGas;
+	private String subSkill;
 	private String overWork;
 	private String advancePayed;
 	private String taxPersonal;
@@ -36,6 +37,7 @@ public class SalaryDetail implements Serializable {
 	private String bankName;
 	private String bankBranch;
 	private String salary;
+	private String group;
 	private String department;
 	private String jobTitle;
 	private String salaryInsurance;
@@ -57,10 +59,10 @@ public class SalaryDetail implements Serializable {
 
 	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
 			String overTimeSalary, String bounus, String maintainDay, String subsidize, String subLunch, String subPhone, String subGas, 
-			String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
+			String subSkill, String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
-			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
-			int workComplete, String workedDay, String other, String arrears, String payStatus, String rSalary) {
+			String salary, String group, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, 
+			String percentEmployeePay, int workComplete, String workedDay, String other, String arrears, String payStatus, String rSalary) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
@@ -75,6 +77,7 @@ public class SalaryDetail implements Serializable {
 		this.subLunch = subLunch;
 		this.subPhone = subPhone;
 		this.subGas = subGas;
+		this.subSkill = subSkill;
 		this.overWork = overWork;
 		this.advancePayed = advancePayed;
 		this.taxPersonal = taxPersonal;
@@ -91,6 +94,7 @@ public class SalaryDetail implements Serializable {
 		this.bankName = bankName;
 		this.bankBranch = bankBranch;
 		this.salary = salary;
+		this.group = group;
 		this.department = department;
 		this.jobTitle = jobTitle;
 		this.salaryInsurance = salaryInsurance;
@@ -284,6 +288,14 @@ public class SalaryDetail implements Serializable {
 		this.salary = salary;
 	}
 
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
 	public String getDepartment() {
 		return department;
 	}
@@ -394,6 +406,14 @@ public class SalaryDetail implements Serializable {
 
 	public void setSubGas(String subGas) {
 		this.subGas = subGas;
+	}
+
+	public String getSubSkill() {
+		return subSkill;
+	}
+
+	public void setSubSkill(String subSkill) {
+		this.subSkill = subSkill;
 	}
 
 	public String getOverWork() {

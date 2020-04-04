@@ -21,24 +21,24 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
 </script>
-<title>Tùy chọn bộ phận/tháng tính lương</title>
+<title>Tùy chọn nhóm lao động/tháng tính lương</title>
 </head>
 <body>
 <%-- 	<a href="${url}/salary/"><button
 			class="btn btn-lg btn-primary btn-sm">Thông tin	lương nhân viên</button></a> --%>
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
 		<button	class="btn btn-primary btn-sm">Quay lại thống kê lương nhân viên </button></a>		
-	<form:form action="listSalarysByDepartment"
+	<form:form action="listSalarysByGroup"
 		modelAttribute="salaryReportForm" method="POST">		
 		<br />
 		<table class="table table-bordered">			
 			<tr>
-				<td bgcolor="#FAFAFA">Chọn bộ phận cần tính lương:</td>
+				<td bgcolor="#FAFAFA">Chọn nhóm lao động cần tính lương:</td>
 				<%-- <form:hidden path="department"/> --%>
-				<td><form:select path="department"
+				<td><form:select path="group"
 						class="form-control animated">
 						<%-- <form:option value="0" label="Cả năm" /> --%>
-						<form:options items="${departmentMap}" var="department" />
+						<form:options items="${workGroupMap}" var="group" />
 					</form:select></td>				
 			</tr>	
 			<tr>

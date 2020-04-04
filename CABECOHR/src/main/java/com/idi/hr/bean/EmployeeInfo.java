@@ -39,7 +39,7 @@ public class EmployeeInfo implements Serializable {
 	private String taxCode;
 	private String academyLevel;
 	private String imagePath;
-	private String salarySocicalInsu;
+	private String workGroup;
 	private String socicalInsuNo;
 	private String healthInsuNo;
 	private String percentSocicalInsu;
@@ -54,7 +54,7 @@ public class EmployeeInfo implements Serializable {
 			String joinDate, String officalJoinDate, String email, String terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
 			String nation, String workStatus, String statusName, String eUnion, String taxCode, String expiryDate, String academyLevel,
-			String imagePath, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
+			String imagePath, String workGroup, String socicalInsuNo, String healthInsuNo,
 			String percentSocicalInsu) {
 
 		this.employeeId = employeeId;
@@ -88,7 +88,7 @@ public class EmployeeInfo implements Serializable {
 		this.expiryDate = expiryDate;
 		this.academyLevel = academyLevel;
 		this.imagePath = imagePath;
-		this.salarySocicalInsu = salarySocicalInsu;
+		this.workGroup = workGroup;
 		this.socicalInsuNo = socicalInsuNo;
 		this.healthInsuNo = healthInsuNo;
 		this.percentSocicalInsu = percentSocicalInsu;
@@ -346,12 +346,12 @@ public class EmployeeInfo implements Serializable {
 		this.academyLevel = academyLevel;
 	}
 
-	public String getSalarySocicalInsu() {
-		return salarySocicalInsu;
+	public String getWorkGroup() {
+		return workGroup;
 	}
 
-	public void setSalarySocicalInsu(String salarySocicalInsu) {
-		this.salarySocicalInsu = salarySocicalInsu;
+	public void setWorkGroup(String workGroup) {
+		this.workGroup = workGroup;
 	}
 
 	public String getSocicalInsuNo() {

@@ -25,17 +25,19 @@
 		moneyConvert("advancePayed");
 		moneyConvert("subsidize");
 		moneyConvert("taxPersonal");
+		//moneyConvert("basicSalary");
 		moneyConvert("other");
 		moneyConvert("arrears");
 		moneyConvert("subLunch");
 		moneyConvert("subPhone");
 		moneyConvert("subGas");
 		moneyConvert("overWork");
+		moneyConvert("subSkill");		
 	});
 </script>	
 </head>
 <body>
-	<a href="${url}/salary/listSalarysByDepartment?department=${salaryDetail.department}&month=${salaryDetail.month}&year=${salaryDetail.year}">
+	<a href="${url}/salary/listSalarysByGroup?group=${salaryDetail.group}&month=${salaryDetail.month}&year=${salaryDetail.year}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách lương tháng</button></a>
 	<br/><br/>
 	<form:form modelAttribute="salaryDetail" method="POST"
@@ -54,6 +56,7 @@
 					<form:hidden path="fullName"/>
 					<form:hidden path="month"/> 
 					<form:hidden path="phoneNo"/>
+					<form:hidden path="group"/>					
 					<form:hidden path="department"/>
 					<form:hidden path="jobTitle"/>
 					<form:hidden path="year"/> 
@@ -94,7 +97,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Lương:(lương cb x hệ số)</td>
-						<td>${salaryDetail.basicSalary}</td>
+						<td><fmt:formatNumber value="${salaryDetail.basicSalary}" type="number"/></td>
 						
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Lương BHXH:</td>
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
@@ -111,14 +114,14 @@
 					</tr>
 					<tr>						
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Số ngày công:</td>
-						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.005" type="number" required="required" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
+						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.25" type="number" required="required" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
 						<td bgcolor="#FAFAFA">Ngày công bảo trì:</td>
 						<td><form:input path="maintainDay" class="form-control animated" min="0" max="31" step="0.005" type="number" /></td>						
-						<td colspan="3">Lương điều tiết: (điều tiết x ngày công) = ${salaryDetail.rSalary}</td>
+						<td colspan="3">Lương điều tiết: (điều tiết x ngày công): ${salaryDetail.rSalary}</td>
 						
 					</tr>				 
 					<tr>
-						<td colspan="3" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/thưởng/tăng ca/lễ/tết</td>
+						<td colspan="3" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/tăng ca/lễ/tết</td>
 						<td colspan="3" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản giảm trừ vào lương</td>
 					</tr>
 					<tr>
@@ -136,14 +139,14 @@
 						<td colspan="2"><form:input path="taxPersonal" class="form-control animated"  maxlength="12" /></td>						
 					</tr>				
 					<tr>
-						<td bgcolor="#FAFAFA">Trợ cấp tiền ăn trưa:</td>
+						<td bgcolor="#FAFAFA">Phụ cấp tiền ăn trưa:</td>
 						<td colspan="2"><form:input path="subLunch" class="form-control animated"  maxlength="12" /></td>
 																
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Truy thu</td>
 						<td colspan="2"><form:input path="arrears" class="form-control animated" maxlength="12" /></td>						
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">Trợ cấp tiền điện thoại:</td>
+						<td bgcolor="#FAFAFA">Phụ cấp tiền điện thoại:</td>
 						<td colspan="2"><form:input path="subPhone" class="form-control animated"  maxlength="12" /></td>
 																
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="10.5% trong đó gồm: 8% cho hưu trí, 1% cho thất nghiệp và 1.5% y tế">Đóng BHXH(10.5%):</td>						
@@ -156,12 +159,19 @@
 						<td></td>	
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">Trợ cấp tiền xăng xe:</td>
+						<td bgcolor="#FAFAFA">Phụ cấp tiền xăng xe:</td>
 						<td colspan="2"><form:input path="subGas" class="form-control animated"  maxlength="12" /></td>
 						<td></td>
 						<td colspan="2"></td>			
 						
 					</tr>				
+					<tr>
+						<td bgcolor="#FAFAFA">Phụ cấp chức vụ/chuyên môn/tay nghề:</td>
+						<td colspan="2"><form:input path="subSkill" class="form-control animated"  maxlength="12" /></td>
+						<td></td>
+						<td colspan="2"></td>			
+						
+					</tr>	
 					<tr>
 						<td bgcolor="#FAFAFA">Tiền ca 3:</td>
 						<td colspan="2"><form:input path="overWork" class="form-control animated"  maxlength="12" /></td>
@@ -236,14 +246,14 @@
 						<td nowrap="nowrap" bgcolor="#FAFAFA"><b>Lương thực nhận:</b></td>
 						<c:if test="${not empty salaryDetail.finalSalary}">
 							<td><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /> </b>vnđ</td>								
-							<td nowrap="nowrap"><b>Trạng thái thanh toán:</b></td>
+							<%-- <td nowrap="nowrap"><b>Trạng thái thanh toán:</b></td>
 							<td>
 								<form:select path="payStatus" class="form-control animated">
 									<form:option value="" label="-Chọn trạng thái-"/>
 									<form:option value="Đã trả lương" label="Đã trả lương"></form:option>
 									<form:option value="Chưa trả lương" label="Chưa trả lương"></form:option> 
 								</form:select>
-							</td>
+							</td> --%>
 						</c:if>
 					</tr>
 					<tr>
@@ -256,7 +266,7 @@
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" /><br/>
 	</form:form>
 	<br/>
-	<a href="${url}/salary/listSalarysByDepartment?department=${salaryDetail.department}&month=${salaryDetail.month}&year=${salaryDetail.year}">
+	<a href="${url}/salary/listSalarysByGroup?group=${salaryDetail.group}&month=${salaryDetail.month}&year=${salaryDetail.year}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách lương tháng</button></a>
 </body>
 </html>

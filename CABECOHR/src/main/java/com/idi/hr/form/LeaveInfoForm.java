@@ -12,7 +12,8 @@ public class LeaveInfoForm implements Serializable{
 	private String toDate;
 	private String dept;
 	private String eId;
-
+	private String group;
+	
 	//Paging
 	private int pageIndex;
 	private int totalRecords;
@@ -49,6 +50,14 @@ public class LeaveInfoForm implements Serializable{
 
 	public void seteId(String eId) {
 		this.eId = eId;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	public int getPageIndex() {

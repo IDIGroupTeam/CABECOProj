@@ -41,12 +41,12 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 	 * @return List of ProductSold
 	 * @throws Exception
 	 */
-	public List<ProductSold> getProductSoldByMonth(String department, String month) {
+	public List<ProductSold> getProductSoldByMonth(String group, String month) {
 
 		String sql = hr.getProperty("GET_PRODUCT_SOLD_BY_MONTH").toString();
 		log.info("GET_PRODUCT_SOLD_BY_MONTH query: " + sql);
 		ProductSoldMapper mapper = new ProductSoldMapper();
-		Object[] params = new Object[] { department, month };
+		Object[] params = new Object[] { group, month };
 
 		List<ProductSold> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
@@ -72,12 +72,12 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 	 * @param month, forCompany
 	 * @return workingDay object
 	 */
-	public ProductSold getProductSold(String department, String month, String productCode, String price, String scale) {
+	public ProductSold getProductSold(String group, String month, String productCode, String price, String scale) {
 		ProductSold productSold = new ProductSold();
 		try {
 			String sql = hr.get("GET_PRODUCT_SOLD").toString();
 			log.info("GET_PRODUCT_SOLD query: " + sql);
-			Object[] params = new Object[] { department, month, productCode, price, scale };
+			Object[] params = new Object[] { group, month, productCode, price, scale };
 			System.out.println(month + "|" + productCode ); 
 			ProductSoldMapper mapper = new ProductSoldMapper();
 	
@@ -107,7 +107,7 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 				productSold.setMoneyIncome(moneyIncome);
 			}
 			Object[] params = new Object[] { productSold.getCode(), productSold.getPrice(), productSold.getAmount(),
-					productSold.getMonth(),	productSold.getScale(), productSold.getMoneyIncome(), productSold.getDepartment(), productSold.getComment()};
+					productSold.getMonth(),	productSold.getScale(), productSold.getMoneyIncome(), productSold.getGroup(), productSold.getComment()};
 			rowInsert = jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 				productSold.setMoneyIncome(moneyIncome);
 			}
 			Object[] params = new Object[] {productSold.getPrice(), productSold.getAmount(), productSold.getScale(),
-					productSold.getMoneyIncome(), productSold.getDepartment(), productSold.getComment(), productSold.getCode(), productSold.getMonth()};
+					productSold.getMoneyIncome(), productSold.getGroup(), productSold.getComment(), productSold.getCode(), productSold.getMonth()};
 			rowUpdate = jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

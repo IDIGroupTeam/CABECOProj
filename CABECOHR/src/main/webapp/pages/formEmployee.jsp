@@ -83,7 +83,7 @@
 								class="form-control animated" /></td>
 					</tr>
 					<tr>
-						<td rowspan="7"><form:hidden path="imagePath" /> <c:if
+						<td rowspan="6"><form:hidden path="imagePath" /> <c:if
 								test="${ not empty employeeForm.imagePath}">
 								<img src="${employeeForm.imagePath}" height="170px"
 									width="145px" />
@@ -164,7 +164,7 @@
 							</div>
 						</td>						
 					</tr>
-					<tr>
+					<tr>						
 						<td bgcolor="#EEEEEE" nowrap="nowrap">Ngày hết hạn hợp đồng:</td>
 						<td>
 							<div class="input-group date datetime">
@@ -180,6 +180,11 @@
 						</td>						
 					</tr>
 					<tr>
+						<td><form:select path="workGroup" class="form-control animated">
+								<form:option value="" label="--- Lựa chọn nhóm lao động ---" />
+								<form:options items="${workGroupMap}" />								
+							</form:select>
+						</td>
 						<td bgcolor="#EEEEEE" nowrap="nowrap">Trình độ/bằng cấp:</td>
 						<td>
 							<form:input path="academyLevel" class="form-control" size="32" maxlength="32" />	
@@ -224,7 +229,7 @@
 								class="form-control animated" /></td>
 					</tr>
 					<tr>
-						<td colspan="6" nowrap="nowrap" bgcolor="#C4C4C4">Liên lạc	khẩn cấp:</td>
+						<td colspan="6" nowrap="nowrap" bgcolor="#C4C4C4">Liên lạc khẩn cấp:</td>
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Tên người liên lạc:</td>

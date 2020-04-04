@@ -183,7 +183,7 @@ tr:nth-child(even) {
 	<div class="table-responsive">		
 		<table class="table table-striped">
 			<tr>
-				<th>Bộ phận</th>
+				<th>Nhóm lao động</th>
 				<th>Tháng</th>				
 				<th>Năm</th>
 			    <th>Điều tiết/công</th>
@@ -192,11 +192,11 @@ tr:nth-child(even) {
 			</tr>
 			<c:forEach var="salary" items="${salarys}">
 				<tr>
-					<td>${salary.department}</td>
+					<td>${salary.groupName}</td>
 					<td>${salary.month}</td>										
 					<td>${salary.year}</td>
 					<td><fmt:formatNumber value="${salary.value}" type="number"/></td> 
-					<td><a href="updateSalaryReForm?department=${salary.department}&month=${salary.month}&year=${salary.year}">Sửa</a></td>						
+					<td><a href="updateSalaryReForm?group=${salary.group}&month=${salary.month}&year=${salary.year}">Sửa</a></td>						
 					<td>${salary.des}</td>			
 					
 				</tr>

@@ -31,12 +31,12 @@ tr:nth-child(even) {
 </head>
 <body>
 	<div class="table-responsive">
-		<a href="${url}/salary/listSalarysByDepartment?department=${department}&month=${monthR}&year=${yearR}"><button
+		<a href="${url}/salary/listSalarysByGroup?group=${group}&month=${monthR}&year=${yearR}"><button
 			class="btn btn-lg btn-primary btn-sm">Thông tin
 			lương nhân viên</button></a>
 		<a href="${url}/salary/prepareProductSold"><button
-			class="btn btn-lg btn-primary btn-sm">Chọn tháng/bộ phận khác</button></a>		
-		<a href="${url}/salary/insertProductSold?month=${month}&department=${department}"><button
+			class="btn btn-lg btn-primary btn-sm">Chọn tháng/nhóm lao động khác</button></a>		
+		<a href="${url}/salary/insertProductSold?month=${month}&group=${group}"><button
 				class="btn btn-primary btn-sm">Thêm sản phẩm đã bán tháng này</button></a> <br />
 		<br />
 		<table class="table table-bordered">
@@ -59,7 +59,7 @@ tr:nth-child(even) {
 					<td>${productSold.scale} %</td>
 					<td><fmt:formatNumber value="${productSold.moneyIncome}" type="number"/></td>
 					<td><a style="color: red;"
-						href="deleteProductSold?month=${productSold.month}&department=${department}&productCode=${productSold.code}&price=${productSold.price}&scale=${productSold.scale}" Onclick="return ConfirmDelete()">Xóa</a>
+						href="deleteProductSold?month=${productSold.month}&group=${group}&productCode=${productSold.code}&price=${productSold.price}&scale=${productSold.scale}" Onclick="return ConfirmDelete()">Xóa</a>
 					</td>
 					<td>${productSold.comment}</td>
 				</tr>

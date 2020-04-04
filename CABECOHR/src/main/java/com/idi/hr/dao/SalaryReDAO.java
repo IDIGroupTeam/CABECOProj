@@ -54,17 +54,18 @@ public class SalaryReDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public SalaryRe getSalaryRe(String department, int month, int year) {
+	public SalaryRe getSalaryRe(String group, int month, int year) {
 		SalaryRe salaryRe = new SalaryRe();
 		try {
 			String sql = hr.get("GET_SALARY_RE").toString();
 			log.info("GET_SALARY_RE query: " + sql);
-			Object[] params = new Object[] { month, year, department };
+			Object[] params = new Object[] { month, year, group };
 			System.out.println(month + "|" + year ); 
 			SalaryReMapper mapper = new SalaryReMapper();	
 			salaryRe = jdbcTmpl.queryForObject(sql, params, mapper);
 		}catch(Exception e) {
-			e.printStackTrace();
+			return salaryRe;
+			//e.printStackTrace();
 		}
 		return salaryRe;
 	}
@@ -81,7 +82,7 @@ public class SalaryReDAO extends JdbcDaoSupport {
 			log.info("Insert new productSold ....");
 			String sql = hr.getProperty("INSERT_SALARY_RE").toString();
 			log.info("INSERT_SALARY_RE query: " + sql);
-			Object[] params = new Object[] {salaryRe.getMonth(), salaryRe.getYear(), salaryRe.getDepartment(), salaryRe.getValue(), salaryRe.getDes()};
+			Object[] params = new Object[] {salaryRe.getMonth(), salaryRe.getYear(), salaryRe.getGroup(), salaryRe.getValue(), salaryRe.getDes()};
 			rowInsert = jdbcTmpl.update(sql, params);
 		} catch (Exception e) {
 			log.error(e, e);
@@ -102,7 +103,7 @@ public class SalaryReDAO extends JdbcDaoSupport {
 			log.info("Update salaryRe ...");
 			String sql = hr.getProperty("UPDATE_SALARY_RE").toString();
 			log.info("UPDATE_SALARY_RE query: " + sql);
-			Object[] params = new Object[] {salaryRe.getValue(), salaryRe.getDes(), salaryRe.getMonth(), salaryRe.getYear(), salaryRe.getDepartment()};
+			Object[] params = new Object[] {salaryRe.getValue(), salaryRe.getDes(), salaryRe.getMonth(), salaryRe.getYear(), salaryRe.getGroup()};
 			rowUpdate = jdbcTmpl.update(sql, params);
 		} catch (Exception e) {
 			log.error(e, e);

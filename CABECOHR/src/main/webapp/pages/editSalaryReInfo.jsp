@@ -36,7 +36,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Tháng:(*)</td>
-						<td><form:select path="month" class="form-control animated">
+						<td><form:select path="month" class="form-control animated" disabled="true">
 								<form:option value="1" label="Tháng 1" />
 								<form:option value="2" label="Tháng 2" />
 								<form:option value="3" label="Tháng 3" />
@@ -52,7 +52,7 @@
 							</form:select>
 						</td>					
 						<td bgcolor="#FAFAFA">Năm:(*)</td>
-						<td><form:select path="year" class="form-control animated">
+						<td><form:select path="year" class="form-control animated" disabled="true">
 								<form:option value="${salaryForm.year + 1}" label="${salaryForm.year + 1}" />
 								<form:option value="${salaryForm.year}" label="${salaryForm.year}" />
 								<form:option value="${salaryForm.year -1 }" label="${salaryForm.year - 1 }" />
@@ -60,10 +60,10 @@
 						</td>		
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">bộ phận:(*)</td>
+						<td bgcolor="#FAFAFA">Nhóm lao động:(*)</td>
 						<td>
-							<form:select path="department"	class="form-control animated">
-								<form:options items="${departmentMap}" var="department" />
+							<form:select path="group" class="form-control animated" disabled="true">
+								<form:options items="${workGroupMap}" var="group" />
 							</form:select>
 						</td>								
 						<td bgcolor="#FAFAFA">Điều tiết/công:(*)</td>

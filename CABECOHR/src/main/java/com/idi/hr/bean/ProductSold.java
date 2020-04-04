@@ -16,7 +16,7 @@ public class ProductSold implements Serializable {
 	private String month;
 	private String scale;
 	private String moneyIncome;
-	private String department;
+	private String group;
 	private String comment;
 
 	public ProductSold() {
@@ -24,7 +24,7 @@ public class ProductSold implements Serializable {
 	}
 
 	public ProductSold(String code, String name, String price, String amount, String month, String scale,
-			String moneyIncome, String department, String comment) {
+			String moneyIncome, String group, String comment) {
 		this.code = code;
 		this.name = name;
 		this.price = price;
@@ -32,7 +32,7 @@ public class ProductSold implements Serializable {
 		this.month = month;
 		this.scale = scale;
 		this.moneyIncome = moneyIncome;
-		this.department = department;
+		this.group = group;
 		this.comment = comment;
 
 	}
@@ -101,12 +101,12 @@ public class ProductSold implements Serializable {
 		this.comment = comment;
 	}
 
-	public String getDepartment() {
-		return department;
+	public String getGroup() {
+		return group;
 	}
 
-	public void setDepartment(String department) {
-		this.department = department;
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 }

@@ -46,6 +46,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.JobTitle;
+import com.idi.hr.bean.WorkGroup;
 import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
@@ -398,6 +399,10 @@ public class EmployeeController {
 		// get works status
 		Map<String, String> workStatusMap = employeeDAO.getWorkStatusMap();
 		model.addAttribute("workStatusMap", workStatusMap);
+		//get work group
+		Map<String, String> workGroupMap = this.dataForWorkGroup();
+		model.addAttribute("workGroupMap", workGroupMap);
+		
 
 		if (employeeInfo.getEmployeeId() > 0) {
 			model.addAttribute("formTitle", "Sửa thông tin nhân viên");
@@ -445,6 +450,23 @@ public class EmployeeController {
 			e.printStackTrace();
 		}
 		return departmentMap;
+	}
+	
+	private Map<String, String> dataForWorkGroup() throws Exception {
+		Map<String, String> workGroupMap = new LinkedHashMap<String, String>();
+		try {
+			List<WorkGroup> list = employeeDAO.getWorkGroups();
+			WorkGroup workGroup = new WorkGroup();
+			for (int i = 0; i < list.size(); i++) {
+				workGroup = (WorkGroup) list.get(i);
+				workGroupMap.put(workGroup.getGroupId(), workGroup.getGroupName());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return workGroupMap;
 	}
 
 	@RequestMapping("/editEmployee")

@@ -17,6 +17,7 @@ public class Salary implements Serializable {
 	private String bankBranch;
 	private String fullName; 
 	private String department;
+	private String group;
 	private String jobTitle;
 	private String desc;
 	private int month;
@@ -27,7 +28,7 @@ public class Salary implements Serializable {
 	}
 
 	public Salary(int employeeId, String fullName, String salary, String constSalary, String bankNo, 
-			String bankName, String bankBranch, String department, String jobTitle, String description) {
+			String bankName, String bankBranch, String group, String department, String jobTitle, String description) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
 		this.salary = salary;
@@ -35,6 +36,7 @@ public class Salary implements Serializable {
 		this.bankNo = bankNo;
 		this.bankName = bankName;
 		this.bankBranch = bankBranch;
+		this.group = group;
 		this.department = department;
 		this.jobTitle = jobTitle;
 		this.desc = description;		
@@ -62,6 +64,14 @@ public class Salary implements Serializable {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	public String getDepartment() {

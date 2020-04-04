@@ -20,7 +20,7 @@
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-
+/* 
 	$(function() {
 		$("#department")
 				.change(
@@ -52,7 +52,7 @@
 									});
 
 						});
-	});
+	}); */
 </script>
 <title>Báo cáo, thống kê lương nhân viên</title>
 </head>
@@ -104,6 +104,15 @@
 					</form:select></td>
 			</tr>
 			<tr>
+				<td bgcolor="#FAFAFA">Chọn nhóm lao động:</td>
+				<%-- <form:hidden path="department"/> --%>
+				<td><form:select path="group"
+						class="form-control animated">
+						<form:option value="all" label="Toàn công ty" />
+						<form:options items="${groupMap}" var="group" />
+					</form:select></td>
+			</tr>
+			<tr>
 				<td bgcolor="#FAFAFA">Chọn bộ phận:</td>
 				<%-- <form:hidden path="department"/> --%>
 				<td><form:select path="department"
@@ -112,14 +121,14 @@
 						<form:options items="${departmentMap}" var="department" />
 					</form:select></td>
 			</tr>
-			<tr>
+			<%-- <tr>
 				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn nhân viên:</td>
 				<td><form:select path="employeeId"
 						class="form-control animated">
 						<form:option value="0" label="Tất cả nhân viên hiện tại"></form:option>
 						<form:options items="${employeeMap}" var="employeeId" />
 					</form:select></td>
-			</tr>
+			</tr> --%>
 		</table>
 		<input class="btn btn-lg btn-primary btn-sm" type="submit"
 			value="Thống kê" name="Thống kê" />

@@ -23,6 +23,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String subLunch = rs.getString("SUB_LUNCH");
 		String subPhone = rs.getString("SUB_PHONE");
 		String subGas = rs.getString("SUB_GAS");
+		String subSkill = rs.getString("SUB_SKILL");
 		String overWork = rs.getString("OVER_WORK");
 		String advancePayed = rs.getString("ADVANCE_PAYED");
 		String taxPersonal = rs.getString("TAX_PERSONAL");
@@ -38,6 +39,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String bankName = rs.getString("BANK_NAME");
 		String bankBranch = rs.getString("BANK_BRANCH");
 		String salary = rs.getString("SALARY");
+		String group = rs.getString("WORK_GROUP");
 		String department = rs.getString("DEPARTMENT");
 		String jobTitle = rs.getString("JOB_TITLE");
 		String salaryInsurance = rs.getString("SALA_SOCI_INSU");
@@ -51,9 +53,9 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String rSalary = rs.getString("R_SALARY");
 		
 		return new SalaryDetail(employeeId, basicSalary, finalSalary, overTimeN, overTimeW, overTimeH, 
-				overTimeSalary, bounus, maintainDay, subsidize, subLunch, subPhone, subGas, overWork,
-				advancePayed, taxPersonal, month, year, totalIncome, totalReduce, desc,
-				payedInsurance, fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
+				overTimeSalary, bounus, maintainDay, subsidize, subLunch, subPhone, subGas, subSkill, 
+				overWork, advancePayed, taxPersonal, month, year, totalIncome, totalReduce, desc,
+				payedInsurance, fullName, phoneNo, bankNo, bankName, bankBranch, salary, group, department, 
 				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 
 				workedDay, other, arrears, payStatus, rSalary);
 	}	

@@ -22,6 +22,11 @@ public class SalaryReportPerEmployeeMapper  implements RowMapper<SalaryReportPer
 		String overTimeSalary = rs.getString("OVER_TIME_SALARY");
 		String bounus = rs.getString("BOUNUS");
 		String subsidize = rs.getString("SUBSIDIZE");
+		String subLunch = rs.getString("SUB_LUNCH");
+		String subPhone = rs.getString("SUB_PHONE");
+		String subGas = rs.getString("SUB_GAS");
+		String subSkill = rs.getString("SUB_SKILL");
+		String overWork = rs.getString("OVER_WORK");
 		String advancePayed = rs.getString("ADVANCE_PAYED");
 		String taxPersonal = rs.getString("TAX_PERSONAL");		
 		//int month = rs.getInt("MONTH");
@@ -30,6 +35,7 @@ public class SalaryReportPerEmployeeMapper  implements RowMapper<SalaryReportPer
 
 		return new SalaryReportPerEmployee(employeeId, fullName, department, jobTitle,
 				salary, finalSalary, overTimeN, overTimeW, overTimeH, overTimeSalary, 
-				bounus, subsidize, advancePayed, taxPersonal, payedInsurance);
+				bounus, subsidize, subLunch, subPhone, subGas, subSkill, overWork,
+				advancePayed, taxPersonal, payedInsurance);
 	}	
 }

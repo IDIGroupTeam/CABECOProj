@@ -18,9 +18,11 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.EmployeeInfo;
+import com.idi.hr.bean.WorkGroup;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.Utils;
 import com.idi.hr.mapper.EmployeeMapper;
+import com.idi.hr.mapper.WorkGroupMapper;
 
 public class EmployeeDAO extends JdbcDaoSupport {
 
@@ -143,7 +145,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 
 						employeeInfo.getEmerName(),	employeeInfo.getEmerPhoneNo(), employeeInfo.geteUnion(), employeeInfo.getTaxCode(),
-						employeeInfo.getExpiryDate(), employeeInfo.getAcademyLevel(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getExpiryDate(), employeeInfo.getAcademyLevel(), employeeInfo.getImagePath(), employeeInfo.getWorkGroup(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu(), employeeInfo.getEmployeeId()};
 				jdbcTmpl.update(sql, params);
@@ -161,7 +163,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getNation(),// employeeInfo.getImage(), 
 						employeeInfo.getEmerName(),
 						employeeInfo.getEmerPhoneNo(), employeeInfo.geteUnion(), employeeInfo.getTaxCode(),
-						employeeInfo.getExpiryDate(), employeeInfo.getAcademyLevel(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getExpiryDate(), employeeInfo.getAcademyLevel(), employeeInfo.getImagePath(), employeeInfo.getWorkGroup(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu() };
 				jdbcTmpl.update(sql, params);
@@ -212,6 +214,30 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		EmployeeMapper mapper = new EmployeeMapper();
 
 		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
+
+		return list;
+	}
+		
+	/**
+	 * Get work group from DB
+	 * 
+	 * @return List of work group
+	 * @throws Exception
+	 */
+	public List<WorkGroup> getWorkGroups() {
+
+		String sql = hr.getProperty("GET_ALL_WORK_GROUP").toString();
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_ALL_WORK_GROUP query: " + sqlUnicode);
+		WorkGroupMapper mapper = new WorkGroupMapper();
+
+		List<WorkGroup> list = jdbcTmpl.query(sqlUnicode, mapper);
 
 		return list;
 	}
@@ -269,9 +295,9 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @return List of employee
 	 * @throws Exception
 	 */
-	public List<EmployeeInfo> getEmployeesForInsertSalaryByDept(String dept) {
+	public List<EmployeeInfo> getEmployeesForInsertSalaryByGroup(String dept) {
 
-		String sql = hr.getProperty("GET_EMPLOYEES_NO_SALARY_INFO_BY_DEPT").toString();
+		String sql = hr.getProperty("GET_EMPLOYEES_NO_SALARY_INFO_BY_WORK_GROUP").toString();
 		String sqlUnicode = "";
 		try {
 			byte[] ptext = sql.getBytes(ISO_8859_1); 
@@ -279,7 +305,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		log.info("GET_EMPLOYEES_NO_SALARY_INFO query: " + sqlUnicode);
+		log.info("GET_EMPLOYEES_NO_SALARY_INFO_BY_WORK_GROUP query: " + sqlUnicode);
 		Object[] params = new Object[] {dept};
 		EmployeeMapper mapper = new EmployeeMapper();
 
@@ -358,6 +384,31 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * Get employees from DB
+	 * @param department
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesByGroup(String group) {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_BY_GROUP").toString();
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES_BY_GROUP query: " + sqlUnicode);
+		Object[] params = new Object[] {group};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
+
+		return list;
+	}
+	
+	/**
 	 * Get employees id from DB
 	 * @param department
 	 * @return List of employee
@@ -375,6 +426,31 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		}
 		log.info("GET_EMPLOYEES_ID_BY_DEPARTMENT query: " + sqlUnicode);
 		Object[] params = new Object[] {department};		
+
+		List<Integer> list = jdbcTmpl.queryForList(sqlUnicode, params, Integer.class);
+
+		return list;
+	}
+	
+	
+	/**
+	 * Get employees id from DB
+	 * @param department
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<Integer> getEmployeesIdByGroup(String group) {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_ID_BY_WORK_GROUP").toString();
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES_ID_BY_WORK_GROUP query: " + sqlUnicode);
+		Object[] params = new Object[] {group};		
 
 		List<Integer> list = jdbcTmpl.queryForList(sqlUnicode, params, Integer.class);
 

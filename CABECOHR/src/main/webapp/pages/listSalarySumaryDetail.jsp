@@ -182,21 +182,29 @@ tr:nth-child(even) {
 				<th>Họ tên</th>
 				<th>Phòng</th>
 				<th>Chức danh</th>				
-				<th>Lương cơ bản</th>		
+				<th>HSLương</th>		
 				<th>Lương thực nhận</th>		
 				<th>Thưởng</th>
-				<th>Trợ cấp/ trách nhiệm</th>
+				<th>Trợ cấp độc hại/trách nhiệm</th>
+				<th>Phụ cấp ăn trưa</th>
+				<th>Phụ cấp điện thoại</th>
+				<th>Phụ cấp xăng xe</th>
+				<th>Phụ cấp chức vụ/chuyên môn/tay nghề</th>
 				<th>Lương ngoài giờ</th>
 				<th>Tạm ứng</th>
 				<th><i>Thuế TNCN</i></th>
 				<th><i>Đóng BHXH</i></th>				
 			</tr>
 			<c:if test="${not empty salaryReport}">
-				<th colspan="5" align="center"> Tổng: </th>		
+				<th colspan="5" align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tổng cộng: </th>		
 				<th><fmt:formatNumber value="${salaryReport.finalSalary + salaryReport.advancePayed}" type="number"/></th>		
 				<th><fmt:formatNumber value="${salaryReport.bounus}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.subsidize}" type="number"/></th>
-				<th><fmt:formatNumber value="${salaryReport.overTimeSalary}" type="number"/></th>
+				<th><fmt:formatNumber value="${salaryReport.subLunch}" type="number"/></th>		
+				<th><fmt:formatNumber value="${salaryReport.subPhone}" type="number"/></th>			
+				<th><fmt:formatNumber value="${salaryReport.subGas}" type="number"/></th>	
+				<th><fmt:formatNumber value="${salaryReport.subSkill}" type="number"/></th>	
+				<th><fmt:formatNumber value="${salaryReport.overWork}" type="number"/> </th>
 				<th><fmt:formatNumber value="${salaryReport.advancePayed}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.taxPersonal}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.payedInsurance}" type="number"/></th>
@@ -211,7 +219,11 @@ tr:nth-child(even) {
 					<td><fmt:formatNumber value="${salary.finalSalary + salary.advancePayed}" type="number"/></td>
 					<td><fmt:formatNumber value="${salary.bounus}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.subsidize}" type="number"/> </td>
-					<td><fmt:formatNumber value="${salary.overTimeSalary}" type="number"/> </td>
+					<td><fmt:formatNumber value="${salary.subLunch}" type="number"/></td>
+					<td><fmt:formatNumber value="${salary.subPhone}" type="number"/></td>	
+					<td><fmt:formatNumber value="${salary.subGas}" type="number"/></td>	
+					<td><fmt:formatNumber value="${salary.subSkill}" type="number"/></td>	
+					<td><fmt:formatNumber value="${salary.overWork}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.advancePayed}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.taxPersonal}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.payedInsurance}" type="number"/> </td>

@@ -32,6 +32,7 @@ import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryRe;
 import com.idi.hr.bean.SalaryReport;
 import com.idi.hr.bean.SalaryReportPerEmployee;
+import com.idi.hr.bean.WorkGroup;
 import com.idi.hr.bean.WorkingDay;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.Utils;
@@ -96,29 +97,32 @@ public class SalaryController {
 			if (form.getPageIndex() < totalPages) {
 				if (form.getPageIndex() == 1) {
 					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
-						SalaryRe salary = new SalaryRe();
+						SalaryRe salary = new SalaryRe();						
 						salary = list.get(i);
+						salary.setGroupName(dataForWorkGroup().get(salary.getGroup()));
 						listSalaryForPage.add(salary);
 					}
 				} else if (form.getPageIndex() > 1) {
 					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
 							* form.getNumberRecordsOfPage(); i++) {
-						SalaryRe salary = new SalaryRe();
+						SalaryRe salary = new SalaryRe();						
 						salary = list.get(i);
+						salary.setGroupName(dataForWorkGroup().get(salary.getGroup()));
 						listSalaryForPage.add(salary);
 					}
 				}
 			} else if (form.getPageIndex() == totalPages) {
 				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
 						.getTotalRecords(); i++) {
-					SalaryRe salary = new SalaryRe();
+					SalaryRe salary = new SalaryRe();					
 					salary = list.get(i);
+					salary.setGroupName(dataForWorkGroup().get(salary.getGroup()));
 					listSalaryForPage.add(salary);
 				}
 			}
 			model.addAttribute("salaryForm", form);
 			model.addAttribute("salarys", listSalaryForPage);
-			model.addAttribute("formTitle", "Danh sách lương điều tiết theo công của các bộ phận");
+			model.addAttribute("formTitle", "Danh sách lương điều tiết theo công của các nhóm lao động");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -156,15 +160,15 @@ public class SalaryController {
 	}
 
 	@RequestMapping(value = "/salary/insertSalaryReForm")
-	public String insertSalaryReForm(Model model, SalaryRe salaryRe) {
+	public String insertSalaryReForm(Model model, SalaryRe salaryRe) throws Exception{
 		
 		Calendar now = Calendar.getInstance();
 		int month = now.get(Calendar.MONTH) + 1;
 		int year = now.get(Calendar.YEAR);				
 		salaryRe.setMonth(month);
 		salaryRe.setYear(year);		
-		Map<String, String> departmentMap = this.departments();
-		model.addAttribute("departmentMap", departmentMap);	
+		Map<String, String> workGroupMap = this.dataForWorkGroup();
+		model.addAttribute("workGroupMap", workGroupMap);	
 		model.addAttribute("salaryForm", salaryRe);
 		model.addAttribute("formTitle", "Thêm mới thông tin điều tiết");
 
@@ -172,13 +176,13 @@ public class SalaryController {
 	}
 	
 	@RequestMapping(value = "/salary/updateSalaryReForm")
-	public String updateSalaryReForm(Model model, @RequestParam(required = false, name="department") String department,
+	public String updateSalaryReForm(Model model, @RequestParam(required = false, name="group") String group,
 			@RequestParam(required = false, name="month", defaultValue = "0") int month, 
-			@RequestParam(required = false, name="year", defaultValue = "0") int year) {
-		Map<String, String> departmentMap = this.departments();
-		model.addAttribute("departmentMap", departmentMap);		
+			@RequestParam(required = false, name="year", defaultValue = "0") int year) throws Exception{
+		Map<String, String> workGroupMap = this.dataForWorkGroup();
+		model.addAttribute("workGroupMap", workGroupMap);		
 		SalaryRe salaryRe = new SalaryRe();
-		salaryRe = salaryReDAO.getSalaryRe(department, month, year);
+		salaryRe = salaryReDAO.getSalaryRe(group, month, year);
 		model.addAttribute("salaryForm", salaryRe);
 		model.addAttribute("formTitle", "Sửa thông tin điều tiết");
 
@@ -244,8 +248,8 @@ public class SalaryController {
 		return "listSalaryInfo";
 	}
 	
-	@RequestMapping(value = { "/salary/listSalarysByDepartment" })
-	public String listSalarysByDepartment(Model model, @ModelAttribute("salaryForm") SalaryForm form,
+	@RequestMapping(value = { "/salary/listSalarysByGroup" })
+	public String listSalarysByGroup(Model model, @ModelAttribute("salaryForm") SalaryForm form,
 			@RequestParam(required = false, name="month", defaultValue = "0") int month, @RequestParam(required = false, name="year", defaultValue = "0") int year) throws Exception {
 		try {
 			if(year > 0)
@@ -260,15 +264,16 @@ public class SalaryController {
 			if (form.getNumberRecordsOfPage() == 0) {
 				form.setNumberRecordsOfPage(25);
 			}
+			
 			if (form.getPageIndex() == 0) {
 				form.setPageIndex(1);
 			}
 			
 			List<Salary4List> list = null;
 			if (form.getMonthReport() < 10)
-				list = salaryDAO.getSalarysByDepartmentAndMonth(form.getDepartment(), "0" + String.valueOf(form.getMonthReport()), String.valueOf(form.getYearReport()));
+				list = salaryDAO.getSalarysByGoupAndMonth(form.getGroup(), "0" + String.valueOf(form.getMonthReport()), String.valueOf(form.getYearReport()));
 			else
-				list = salaryDAO.getSalarysByDepartmentAndMonth(form.getDepartment(), String.valueOf(form.getMonthReport()), String.valueOf(form.getYearReport()));			
+				list = salaryDAO.getSalarysByGoupAndMonth(form.getGroup(), String.valueOf(form.getMonthReport()), String.valueOf(form.getYearReport()));			
 			
 			form.setTotalRecords(list.size());
 
@@ -303,19 +308,19 @@ public class SalaryController {
 				}
 			}
 			if(list.size() > 0) {
-				if(employeeDAO.getEmployeesIdByDepartment(form.getDepartment()).size() != salaryDAO.countMembers(form.getMonthReport(), form.getYearReport(), form.getDepartment())) {
+				if(employeeDAO.getEmployeesIdByGroup(form.getGroup()).size() != salaryDAO.countMembers(form.getMonthReport(), form.getYearReport(), form.getGroup())) {
 					model.addAttribute("filled", null);
-					System.err.println("chua dien het ngay cong: " + list.size());
+					System.out.println("Chua dien het ngay cong: " + list.size());
 				}else {
 					model.addAttribute("filled", "YES");
-					System.err.println("da dien het ngay cong: " + list.size() + "|" + salaryDAO.countMembers(form.getMonthReport(), form.getYearReport(), form.getDepartment()));
+					System.out.println("Da dien het ngay cong: " + list.size() + "|" + salaryDAO.countMembers(form.getMonthReport(), form.getYearReport(), form.getGroup()));
 				}	
 			}else {
-				model.addAttribute("message", "Hiện tại bộ phận này không có nhân viên nào!");
+				model.addAttribute("message", "Hiện tại nhóm lao động này không có nhân viên nào!");
 			}
 			model.addAttribute("salaryForm", form);
 			model.addAttribute("salarys", listSalaryForPage);
-			model.addAttribute("formTitle", "Danh sách lương của nhân viên bộ phận " + departments().get(form.getDepartment()) + " tháng " + form.getMonthReport() + ", " + form.getYearReport());
+			model.addAttribute("formTitle", "Danh sách lương của nhân viên thuộc nhóm lao động " + dataForWorkGroup().get(form.getGroup()) + " tháng " + form.getMonthReport() + ", " + form.getYearReport());
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -354,10 +359,10 @@ public class SalaryController {
 	 * employeeMap; }
 	 */
 	
-	private Map<String, String> employeesNoInfoByDept(String dept) {
+	private Map<String, String> employeesNoInfoByGroup(String group) {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
-			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertSalaryByDept(dept);
+			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertSalaryByGroup(group);
 			EmployeeInfo employee = new EmployeeInfo();
 			for (int i = 0; i < list.size(); i++) {
 				employee = (EmployeeInfo) list.get(i);
@@ -377,7 +382,7 @@ public class SalaryController {
 			@RequestParam(required = false, name="year") int year,	final RedirectAttributes redirectAttributes) throws Exception{
 		SalaryForm form = new SalaryForm();
 		try {
-			form.setDepartment(salary.getDepartment());
+			form.setGroup(salary.getGroup());
 			salaryDAO.insertSalary(salary);
 			// Add message to flash scope
 			model.addAttribute("message", "Thêm thông tin lương nhân viên thành công!");
@@ -385,7 +390,7 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return listSalarysByDepartment(model, form, month, year);
+		return listSalarysByGroup(model, form, month, year);
 	}
 
 	@RequestMapping(value = "/salary/updateSalary", method = RequestMethod.POST)
@@ -393,7 +398,7 @@ public class SalaryController {
 			@RequestParam(required = false, name="year") int year, final RedirectAttributes redirectAttributes) throws Exception{
 		SalaryForm form = new SalaryForm();
 		try {
-			form.setDepartment(salary.getDepartment());			
+			form.setGroup(salary.getGroup());			
 			salaryDAO.updateSalary(salary);
 			// Add message to flash scope
 			model.addAttribute("message", "Cập nhật thông tin lương nhân viên thành công!");
@@ -401,46 +406,46 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return listSalarysByDepartment(model, form, month, year);
+		return listSalarysByGroup(model, form, month, year);
 	}
 
-	private String salaryForm(Model model, Salary salary) {
+	private String salaryForm(Model model, Salary salary) throws Exception{
 		model.addAttribute("salaryForm", salary);
 		// get list employee id
-		Map<String, String> employeeMap = this.employeesNoInfoByDept(salary.getDepartment());
+		Map<String, String> employeeMap = this.employeesNoInfoByGroup(salary.getGroup());
 		model.addAttribute("employeeMap", employeeMap);
 		if(employeeMap.size() == 0)
-			model.addAttribute("addedAll", " >>> Đã thêm mới thông tin lương cho toàn bộ nhân viên thuộc bộ phận này <<< ");
+			model.addAttribute("addedAll", " >>> Đã thêm mới thông tin lương cho toàn bộ nhân viên thuộc nhóm lao động này <<< ");
 
 		String actionform = "";
 		if (salary.getEmployeeId() > 0) {
-			model.addAttribute("formTitle", "Sửa thông tin lương nhân viên thuộc bộ phận " + departments().get(salary.getDepartment()));
+			model.addAttribute("formTitle", "Sửa thông tin lương nhân viên thuộc nhóm lao động " + dataForWorkGroup().get(salary.getGroup()));
 			actionform = "editSalaryInfo";
 		} else {
-			model.addAttribute("formTitle", "Thêm mới thông tin lương nhân viên thuộc bộ phận " + departments().get(salary.getDepartment()));
+			model.addAttribute("formTitle", "Thêm mới thông tin lương nhân viên thuộc nhóm lao động " + dataForWorkGroup().get(salary.getGroup()));
 			actionform = "insertSalaryInfo";
 		}
 		return actionform;
 	}
 
 	@RequestMapping("/salary/insertSalary")
-	public String addSalary(Model model, @RequestParam(required = false, name="department") String department,
-			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year) {
+	public String addSalary(Model model, @RequestParam(required = false, name="group") String group,
+			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year) throws Exception {
 		Salary salary = new Salary();
 		salary.setConstSalary("100");
-		salary.setDepartment(department);
+		salary.setGroup(group);
 		salary.setMonth(month);
 		salary.setYear(year);
 		return this.salaryForm(model, salary);
 	}
 
 	@RequestMapping("/salary/editSalary")
-	public String editSalary(Model model, @RequestParam("employeeId") int employeeId, @RequestParam(required = false, name="department") String department,
-			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year) {
+	public String editSalary(Model model, @RequestParam("employeeId") int employeeId, @RequestParam(required = false, name="group") String group,
+			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year) throws Exception{
 		Salary salary = null;
 		if (employeeId > 0) {
 			salary = salaryDAO.getSalary(employeeId);
-			salary.setDepartment(department);
+			salary.setGroup(group);
 			salary.setMonth(month);
 			salary.setYear(year);
 			//System.err.println("he so luong: " + salary.getConstSalary());
@@ -566,13 +571,13 @@ public class SalaryController {
 				salaryDetail.setSubGas("");
 				salaryDetail.setSubLunch("");
 				salaryDetail.setSubPhone("");
+				salaryDetail.setSubSkill("");
 				salaryDetail.setOverWork("");
 				salaryDetail.setArrears("");
 				salaryDetail.setTotalIncome("");
 				salaryDetail.setTotalReduce("");
 				salaryDetail.setWorkedDay(null);
-			}
-			
+			}			
 			
 			/*
 			 WorkingDay workingDay = null; if (month < 10) workingDay =
@@ -607,8 +612,7 @@ public class SalaryController {
 			} else {
 				model.addAttribute("workDayDefine",
 						"Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
-			}
-			
+			}			
 			
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			model.addAttribute("salaryPerHour", salaryPerHour);
@@ -639,7 +643,7 @@ public class SalaryController {
 					&& hr.getProperty("BASIC_SALARY") != null && hr.getProperty("BASIC_SALARY").length() > 0) {
 				float s = Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(hr.getProperty("BASIC_SALARY"));
 				salaryDetail.setBasicSalary(String.valueOf(s));
-				System.err.println("BasicSalary: " + s);
+				System.out.println("BasicSalary: " + s);
 			}
 			/*
 			WorkingDay workingDay = null;
@@ -732,9 +736,9 @@ public class SalaryController {
 			log.error(e, e);
 		}
 		SalaryForm form = new SalaryForm();
-		form.setDepartment(salaryDetail.getDepartment());
+		form.setGroup(salaryDetail.getGroup());
 		 
-		return listSalarysByDepartment(model, form, salaryDetail.getMonth(), salaryDetail.getYear()); //"updateSalaryDetail"; // editSalaryDetailForm(model, salaryDetail); 
+		return listSalarysByGroup(model, form, salaryDetail.getMonth(), salaryDetail.getYear()); //"updateSalaryDetail"; // editSalaryDetailForm(model, salaryDetail); 
 	}
 
 	@RequestMapping("/salary/editSalaryDetailForm")
@@ -793,7 +797,7 @@ public class SalaryController {
 	}
 
 	@RequestMapping(value = "/salary/calculatesSalary")
-	public String calculatesSalary(Model model,  @RequestParam(required = false, name="department") String department,
+	public String calculatesSalary(Model model,  @RequestParam(required = false, name="group") String group,
 			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year,
 			final RedirectAttributes redirectAttributes) throws Exception{
 		try {
@@ -801,9 +805,9 @@ public class SalaryController {
 			String totalMoneyIncome = "0";
 			float totalMoney = 0;
 			if(month < 10)
-				totalMoneyIncome = productSoldDAO.getMoneyIncome(String.valueOf(year + "-0" + month), department);
+				totalMoneyIncome = productSoldDAO.getMoneyIncome(String.valueOf(year + "-0" + month), group);
 			else
-				totalMoneyIncome = productSoldDAO.getMoneyIncome(String.valueOf(year + "-" + month), department); 
+				totalMoneyIncome = productSoldDAO.getMoneyIncome(String.valueOf(year + "-" + month), group); 
 			System.err.println("totalMoneyIncome 1: " + totalMoneyIncome);
 			try {
 				totalMoney = Float.valueOf(totalMoneyIncome);
@@ -812,13 +816,13 @@ public class SalaryController {
 			}
 			
 			//dieu tiet /cong
-			String r = salaryReDAO.getSalaryRe(department, month, year).getValue();
+			String r = salaryReDAO.getSalaryRe(group, month, year).getValue();
 			 
 			//System.err.println("totalMoneyIncome 2: " + totalMoney);
 			//luong dieu tiet (x ngay cong)
 						
-			//lay ds nv cua phong
-			List<Integer> eIds = employeeDAO.getEmployeesIdByDepartment(department);
+			//lay ds nv cua nhom lao dong
+			List<Integer> eIds = employeeDAO.getEmployeesIdByGroup(group);
 			if(eIds.size() > 0) {
 				float sumHSL = 0;
 				// tinh hs luong cho tung nv
@@ -841,7 +845,8 @@ public class SalaryController {
 					
 					// Tính lương thực nhận
 					float finalSalary = 0;
-					finalSalary = Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay())*hsc ;			
+					finalSalary = Float.valueOf(salaryDetail.getBasicSalary()) + Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay())*hsc ;			
+					
 					System.err.println("finalSalary luong sp: " + finalSalary);
 					float luongsp = finalSalary;
 					
@@ -907,6 +912,10 @@ public class SalaryController {
 						finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubGas().replaceAll(",", ""));
 						salaryDetail.setSubGas(salaryDetail.getSubGas().replaceAll(",", ""));
 					}
+					if (salaryDetail.getSubSkill() != null && salaryDetail.getSubSkill().length() > 0) {
+						finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubSkill().replaceAll(",", ""));
+						salaryDetail.setSubSkill(salaryDetail.getSubSkill().replaceAll(",", ""));
+					}
 					if (salaryDetail.getOverWork() != null && salaryDetail.getOverWork().length() > 0) {
 						finalSalary = finalSalary + Float.valueOf(salaryDetail.getOverWork().replaceAll(",", ""));
 						salaryDetail.setOverWork(salaryDetail.getOverWork().replaceAll(",", ""));
@@ -953,8 +962,8 @@ public class SalaryController {
 			log.error(e, e);
 		}
 		SalaryForm form = new SalaryForm();
-		form.setDepartment(department);
-		return  listSalarysByDepartment(model, form, month, year);
+		form.setGroup(group);
+		return  listSalarysByGroup(model, form, month, year);
 	}
 
 	@RequestMapping(value = "/salary/prepareSalary", method = RequestMethod.GET)
@@ -968,10 +977,10 @@ public class SalaryController {
 			
 			System.err.println(month + "|" + year);
 			model.addAttribute("salaryReportForm", salaryForm);
-			Map<String, String> departmentMap = this.departments();
-			model.addAttribute("departmentMap", departmentMap);			
+			Map<String, String> workGroupMap = this.dataForWorkGroup();
+			model.addAttribute("workGroupMap", workGroupMap);			
 
-			model.addAttribute("formTitle", "Tùy chọn bộ phận cần tính lương");
+			model.addAttribute("formTitle", "Tùy chọn nhóm lao động cần tính lương");
 			// System.out.println("PepareSummarySalary 1");
 		} catch (Exception e) {
 			log.error(e, e);
@@ -989,6 +998,11 @@ public class SalaryController {
 			// get list department
 			Map<String, String> departmentMap = this.departments();
 			model.addAttribute("departmentMap", departmentMap);	
+			
+			// nhom lao dong
+			
+			Map<String, String> groupMap = this.dataForWorkGroup();
+			model.addAttribute("groupMap", groupMap);	
 
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
@@ -1019,18 +1033,16 @@ public class SalaryController {
 							"Thông tin thông kê lương của " + name + " năm " + leaveReport.getYearReport());
 					SalaryReport salaryReport = new SalaryReport();
 					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(),
-							leaveReport.getYearReport(), null);
+							leaveReport.getYearReport(), null, leaveReport.getGroup());
 					model.addAttribute("salaryReport", salaryReport);
 					return "summarySalaryReport";
 				} else {
-					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport(), leaveReport.getDepartment());
+					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport(), leaveReport.getDepartment(), leaveReport.getGroup());
 					if(leaveReport.getDepartment() !=null && leaveReport.getDepartment().equalsIgnoreCase("all"))
 						model.addAttribute("formTitle",	"Thông tin thông kê lương nhân viên năm " + leaveReport.getYearReport());
 					else
 						model.addAttribute("formTitle",	"Thông tin thông kê lương nhân viên phòng " + departments().get(leaveReport.getDepartment()) + " năm " + leaveReport.getYearReport());
-					// System.err.println("fan trang");
-					// System.err.println("fan trang" + form.getYearReport());
-					// System.err.println("fan trang" + leaveReport.getYearReport());
+
 					if (form.getNumberRecordsOfPage() == 0) {
 						form.setNumberRecordsOfPage(25);
 					}
@@ -1076,7 +1088,7 @@ public class SalaryController {
 					//model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
 					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
 					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
-							leaveReport.getMonthReport(), leaveReport.getYearReport(), leaveReport.getDepartment());
+							leaveReport.getMonthReport(), leaveReport.getYearReport(), leaveReport.getDepartment(), leaveReport.getGroup());
 					model.addAttribute("salaryReport", salaryReport);
 					// model.addAttribute("yearReport", leaveReport.getYearReport());
 					return "listSalarySumaryDetail";
@@ -1089,13 +1101,13 @@ public class SalaryController {
 							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
 					SalaryReport salaryReport = new SalaryReport();
 					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(),
-							leaveReport.getYearReport(), null);
+							leaveReport.getYearReport(), null, leaveReport.getGroup());
 					model.addAttribute("salaryReport", salaryReport);
 
 					return "summarySalaryReport";
 				} else {
 					List<SalaryDetail> list = salaryDAO.getSalaryReportDetail(leaveReport.getMonthReport(),
-							leaveReport.getYearReport(), leaveReport.getDepartment());
+							leaveReport.getYearReport(), leaveReport.getDepartment(), leaveReport.getGroup());
 
 					if (form.getNumberRecordsOfPage() == 0) {
 						form.setNumberRecordsOfPage(25);
@@ -1137,7 +1149,7 @@ public class SalaryController {
 						}
 					}
 					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
-							leaveReport.getMonthReport(), leaveReport.getYearReport(), leaveReport.getDepartment());
+							leaveReport.getMonthReport(), leaveReport.getYearReport(), leaveReport.getDepartment(), leaveReport.getGroup());
 					model.addAttribute("salaryReport", salaryReport);
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
@@ -1169,8 +1181,8 @@ public class SalaryController {
 			int month = now.get(Calendar.MONTH) + 1;
 			salaryForm.setMonthReport(month);
 			model.addAttribute("salaryReportForm", salaryForm);
-			Map<String, String> departmentMap = this.departments();
-			model.addAttribute("departmentMap", departmentMap);		
+			Map<String, String> groupMap = dataForWorkGroup();
+			model.addAttribute("groupMap", groupMap);		
 			model.addAttribute("formTitle", "Tùy chọn tháng cần tính sản lượng, cho tính lương sản phẩm");
 
 		} catch (Exception e) {
@@ -1182,22 +1194,22 @@ public class SalaryController {
 	
 	@RequestMapping(value = { "/salary/listProductSold" })
 	public String listProductSold(Model model, @ModelAttribute("salaryReportForm") @Validated LeaveReport leaveReport, @RequestParam(required = false, name="month") String month,
-			@RequestParam(required = false, name="department") String department, @RequestParam(required = false, name="message") String message) {
+			@RequestParam(required = false, name="group") String group, @RequestParam(required = false, name="message") String message) {
 		try {
 			if(month == null || month.isEmpty())
 				month = leaveReport.getYearReport() + "-" + leaveReport.getMonthReport();
-			List<ProductSold> list = productSoldDAO.getProductSoldByMonth(department, month);	
-			String totalMoneyIncome = productSoldDAO.getMoneyIncome(month, department);
+			List<ProductSold> list = productSoldDAO.getProductSoldByMonth(group, month);	
+			String totalMoneyIncome = productSoldDAO.getMoneyIncome(month, group);
 			if(list.size() < 1)
-				model.addAttribute("message1", "Chưa có thông tin sản lượng sản phẩm trong tháng " + month + ", bộ phận " + department);
+				model.addAttribute("message1", "Chưa có thông tin sản lượng sản phẩm trong tháng " + month.substring(5, 7) + "-" + month.substring(0, 4) + ", nhóm lao động " + dataForWorkGroup().get(group));
 			model.addAttribute("month", month);
 			model.addAttribute("monthR", month.substring(5, 7));
 			model.addAttribute("yearR", month.substring(0, 4));	
 			model.addAttribute("message", message);
 			model.addAttribute("totalMoneyIncome", totalMoneyIncome);
 			model.addAttribute("productSold", list);
-			model.addAttribute("formTitle", "Danh sách sản phẩm đã bán trong tháng " + month.substring(5, 7) + ", " + month.substring(0, 4) + ", bộ phận " + department);
-			model.addAttribute("department", department);
+			model.addAttribute("formTitle", "Danh sách sản phẩm đã bán/làm trong tháng " + month.substring(5, 7) + "-" + month.substring(0, 4) + ", nhóm lao động " + dataForWorkGroup().get(group));
+			model.addAttribute("group", group);
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -1216,16 +1228,17 @@ public class SalaryController {
 			System.err.println("rowInsert = " + rowInsert);
 			
 			if(rowInsert > 0)
-				message = "Thêm thông tin sản phẩm đã bán thành công!";
+				message = "Thêm thông tin sản phẩm đã bán/làm thành công!";
 			else
-				message = "Không thêm được thông tin cho sản phẩm mã " + productSold.getCode() + ", cho tháng " + productSold.getMonth().substring(5, 7) + ", " + productSold.getMonth().substring(0, 4) + " . Vui lòng kiểm tra lại, có thể sản phẩm đó đã tồn tại ...";
+				message = "Không thêm được thông tin cho sản phẩm mã " + productSold.getCode() + ", cho tháng " + productSold.getMonth().substring(5, 7) + "-" + productSold.getMonth().substring(0, 4) + " . Vui lòng kiểm tra lại, có thể sản phẩm đó đã tồn tại ...";
+			System.err.println("productSold.getGroup(): " + productSold.getGroup());
 			leaveReport.setMonthReport(productSold.getMonth().substring(5, 7));
 			leaveReport.setYearReport(productSold.getMonth().substring(0, 4));
 		} catch (Exception e) {
 			log.error(e, e);
 		}		
 		
-		return listProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
+		return listProductSold(model, leaveReport, productSold.getMonth(), productSold.getGroup(), message);
 	}
 
 	@RequestMapping(value = "/salary/updateProductSold", method = RequestMethod.POST)
@@ -1237,7 +1250,7 @@ public class SalaryController {
 			int rowUpdate = productSoldDAO.updateProductSold(productSold);
 			// Add message to flash scope			
 			if(rowUpdate > 0)
-				message = "Cập nhật thông tin sản phẩm đã bán thành công!";
+				message = "Cập nhật thông tin sản phẩm đã bán/làm thành công!";
 			else
 				message = "Không thể cập nhật thông tin sản phẩm " + productSold.getCode() + ", cho tháng " + productSold.getMonth() + ". Vui lòng kiểm tra lại";
 			leaveReport.setMonthReport(productSold.getMonth().substring(4, 5));
@@ -1245,10 +1258,10 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return listProductSold(model, leaveReport, productSold.getMonth(), productSold.getDepartment(), message);
+		return listProductSold(model, leaveReport, productSold.getMonth(), productSold.getGroup(), message);
 	}
 
-	private String productSoldForm(Model model, ProductSold productSold) {
+	private String productSoldForm(Model model, ProductSold productSold) throws Exception{
 		
 		// get list product id
 		Map<String, String> productMap = this.products();
@@ -1256,10 +1269,10 @@ public class SalaryController {
 
 		String actionform = "";
 		if (productSold.getCode() != null) {
-			model.addAttribute("formTitle", "Sửa thông tin sản phẩm đã bán tháng " + productSold.getMonth().substring(5, 7) + ", " + productSold.getMonth().substring(0, 4) + " của bộ phận " + productSold.getDepartment());
+			model.addAttribute("formTitle", "Sửa thông tin sản phẩm đã bán/làm tháng " + productSold.getMonth().substring(5, 7) + "-" + productSold.getMonth().substring(0, 4) + " của nhóm lao động " + dataForWorkGroup().get(productSold.getGroup()));
 			actionform = "editProductSold";
 		} else {
-			model.addAttribute("formTitle", "Thêm mới thông tin sản phẩm đã bán tháng " + productSold.getMonth().substring(5, 7) + ", " + productSold.getMonth().substring(0, 4) + " của bộ phận " + productSold.getDepartment());
+			model.addAttribute("formTitle", "Thêm mới thông tin sản phẩm đã bán/làm tháng " + productSold.getMonth().substring(5, 7) + "-" + productSold.getMonth().substring(0, 4) + " của nhóm lao động " + dataForWorkGroup().get(productSold.getGroup()));
 			productSold.setScale("100");
 			actionform = "insertProductSold";
 		}
@@ -1270,19 +1283,19 @@ public class SalaryController {
 	}
 
 	@RequestMapping("/salary/insertProductSold")
-	public String insertProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department) {
+	public String insertProductSold(Model model, @RequestParam("month") String month,  @RequestParam("group") String group) throws Exception{
 		ProductSold productSold = new ProductSold();
 		productSold.setMonth(month);
-		productSold.setDepartment(department);
+		productSold.setGroup(group);
 		return this.productSoldForm(model, productSold);
 	}
 
 	@RequestMapping("/salary/editProductSold")
-	public String editProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department,
-			@RequestParam("productCode") String productCode, @RequestParam("price") String price, @RequestParam("scale") String scale) {
+	public String editProductSold(Model model, @RequestParam("month") String month,  @RequestParam("group") String group,
+			@RequestParam("productCode") String productCode, @RequestParam("price") String price, @RequestParam("scale") String scale) throws Exception {
 		ProductSold productSold = null;
 		if (productCode != null && productCode.length() > 0 && month != null && month.length() > 0) {
-			productSold = productSoldDAO.getProductSold(department, month, productCode, price, scale);
+			productSold = productSoldDAO.getProductSold(group, month, productCode, price, scale);
 		}
 		if (productSold == null) {
 			return "redirect:/salary/listProductSold/";
@@ -1292,13 +1305,13 @@ public class SalaryController {
 	}
 	
 	@RequestMapping("/salary/deleteProductSold")
-	public String deleteProductSold(Model model, @RequestParam("month") String month,  @RequestParam("department") String department,
+	public String deleteProductSold(Model model, @RequestParam("month") String month,  @RequestParam("group") String group,
 			@RequestParam("productCode") String productCode, @RequestParam("price") String price, @RequestParam("scale") String scale) throws Exception{
 		
 		LeaveReport leaveReport = new LeaveReport();
-		productSoldDAO.deleteProductSold(department, month, productCode, price, scale);			
+		productSoldDAO.deleteProductSold(group, month, productCode, price, scale);			
 		
-		return listProductSold(model, leaveReport, month, department, "Xóa thông tin sản phẩm thành công" );
+		return listProductSold(model, leaveReport, month, group, "Xóa thông tin sản phẩm thành công" );
 	}
 	
 	private Map<String, String> products() {
@@ -1316,6 +1329,23 @@ public class SalaryController {
 			e.printStackTrace();
 		}
 		return productMap;
+	}
+	
+	private Map<String, String> dataForWorkGroup() throws Exception {
+		Map<String, String> workGroupMap = new LinkedHashMap<String, String>();
+		try {
+			List<WorkGroup> list = employeeDAO.getWorkGroups();
+			WorkGroup workGroup = new WorkGroup();
+			for (int i = 0; i < list.size(); i++) {
+				workGroup = (WorkGroup) list.get(i);
+				workGroupMap.put(workGroup.getGroupId(), workGroup.getGroupName());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return workGroupMap;
 	}
 
 	private Map<String, String> departments() {
@@ -1348,4 +1378,15 @@ public class SalaryController {
 		return list;
 	}
 	 
+	@RequestMapping("/salary/selectionGroup")
+	public @ResponseBody List<EmployeeInfo> employeesByGroup(@RequestParam("group") String group) {
+		List<EmployeeInfo> list = null;
+		if (!group.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByGroup(group);
+		else
+			list = employeeDAO.getEmployees();
+
+		return list;
+	}
+	
 }

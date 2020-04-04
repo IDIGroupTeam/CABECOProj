@@ -60,10 +60,10 @@
 						</td>		
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">bộ phận:(*)</td>
+						<td bgcolor="#FAFAFA">Nhóm lao động:(*)</td>
 						<td>
-							<form:select path="department"	class="form-control animated">
-								<form:options items="${departmentMap}" var="department" />
+							<form:select path="group"	class="form-control animated">
+								<form:options items="${workGroupMap}" var="group" />
 							</form:select>
 						</td>								
 						<td bgcolor="#FAFAFA">Điều tiết/công:(*)</td>

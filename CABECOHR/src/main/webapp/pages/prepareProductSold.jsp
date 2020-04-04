@@ -31,11 +31,9 @@
 		<br />
 		<table class="table table-bordered">
 			<tr>	
-				<td bgcolor="#FAFAFA">Bộ phận:</td>
-				<td><form:select path="department"
-						class="form-control animated">
-						<%-- <form:option value="0" label="Cả năm" /> --%>
-						<form:options items="${departmentMap}" var="department" />
+				<td bgcolor="#FAFAFA">Nhóm lao động:</td>
+				<td><form:select path="group" class="form-control animated">
+						<form:options items="${groupMap}" var="group" />
 					</form:select></td>
 			</tr>
 			<jsp:useBean id="now" class="java.util.Date" />

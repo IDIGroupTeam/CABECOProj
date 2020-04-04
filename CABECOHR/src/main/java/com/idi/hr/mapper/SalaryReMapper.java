@@ -14,8 +14,8 @@ public class SalaryReMapper implements RowMapper<SalaryRe>{
 		int month = rs.getInt("MONTH");
 		int year = rs.getInt("YEAR");
 		String value = rs.getString("VALUE");
-		String department = rs.getString("DEPARTMENT");
+		String group = rs.getString("WORK_GROUP");
 		String des = rs.getString("DESCRIPTION");
-		return new SalaryRe(month, year, value, department, des);
+		return new SalaryRe(month, year, value, group, des);
 	}
 }

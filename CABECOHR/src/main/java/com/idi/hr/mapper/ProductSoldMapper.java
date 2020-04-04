@@ -19,10 +19,10 @@ public class ProductSoldMapper implements RowMapper<ProductSold>{
 		String month = rs.getString("MONTH"); 
 		String scale = rs.getString("SCALE"); 
 		String moneyIncome = rs.getString("MONEY_INCOME"); 
-		String department = rs.getString("DEPARTMENT");
+		String group = rs.getString("WORK_GROUP");
 		String comment = rs.getString("COMMENT");
 		
-		return new ProductSold(code, name, price, amount, month, scale, moneyIncome, department, comment);
+		return new ProductSold(code, name, price, amount, month, scale, moneyIncome, group, comment);
 	}
 
 }

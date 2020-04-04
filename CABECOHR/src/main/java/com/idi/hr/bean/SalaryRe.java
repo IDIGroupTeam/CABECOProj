@@ -12,18 +12,19 @@ public class SalaryRe implements Serializable {
 	private int month;
 	private int year;
 	private String value;
-	private String department;
+	private String group;
+	private String groupName;
 	private String des;
 
 	public SalaryRe() {
 
 	}
 
-	public SalaryRe(int month, int year, String value, String department, String des) {
+	public SalaryRe(int month, int year, String value, String group, String des) {
 		this.month = month;
 		this.year = year;
 		this.value = value;
-		this.department = department;
+		this.group = group;
 		this.des = des;
 
 	}
@@ -60,11 +61,20 @@ public class SalaryRe implements Serializable {
 		this.des = des;
 	}
 
-	public String getDepartment() {
-		return department;
+	public String getGroup() {
+		return group;
 	}
 
-	public void setDepartment(String department) {
-		this.department = department;
+	public void setGroup(String group) {
+		this.group = group;
 	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	
 }

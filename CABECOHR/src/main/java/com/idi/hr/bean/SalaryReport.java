@@ -17,6 +17,11 @@ public class SalaryReport implements Serializable {
 	private String overTimeSalary;
 	private String bounus;
 	private String subsidize;
+	private String subLunch;
+	private String subPhone;
+	private String subGas;
+	private String subSkill;
+	private String overWork;
 	private String advancePayed;
 	private String taxPersonal;
 	private int month;
@@ -28,7 +33,8 @@ public class SalaryReport implements Serializable {
 	}
 
 	public SalaryReport(String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
-		String bounus, String subsidize, String advancePayed, String taxPersonal, String payedInsurance) {
+		String bounus, String subsidize, String subLunch, String subPhone, String subGas, String subSkill, String overWork, 
+		String advancePayed, String taxPersonal, String payedInsurance) {
 		
 		this.finalSalary = finalSalary;
 		this.overTimeN = overTimeN;
@@ -37,6 +43,11 @@ public class SalaryReport implements Serializable {
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
 		this.subsidize = subsidize;
+		this.subLunch = subLunch;
+		this.subPhone = subPhone;
+		this.subGas = subGas;
+		this.subSkill = subSkill;
+		this.overWork = overWork;
 		this.advancePayed = advancePayed;
 		this.taxPersonal = taxPersonal;
 /*		this.month = month;
@@ -152,4 +163,49 @@ public class SalaryReport implements Serializable {
 	public void setDepartment(String payedInsurance) {
 		this.payedInsurance = payedInsurance;
 	}
+
+	public String getSubLunch() {
+		return subLunch;
+	}
+
+	public void setSubLunch(String subLunch) {
+		this.subLunch = subLunch;
+	}
+
+	public String getSubPhone() {
+		return subPhone;
+	}
+
+	public void setSubPhone(String subPhone) {
+		this.subPhone = subPhone;
+	}
+
+	public String getSubGas() {
+		return subGas;
+	}
+
+	public void setSubGas(String subGas) {
+		this.subGas = subGas;
+	}
+
+	public String getSubSkill() {
+		return subSkill;
+	}
+
+	public void setSubSkill(String subSkill) {
+		this.subSkill = subSkill;
+	}
+
+	public String getOverWork() {
+		return overWork;
+	}
+
+	public void setOverWork(String overWork) {
+		this.overWork = overWork;
+	}
+
+	public void setPayedInsurance(String payedInsurance) {
+		this.payedInsurance = payedInsurance;
+	}
+	
 }

@@ -16,13 +16,14 @@ public class Salary4ListMapper implements RowMapper<Salary4List> {
 		String constSalary = rs.getString("CONST_SALARY");
 		String bankNo = rs.getString("BANK_NO");
 		String bankName = rs.getString("BANK_NAME");
-		String bankBranch = rs.getString("BANK_BRANCH");
+		String bankBranch = rs.getString("BANK_BRANCH");		
+		String group = rs.getString("WORK_GROUP");
 		String department = rs.getString("DEPARTMENT");
 		String jobTitle = rs.getString("JOB_TITLE");
 		String description = rs.getString("COMMENT");
 		String workedDay = rs.getString("WORKED_DAY"); 
 		String actualSalary = rs.getString("ACTUAL_SALARY");
-		return new Salary4List(employeeId, fullName, salary, constSalary, bankNo, bankName, bankBranch, department, 
-				jobTitle, description, workedDay, actualSalary);
+		return new Salary4List(employeeId, fullName, salary, constSalary, bankNo, bankName, bankBranch, group,
+				department, jobTitle, description, workedDay, actualSalary);
 	}
 }

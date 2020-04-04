@@ -75,11 +75,11 @@ tr:nth-child(even) {
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
 		<button	class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
 	<a href="${pageContext.request.contextPath}/salary/prepareSalary">
-		<button class="btn btn-primary btn-sm">Chọn lại bộ phận cần tính lương</button></a>
+		<button class="btn btn-primary btn-sm">Chọn lại nhóm lao động cần tính lương</button></a>
 	<a href="${url}/salary/prepareProductSold"><button
 			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>			
 	<a href="${url}/salary/salaryRe"><button class="btn btn-primary btn-sm">Điều tiết</button></a>		
-	<a href="${pageContext.request.contextPath}/salary/insertSalary?department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button
+	<a href="${pageContext.request.contextPath}/salary/insertSalary?group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 	<br />
 	<br />
@@ -203,8 +203,8 @@ tr:nth-child(even) {
 					<td>${salary.salary}</td> 	
 					<td>${salary.workedDay}</td>
 					<td><fmt:formatNumber value="${salary.actualSalary}" type="number"/></td>				
-					<td><a href="editSalary?employeeId=${salary.employeeId}&department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Sửa</a></td>
-					<td><a href="insertSalaryDetailForm?employeeId=${salary.employeeId}&department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Cập nhật/xem chi tiết</a></td>
+					<td><a href="editSalary?employeeId=${salary.employeeId}&group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Sửa</a></td>
+					<td><a href="insertSalaryDetailForm?employeeId=${salary.employeeId}&group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Cập nhật/xem chi tiết</a></td>
 					<td>${salary.desc}</td>
 				</tr>
 			</c:forEach>
@@ -215,11 +215,11 @@ tr:nth-child(even) {
 	</div>
 	<c:if test="${empty message}">
 		<c:if test="${not empty filled}">
-			<a href="${pageContext.request.contextPath}/salary/calculatesSalary?department=${salaryForm.department}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button title="Vui lòng nhập ngày công cho toàn bộ nhân viên của phòng trước khi tính lương"
+			<a href="${pageContext.request.contextPath}/salary/calculatesSalary?group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button title="Vui lòng nhập ngày công cho toàn bộ nhân viên của phòng trước khi tính lương"
 			class="btn btn-primary btn-sm">Tính lương </button></a>
 		</c:if>
 		<c:if test="${empty filled}">
-			<div class="alert alert-warning">Vui lòng thêm đầy đủ thông tin lương nhân viên và nhập ngày công cho toàn bộ nhân viên của phòng trước khi tính lương</div>
+			<div class="alert alert-warning">Vui lòng thêm đầy đủ thông tin lương nhân viên và nhập ngày công cho toàn bộ nhân viên thuộc nhóm lao động trước khi tính lương</div>
 		</c:if>
 	</c:if>
 	

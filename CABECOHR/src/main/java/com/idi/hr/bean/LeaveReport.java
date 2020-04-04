@@ -24,7 +24,7 @@ public class LeaveReport implements Serializable {
 	private String leaveRemain;// so ngay phep con lai trong nam = (quataLeave - leaveUsed) + restQuata
 	private String monthReport;
 	private String yearReport;
-	
+	private String group;
 	//count come late, leave soon, 
 	private int comeLate = 0; // tong so lan di muon
 	private int leaveSoon = 0; // tong so lan ve som
@@ -244,4 +244,13 @@ public class LeaveReport implements Serializable {
 	public void setLeaveRemain(String leaveRemain) {
 		this.leaveRemain = leaveRemain;
 	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	
 }

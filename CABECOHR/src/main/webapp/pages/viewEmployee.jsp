@@ -31,7 +31,7 @@
 					<td><c:out value="${employeeForm.phoneNo}" /></td>
 				</tr>
 				<tr>
-					<td rowspan="7">
+					<td rowspan="6">
 					<img src="<c:out value="${employeeForm.imagePath}"/>" alt="profile image" width="125px" height="150px"/>
 					</td>
 
@@ -77,6 +77,7 @@
 					<td><c:out value="${employeeForm.taxCode}" /></td>	
 				</tr>
 				<tr>
+					<td nowrap="nowrap">Nhóm lao động: <c:out value="${employeeForm.workGroup}" /></td>	
 					<td bgcolor="#EEEEEE" nowrap="nowrap">Trình độ/bằng cấp:</td>
 					<td><c:out value="${employeeForm.academyLevel}" /></td>	
 						

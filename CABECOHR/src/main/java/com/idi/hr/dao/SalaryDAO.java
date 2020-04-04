@@ -83,14 +83,14 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @return List of Salary
 	 * @throws Exception
 	 */
-	public List<Salary4List> getSalarysByDepartmentAndMonth(String dept, String month, String year) {
+	public List<Salary4List> getSalarysByGoupAndMonth(String group, String month, String year) {
 
-		String sql = hr.getProperty("GET_LIST_SALARY_INFO_BY_DEPARTMENT_AND_MONTH").toString();
-		log.info("GET_LIST_SALARY_INFO_BY_DEPARTMENT_AND_MONTH query: " + sql);
+		String sql = hr.getProperty("GET_LIST_SALARY_INFO_BY_WORK_GROUP_AND_MONTH").toString();
+		log.info("GET_LIST_SALARY_INFO_BY_WORK_GROUP_AND_MONTH query: " + sql);
 		Salary4ListMapper mapper = new Salary4ListMapper();
-		Object[] params = new Object[] { dept, month, year };
+		Object[] params = new Object[] { group, month, year };
 		List<Salary4List> list = jdbcTmpl.query(sql, params, mapper);
-		System.err.println("dept list dao = " + dept +"|" + month + "|" + year + "|" + list.size());
+		System.out.println("Work group list dao = " + group +"|" + month + "|" + year + "|" + list.size());
 		return list;
 	}
 	
@@ -205,7 +205,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public SalaryReport getSalaryReport(int employeeId, String month, String year, String dept) {
+	public SalaryReport getSalaryReport(int employeeId, String month, String year, String dept, String group) {
 
 		SalaryReport salaryReport = null;
 		String sql = hr.get("GET_SUMMARY_SALARY").toString();
@@ -219,6 +219,12 @@ public class SalaryDAO extends JdbcDaoSupport {
 			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept + "'");
 		else
 			sql = sql.replaceAll("%DEPT%", " ");
+		
+		if(group != null && group.length() > 0 && !group.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%GROUP%", " AND E.WORK_GROUP= '" + group + "'");
+		else
+			sql = sql.replaceAll("%GROUP%", " ");
+		
 		
 		log.info("GET_SUMMARY_SALARY query: " + sql);
 		
@@ -234,14 +240,27 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year, String dept) {
+	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year, String dept, String group) {
 		System.err.println("dept: " + dept);
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR").toString();
-		log.info("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR query: " + sql);
+		
 		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
 			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept + "'");
 		else
 			sql = sql.replaceAll("%DEPT%", " ");
+		
+		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept + "'");
+		else
+			sql = sql.replaceAll("%DEPT%", " ");
+		
+		if(group != null && group.length() > 0 && !group.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%GROUP%", " AND E.WORK_GROUP= '" + group + "'");
+		else
+			sql = sql.replaceAll("%GROUP%", " ");
+		
+		log.info("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR query: " + sql);
+		
 		Object[] params = new Object[] { year };
 		SalaryReportPerEmployeeMapper mapper = new SalaryReportPerEmployeeMapper();
 		List<SalaryReportPerEmployee> list = jdbcTmpl.query(sql, params, mapper); 
@@ -255,13 +274,18 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param year
 	 * @return
 	 */
-	public List<SalaryDetail> getSalaryReportDetail(String month, String year, String dept) {
+	public List<SalaryDetail> getSalaryReportDetail(String month, String year, String dept, String group) {
 		System.err.println("dept: " + dept);
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL").toString();
 		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
 			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept +"'");
 		else
 			sql = sql.replaceAll("%DEPT%", " ");
+		
+		if(group != null && group.length() > 0 && !group.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%GROUP%", " AND E.WORK_GROUP= '" + group + "'");
+		else
+			sql = sql.replaceAll("%GROUP%", " ");
 		
 		log.info("GET_SUMMARY_SALARY_DETAIL query: " + sql);
 		
@@ -378,7 +402,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
-					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), 
+					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(),
 					salaryDetail.getOverWork(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getBasicSalary(), salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(),
 					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(),
@@ -509,7 +533,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
-					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getOverWork(),
+					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(), salaryDetail.getOverWork(),
 					salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), 
 					salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
