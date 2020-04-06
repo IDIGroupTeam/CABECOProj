@@ -60,7 +60,7 @@ public class SalaryReDAO extends JdbcDaoSupport {
 			String sql = hr.get("GET_SALARY_RE").toString();
 			log.info("GET_SALARY_RE query: " + sql);
 			Object[] params = new Object[] { month, year, group };
-			System.out.println(month + "|" + year ); 
+			//System.out.println(month + "|" + year ); 
 			SalaryReMapper mapper = new SalaryReMapper();	
 			salaryRe = jdbcTmpl.queryForObject(sql, params, mapper);
 		}catch(Exception e) {
@@ -104,6 +104,7 @@ public class SalaryReDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("UPDATE_SALARY_RE").toString();
 			log.info("UPDATE_SALARY_RE query: " + sql);
 			Object[] params = new Object[] {salaryRe.getValue(), salaryRe.getDes(), salaryRe.getMonth(), salaryRe.getYear(), salaryRe.getGroup()};
+			//System.err.println("Update salaryRe: " + salaryRe.getValue() + "|"+ salaryRe.getDes() +"|"+ salaryRe.getMonth()+"|"+  salaryRe.getYear()+"|"+  salaryRe.getGroup());
 			rowUpdate = jdbcTmpl.update(sql, params);
 		} catch (Exception e) {
 			log.error(e, e);

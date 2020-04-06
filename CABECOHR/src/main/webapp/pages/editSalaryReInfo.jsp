@@ -31,6 +31,9 @@
 		action="updateSalaryRe">		
 			<table class="table table-bordered">
 				<tbody>
+					<form:hidden path="month"/>
+					<form:hidden path="year"/>
+					<form:hidden path="group"/>
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin	điều tiết</td>
 					</tr>
