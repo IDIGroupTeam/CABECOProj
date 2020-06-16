@@ -75,7 +75,7 @@ tr:nth-child(even) {
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
 		<button	class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
 	<a href="${pageContext.request.contextPath}/salary/prepareSalary">
-		<button class="btn btn-primary btn-sm">Chọn bộ phận cần tính lương</button></a>
+		<button class="btn btn-primary btn-sm">Chọn nhóm lao động cần tính lương</button></a>
 	<a href="${url}/salary/prepareProductSold"><button
 			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>	
 	<a href="${url}/salary/insertSalaryReForm"><button
