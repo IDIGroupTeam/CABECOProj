@@ -415,7 +415,7 @@ public class SalaryController {
 		Map<String, String> employeeMap = this.employeesNoInfoByGroup(salary.getGroup());
 		model.addAttribute("employeeMap", employeeMap);
 		if(employeeMap.size() == 0)
-			model.addAttribute("addedAll", " >>> Đã thêm mới thông tin lương cho toàn bộ nhân viên thuộc nhóm lao động này <<< ");
+			model.addAttribute("addedAll", " >>> Đã điền đầy đủ thông tin lương cơ bản cho toàn bộ nhân viên thuộc nhóm lao động này <<< ");
 
 		String actionform = "";
 		if (salary.getEmployeeId() > 0) {
