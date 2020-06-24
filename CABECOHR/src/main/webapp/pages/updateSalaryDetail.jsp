@@ -122,9 +122,9 @@
 					</tr>
 					<tr>						
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Số ngày công:</td>
-						<td><form:input path="workedDay" class="form-control bfh-number" min="0.005" max="31" step="0.25" type="number" required="required" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
+						<td><form:input path="workedDay" class="form-control bfh-number" min="0.001" max="31" step="0.001" type="number" required="required" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
 						<td bgcolor="#FAFAFA">Giờ công bảo trì:</td>
-						<td><form:input path="maketingSalary" class="form-control animated" min="0.005" max="31" step="0.005" type="number" maxlength="12" /></td>
+						<td><form:input path="maketingSalary" class="form-control animated" min="0" max="31" step="0.001" type="number" maxlength="12" /></td>
 						<td>x ${salaryPerHour} = ${maintainSalary}</td>
 						<td>Điều tiết: ${salaryDetail.rSalary} </td>
 					</tr>				 
