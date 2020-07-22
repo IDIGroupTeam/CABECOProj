@@ -564,8 +564,8 @@ public class SalaryController {
 				salaryDetail.setFinalSalary("");
 				salaryDetail.setTaxPersonal("");
 				salaryDetail.setOverTimeH("");
-				salaryDetail.setOverTimeN("");
-				salaryDetail.setOverTimeW("");
+				//salaryDetail.setOverTimeN("");
+				//salaryDetail.setOverTimeW("");
 				salaryDetail.setSubsidize("");
 				salaryDetail.setMaintainDay("");
 				salaryDetail.setSubGas("");
@@ -718,11 +718,18 @@ public class SalaryController {
 			// overTimeSalary);
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary)); */
-
-			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
-				salaryDetail.setPayedInsurance(
-						String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance()) * 10.5 / 100));
-
+			
+			System.out.println("subInsurance in controller: " + salaryDetail.getSubInsurance());
+			System.out.println("bonus: " + salaryDetail.getBounus());
+			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().trim().length() > 0) {
+				if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
+					salaryDetail.setPayedInsurance(String.valueOf((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",",""))) * 10.5 / 100));
+					salaryDetail.setUnionFee(String.valueOf((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",",""))) * 1/100));
+				}else {
+					salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance()) * 10.5 / 100));
+					salaryDetail.setUnionFee(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance()) * 1/100));
+				}
+			}
 			salaryDAO.insertSalaryDetail(salaryDetail);
 			model.addAttribute("salaryDetail", salaryDetail);
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
@@ -826,7 +833,7 @@ public class SalaryController {
 			if(eIds.size() > 0) {
 				float sumHSL = 0;
 				// tinh hs luong cho tung nv
-				for(int i=0; i<eIds.size(); i++) {
+				for(int i=0; i < eIds.size(); i++) {
 					System.err.println(eIds.get(i) +"|"+ month+"|"+ year);
 					SalaryDetail salaryDetail = salaryDAO.getSalaryDetail(eIds.get(i), month, year);
 					
@@ -840,7 +847,7 @@ public class SalaryController {
 				float hsc = totalMoney/sumHSL;
 				System.err.println("hsc " + hsc);
 				//tinh luong cho tung nv
-				for(int j=0; j<eIds.size(); j++) {
+				for(int j=0; j < eIds.size(); j++) {
 					SalaryDetail salaryDetail = salaryDAO.getSalaryDetail(eIds.get(j), month, year);					
 					
 					// Tính lương thực nhận
@@ -942,9 +949,14 @@ public class SalaryController {
 						finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 						salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 					}	
-					if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0) {
-						//System.err.println(salaryDetail.getSalaryInsurance());
-						finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
+					if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().trim().length() > 0) {						
+						if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
+							finalSalary = finalSalary - ((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",", ""))) * (float)10.5 / 100);
+							finalSalary = finalSalary - ((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",", ""))) * (float)1/100);
+						}else {
+							finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;							
+						}
+												
 					}
 					salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
 					
@@ -1225,13 +1237,13 @@ public class SalaryController {
 		try {			
 			int rowInsert = productSoldDAO.insertProductSold(productSold);
 			// Add message to flash scope
-			System.err.println("rowInsert = " + rowInsert);
+			//System.err.println("rowInsert = " + rowInsert);
 			
 			if(rowInsert > 0)
 				message = "Thêm thông tin sản phẩm đã bán/làm thành công!";
 			else
 				message = "Không thêm được thông tin cho sản phẩm mã " + productSold.getCode() + ", cho tháng " + productSold.getMonth().substring(5, 7) + "-" + productSold.getMonth().substring(0, 4) + " . Vui lòng kiểm tra lại, có thể sản phẩm đó đã tồn tại ...";
-			System.err.println("productSold.getGroup(): " + productSold.getGroup());
+			//System.err.println("productSold.getGroup(): " + productSold.getGroup());
 			leaveReport.setMonthReport(productSold.getMonth().substring(5, 7));
 			leaveReport.setYearReport(productSold.getMonth().substring(0, 4));
 		} catch (Exception e) {

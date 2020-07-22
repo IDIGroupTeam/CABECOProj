@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Tập đoàn IDI - Quản lý tiền lương</title>
+<title>Cabeco - Quản lý tiền lương</title>
 <style>
 .error-message {
 	color: red;
@@ -25,7 +25,7 @@
 		moneyConvert("advancePayed");
 		moneyConvert("subsidize");
 		moneyConvert("taxPersonal");
-		//moneyConvert("basicSalary");
+		moneyConvert("subInsurance");
 		moneyConvert("other");
 		moneyConvert("arrears");
 		moneyConvert("subLunch");
@@ -96,28 +96,30 @@
 						<td colspan="6" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin lương chi tiết</td>
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">Lương:(lương cb x hệ số)</td>
-						<td><fmt:formatNumber value="${salaryDetail.basicSalary}" type="number"/></td>
-						
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Lương BHXH:</td>
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
 							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance}" type="number"/></td> 
+							<td bgcolor="#FAFAFA" nowrap="nowrap">Phụ cấp BHXH:</td>
+							<td><form:input path="subInsurance" class="form-control animated"  maxlength="12" /></td> 
 						</c:if>
 
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
 						</c:if>	
-												
-						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Bắt buộc phải > hoăc = 0. Mặc định là 100%">Hệ số hoàn thành cv (%):</td>
-						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" value="100" type="number" size="4" required="required"/></td>
-													
+					</tr>
+					<tr>
+						<td bgcolor="#FAFAFA">Lương:(lương cơ bản x hệ số)</td>
+						<td><fmt:formatNumber value="${salaryDetail.basicSalary}" type="number"/></td>						
+											
+						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Bắt buộc phải > hoăc = 0. Mặc định là 100%">Hệ số hoàn thành/chuyên cần (%):</td>
+						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" value="100" type="number" size="4" required="required"/></td>													
 					</tr>
 					<tr>						
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Số ngày công:</td>
 						<td><form:input path="workedDay" class="form-control bfh-number" min="0.001" max="31" step="0.001" type="number" required="required" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
 						<td bgcolor="#FAFAFA">Ngày công bảo trì:</td>
 						<td><form:input path="maintainDay" class="form-control animated" min="0" max="31" step="0.001" type="number" /></td>						
-						<td colspan="3">Lương điều tiết: (điều tiết x ngày công): ${salaryDetail.rSalary}</td>
+						<td colspan="3">Lương điều tiết: (điều tiết * ngày công): ${salaryDetail.rSalary}</td>
 						
 					</tr>				 
 					<tr>
@@ -151,7 +153,7 @@
 																
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="10.5% trong đó gồm: 8% cho hưu trí, 1% cho thất nghiệp và 1.5% y tế">Đóng BHXH(10.5%):</td>						
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
-							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100}" /> </td> 
+							<td><fmt:formatNumber value="${(salaryDetail.salaryInsurance + salaryDetail.subInsurance)*10.5/100}" /> </td> 
 						</c:if>
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
@@ -161,8 +163,11 @@
 					<tr>
 						<td bgcolor="#FAFAFA">Phụ cấp tiền xăng xe:</td>
 						<td colspan="2"><form:input path="subGas" class="form-control animated"  maxlength="12" /></td>
-						<td></td>
-						<td colspan="2"></td>			
+						
+						<td bgcolor="#FAFAFA">Phí công đoàn:</td>
+						<c:if test="${not empty salaryDetail.salaryInsurance}">
+							<td><fmt:formatNumber value="${(salaryDetail.salaryInsurance + salaryDetail.subInsurance)*1/100}" /></td> 
+						</c:if>		
 						
 					</tr>				
 					<tr>

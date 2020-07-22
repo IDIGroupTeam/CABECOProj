@@ -397,10 +397,12 @@ public class SalaryDAO extends JdbcDaoSupport {
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
 			*/
 			
-				
+			if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
+				salaryDetail.setSubInsurance(salaryDetail.getSubInsurance().replaceAll(",", ""));
+			}	
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
-			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
-					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
+			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getUnionFee(),
+					salaryDetail.getSubInsurance(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
 					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(),
 					salaryDetail.getOverWork(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
@@ -530,7 +532,10 @@ public class SalaryDAO extends JdbcDaoSupport {
 			//System.err.println("year " + salaryDetail.getYear());
 			//System.err.println("Luong thuc nhan " + finalSalary);
 			
-			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
+			if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
+				salaryDetail.setSubInsurance(salaryDetail.getSubInsurance().replaceAll(",", ""));
+			}
+			Object[] params = new Object[] { salaryDetail.getUnionFee(), salaryDetail.getSubInsurance(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
 					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(), salaryDetail.getOverWork(),

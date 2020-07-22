@@ -12,8 +12,8 @@ public class SalaryDetail implements Serializable {
 	private int employeeId; 
 	private String finalSalary;
 	private String basicSalary;
-	private String overTimeN;
-	private String overTimeW;
+	private String unionFee;
+	private String subInsurance;
 	private String overTimeH;
 	private String overTimeSalary;
 	private float salaryPerHour;
@@ -57,7 +57,7 @@ public class SalaryDetail implements Serializable {
 		
 	}
 
-	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
+	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String unionFee, String subInsurance, String overTimeH, 
 			String overTimeSalary, String bounus, String maintainDay, String subsidize, String subLunch, String subPhone, String subGas, 
 			String subSkill, String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
@@ -67,8 +67,8 @@ public class SalaryDetail implements Serializable {
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
 		this.basicSalary = basicSalary;
-		this.overTimeN = overTimeN;
-		this.overTimeW = overTimeW;
+		this.unionFee = unionFee;
+		this.subInsurance = subInsurance;
 		this.overTimeH = overTimeH;
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
@@ -132,20 +132,20 @@ public class SalaryDetail implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public String getOverTimeN() {
-		return overTimeN;
+	public String getUnionFee() {
+		return unionFee;
 	}
 
-	public void setOverTimeN(String overTimeN) {
-		this.overTimeN = overTimeN;
+	public void setUnionFee(String unionFee) {
+		this.unionFee = unionFee;
 	}
 
-	public String getOverTimeW() {
-		return overTimeW;
+	public String getSubInsurance() {
+		return subInsurance;
 	}
 
-	public void setOverTimeW(String overTimeW) {
-		this.overTimeW = overTimeW;
+	public void setSubInsurance(String subInsurance) {
+		this.subInsurance = subInsurance;
 	}
 
 	public String getOverTimeH() {

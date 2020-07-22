@@ -78,7 +78,7 @@ public class ProductSoldDAO extends JdbcDaoSupport {
 			String sql = hr.get("GET_PRODUCT_SOLD").toString();
 			log.info("GET_PRODUCT_SOLD query: " + sql);
 			Object[] params = new Object[] { group, month, productCode, price, scale };
-			System.out.println(month + "|" + productCode ); 
+			//System.out.println(month + "|" + productCode ); 
 			ProductSoldMapper mapper = new ProductSoldMapper();
 	
 			productSold = jdbcTmpl.queryForObject(sql, params, mapper);
