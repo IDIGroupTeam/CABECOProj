@@ -22,6 +22,10 @@ public class Salary4List implements Serializable {
 	private String desc;
 	private String workedDay;
 	private String actualSalary;
+	private String saProduct;
+	private String saTime;
+	private String workedTime;
+	private String maintainDay;
 	
 	public Salary4List() {
 		
@@ -29,7 +33,8 @@ public class Salary4List implements Serializable {
 
 	public Salary4List(int employeeId, String fullName, String salary, String constSalary, String bankNo, 
 			String bankName, String bankBranch, String group, String department, String jobTitle,
-			String description,	String workedDay, String actualSalary) {
+			String description,	String workedDay, String actualSalary, String saProduct, String saTime,
+			String workedTime, String maintainDay) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
 		this.salary = salary;
@@ -42,7 +47,11 @@ public class Salary4List implements Serializable {
 		this.jobTitle = jobTitle;
 		this.desc = description;	
 		this.workedDay = workedDay;
-		this.actualSalary = actualSalary;
+		this.actualSalary = actualSalary;		
+		this.saProduct = saProduct;
+		this.saTime = saTime;
+		this.workedTime = workedTime;
+		this.maintainDay = maintainDay;
 	}	
 
 	public String getSalary() {
@@ -147,5 +156,37 @@ public class Salary4List implements Serializable {
 	public void setActualSalary(String actualSalary) {
 		this.actualSalary = actualSalary;
 	}
+	
+	public String getSaTime() {
+		return saTime;
+	}
 
+	public void setSaTime(String saTime) {
+		this.saTime = saTime;
+	}
+	
+	public String getSaProduct() {
+		return saProduct;
+	}
+
+	public void setSaProduct(String saProduct) {
+		this.saProduct = saProduct;
+	}
+
+	public String getWorkedTime() {
+		return workedTime;
+	}
+
+	public void setWorkedTime(String workedTime) {
+		this.workedTime = workedTime;
+	}
+
+	public String getMaintainDay() {
+		return maintainDay;
+	}
+
+	public void setMaintainDay(String maintainDay) {
+		this.maintainDay = maintainDay;
+	}
+	
 }

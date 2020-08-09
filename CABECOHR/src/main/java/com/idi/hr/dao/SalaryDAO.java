@@ -402,14 +402,15 @@ public class SalaryDAO extends JdbcDaoSupport {
 			}	
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getUnionFee(),
-					salaryDetail.getSubInsurance(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
-					salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
+					salaryDetail.getSubInsurance(), salaryDetail.getWorkedTime(), salaryDetail.getWorkedTimePrice(),
+					salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
 					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(),
 					salaryDetail.getOverWork(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getBasicSalary(), salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(),
 					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(),
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(),
-					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus(), salaryDetail.getrSalary() };
+					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus(), salaryDetail.getrSalary(), 
+					salaryDetail.getSaProduct(), salaryDetail.getSaTime() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -536,13 +537,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setSubInsurance(salaryDetail.getSubInsurance().replaceAll(",", ""));
 			}
 			Object[] params = new Object[] { salaryDetail.getUnionFee(), salaryDetail.getSubInsurance(),
-					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
+					salaryDetail.getWorkedTime(), salaryDetail.getWorkedTimePrice(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
 					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(), salaryDetail.getOverWork(),
 					salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), 
 					salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
-					salaryDetail.getArrears(), salaryDetail.getPayStatus(),salaryDetail.getrSalary(),
+					salaryDetail.getArrears(), salaryDetail.getPayStatus(),salaryDetail.getrSalary(), salaryDetail.getSaProduct(), salaryDetail.getSaTime(),
 					salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 

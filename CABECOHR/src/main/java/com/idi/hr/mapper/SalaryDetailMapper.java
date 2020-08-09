@@ -15,7 +15,8 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String finalSalary = rs.getString("ACTUAL_SALARY");
 		String unionFee = rs.getString("UNION_FEE");
 		String subInsurance = rs.getString("SUB_INSURANCE");
-		String overTimeH = rs.getString("OVER_TIME_H");
+		String workedTime = rs.getString("WORKED_TIME");
+		String workedTimePrice = rs.getString("WORKED_TIME_PRICE");
 		String overTimeSalary = rs.getString("OVER_TIME_SALARY");
 		String bounus = rs.getString("BOUNUS");
 		String maintainDay = rs.getString("MAINTAIN_DAY");
@@ -51,12 +52,14 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String arrears = rs.getString("ARREARS");
 		String payStatus = rs.getString("PAY_STATUS");
 		String rSalary = rs.getString("R_SALARY");
+		String saProduct = rs.getString("SA_PRODUCT");
+		String saTime = rs.getString("SA_TIME");
 		
-		return new SalaryDetail(employeeId, basicSalary, finalSalary, unionFee, subInsurance, overTimeH, 
-				overTimeSalary, bounus, maintainDay, subsidize, subLunch, subPhone, subGas, subSkill, 
+		return new SalaryDetail(employeeId, basicSalary, finalSalary, unionFee, subInsurance, workedTime, 
+				workedTimePrice, overTimeSalary, bounus, maintainDay, subsidize, subLunch, subPhone, subGas, subSkill, 
 				overWork, advancePayed, taxPersonal, month, year, totalIncome, totalReduce, desc,
 				payedInsurance, fullName, phoneNo, bankNo, bankName, bankBranch, salary, group, department, 
 				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 
-				workedDay, other, arrears, payStatus, rSalary);
+				workedDay, other, arrears, payStatus, rSalary, saProduct, saTime);
 	}	
 }

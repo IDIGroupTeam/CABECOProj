@@ -189,11 +189,15 @@ tr:nth-child(even) {
 				<th>Họ tên</th>				
 				<th>Chức danh</th>
 			    <th>HS lương</th>	
-			    <th>Ngày công</th>		
-			    <th>Lương</th>	
-				<th>Thông tin lương cb</th>
-				<th>Lương chi tiết tháng</th>
-				<th>Ghi chú</th>
+			    <th>Ngày công SP</th>		
+			    <th>Ngày công tg/b.trì/bx</th>		
+			    <th>Ngày công lđ/gn</th>	
+			    <th>Lương sản phẩm</th>
+			    <th>Lương thời gian</th>	
+			   	<th>Lương</th>
+				<th>Lương cơ bản</th>
+				<th>Lương chi tiết</th>
+				<!-- <th>Ghi chú</th> -->
 			</tr>
 			<c:forEach var="salary" items="${salarys}">
 				<tr>
@@ -202,10 +206,24 @@ tr:nth-child(even) {
 					<td>${salary.jobTitle}</td>
 					<td>${salary.salary}</td> 	
 					<td>${salary.workedDay}</td>
-					<td><fmt:formatNumber value="${salary.actualSalary}" type="number"/></td>				
+					<td>${salary.maintainDay}</td>
+					<td>${salary.workedTime}</td>					
+					<c:if test="${not empty salary.saProduct}">
+						<td><fmt:formatNumber value="${salary.saProduct}" type="number"/></td>
+					</c:if>
+					<c:if test="${empty salary.saProduct}">
+						<td>${salary.saProduct}</td>
+					</c:if>					
+					<c:if test="${not empty salary.saTime}">
+						<td><fmt:formatNumber value="${salary.saTime}" type="number"/></td>
+					</c:if>
+					<c:if test="${empty salary.saTime}">
+						<td>${salary.saTime}</td>
+					</c:if>
+					<td><fmt:formatNumber value="${salary.actualSalary}" type="number"/></td>	
 					<td><a href="editSalary?employeeId=${salary.employeeId}&group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Sửa</a></td>
 					<td><a href="insertSalaryDetailForm?employeeId=${salary.employeeId}&group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}">Cập nhật/xem chi tiết</a></td>
-					<td>${salary.desc}</td>
+					<%-- <td>${salary.desc}</td> --%>
 				</tr>
 			</c:forEach>
 		</table>

@@ -23,7 +23,12 @@ public class Salary4ListMapper implements RowMapper<Salary4List> {
 		String description = rs.getString("COMMENT");
 		String workedDay = rs.getString("WORKED_DAY"); 
 		String actualSalary = rs.getString("ACTUAL_SALARY");
+		String saProduct = rs.getString("SA_PRODUCT");
+		String saTime = rs.getString("SA_TIME");
+		String workedTime = rs.getString("WORKED_TIME");
+		String maintainDay = rs.getString("MAINTAIN_DAY");
+		
 		return new Salary4List(employeeId, fullName, salary, constSalary, bankNo, bankName, bankBranch, group,
-				department, jobTitle, description, workedDay, actualSalary);
+				department, jobTitle, description, workedDay, actualSalary, saProduct, saTime, workedTime, maintainDay);
 	}
 }

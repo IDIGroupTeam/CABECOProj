@@ -14,7 +14,8 @@ public class SalaryDetail implements Serializable {
 	private String basicSalary;
 	private String unionFee;
 	private String subInsurance;
-	private String overTimeH;
+	private String workedTime;
+	private String workedTimePrice;
 	private String overTimeSalary;
 	private float salaryPerHour;
 	private String bounus;
@@ -52,24 +53,27 @@ public class SalaryDetail implements Serializable {
 	private String totalReduce;
 	private String totalIncome;
 	private String rSalary; //hs luong
+	private String saProduct;
+	private String saTime;
 		
 	public SalaryDetail() {
 		
 	}
 
-	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String unionFee, String subInsurance, String overTimeH, 
+	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String unionFee, String subInsurance, String workedTime, String workedTimePrice,
 			String overTimeSalary, String bounus, String maintainDay, String subsidize, String subLunch, String subPhone, String subGas, 
 			String subSkill, String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
-			String salary, String group, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, 
-			String percentEmployeePay, int workComplete, String workedDay, String other, String arrears, String payStatus, String rSalary) {
+			String salary, String group, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay,
+			int workComplete, String workedDay, String other, String arrears, String payStatus, String rSalary, String saProduct, String saTime) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
 		this.basicSalary = basicSalary;
 		this.unionFee = unionFee;
 		this.subInsurance = subInsurance;
-		this.overTimeH = overTimeH;
+		this.workedTime = workedTime;
+		this.workedTimePrice = workedTimePrice;
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
 		this.maintainDay = maintainDay;
@@ -106,6 +110,8 @@ public class SalaryDetail implements Serializable {
 		this.arrears = arrears;
 		this.payStatus = payStatus;
 		this.rSalary = rSalary;
+		this.saProduct = saProduct;
+		this.saTime = saTime;
 	}	
 
 	public String getBasicSalary() {
@@ -148,12 +154,20 @@ public class SalaryDetail implements Serializable {
 		this.subInsurance = subInsurance;
 	}
 
-	public String getOverTimeH() {
-		return overTimeH;
+	public String getWorkedTime() {
+		return workedTime;
 	}
 
-	public void setOverTimeH(String overTimeH) {
-		this.overTimeH = overTimeH;
+	public String getWorkedTimePrice() {
+		return workedTimePrice;
+	}
+
+	public void setWorkedTimePrice(String workedTimePrice) {
+		this.workedTimePrice = workedTimePrice;
+	}
+
+	public void setWorkedTime(String workedTime) {
+		this.workedTime = workedTime;
 	}
 
 	public String getOverTimeSalary() {
@@ -454,6 +468,22 @@ public class SalaryDetail implements Serializable {
 
 	public void setrSalary(String rSalary) {
 		this.rSalary = rSalary;
+	}
+
+	public String getSaProduct() {
+		return saProduct;
+	}
+
+	public void setSaProduct(String saProduct) {
+		this.saProduct = saProduct;
+	}
+
+	public String getSaTime() {
+		return saTime;
+	}
+
+	public void setSaTime(String saTime) {
+		this.saTime = saTime;
 	}
 		
 }
