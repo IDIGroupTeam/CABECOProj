@@ -372,6 +372,13 @@ public class EmployeeController {
 					log.error("Error : " + e.getMessage());
 				}
 			}
+			EmployeeInfo currentEmployee = employeeDAO.getEmployee(String.valueOf(employeeInfo.getEmployeeId()));
+			//System.err.println("work group in form: " + employeeInfo.getWorkGroup() + ": " + employeeInfo.getFullName());
+			//System.err.println("work group in DB: " + currentEmployee.getWorkGroup() + ": " + currentEmployee.getFullName());
+			
+			if(currentEmployee.getWorkGroup() != null && employeeInfo.getWorkGroup() == null)
+				employeeInfo.setWorkGroup(currentEmployee.getWorkGroup());
+			
 			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm mới/cập nhật thông tin nhân viên thành công!");
@@ -459,7 +466,7 @@ public class EmployeeController {
 			WorkGroup workGroup = new WorkGroup();
 			for (int i = 0; i < list.size(); i++) {
 				workGroup = (WorkGroup) list.get(i);
-				workGroupMap.put(workGroup.getGroupId(), workGroup.getGroupName());
+				workGroupMap.put(workGroup.getGroupId(), workGroup.getGroupId() + ": " + workGroup.getGroupName());
 			}
 
 		} catch (Exception e) {
@@ -479,6 +486,7 @@ public class EmployeeController {
 		EmployeeInfo employeeInfo = null;
 		if (employeeId != null) {
 			employeeInfo = this.employeeDAO.getEmployee(employeeId);
+			//System.err.println("employeeInfo: WorkGroup = " + employeeInfo.getWorkGroup());
 		}
 		if (employeeInfo == null) {
 			return "redirect:/";

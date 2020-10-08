@@ -10,6 +10,7 @@ public class SalaryDetail implements Serializable {
 	private static final long serialVersionUID = -1871003330726286159L;
 	
 	private int employeeId; 
+	private String workGroup;
 	private String finalSalary;
 	private String basicSalary;
 	private String unionFee;
@@ -60,7 +61,7 @@ public class SalaryDetail implements Serializable {
 		
 	}
 
-	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String unionFee, String subInsurance, String workedTime, String workedTimePrice,
+	public SalaryDetail(int employeeId, String workGroup, String basicSalary, String finalSalary, String unionFee, String subInsurance, String workedTime, String workedTimePrice,
 			String overTimeSalary, String bounus, String maintainDay, String subsidize, String subLunch, String subPhone, String subGas, 
 			String subSkill, String overWork, String advancePayed, String taxPersonal, int month, int year, String totalIncome, String totalReduce,
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
@@ -68,6 +69,7 @@ public class SalaryDetail implements Serializable {
 			int workComplete, String workedDay, String other, String arrears, String payStatus, String rSalary, String saProduct, String saTime) {
 		
 		this.employeeId = employeeId;
+		this.workGroup = workGroup;
 		this.finalSalary = finalSalary;
 		this.basicSalary = basicSalary;
 		this.unionFee = unionFee;
@@ -136,6 +138,14 @@ public class SalaryDetail implements Serializable {
 
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public String getWorkGroup() {
+		return workGroup;
+	}
+
+	public void setWorkGroup(String workGroup) {
+		this.workGroup = workGroup;
 	}
 
 	public String getUnionFee() {

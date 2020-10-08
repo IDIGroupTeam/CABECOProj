@@ -37,50 +37,50 @@
 				
 					<c:if test="${not empty addedAll }">
 						<tr>
-							<td colspan="4" nowrap="nowrap" bgcolor="D3F7F7">${addedAll}</td>
-						</tr>
-						<tr>
-							<td></td>
+							<td colspan="4" nowrap="nowrap" bgcolor="#85a9e0">${addedAll}</td>
 						</tr>
 					</c:if>	
-					<tr>
-						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
-							lương nhân viên</td>
-					</tr>
-					<tr>
-						<td bgcolor="#FAFAFA">Chọn NV:</td>
-						<td><form:select path="employeeId" class="form-control animated">
-								<form:options items="${employeeMap}" />
-							</form:select></td>					
-						<td bgcolor="#FAFAFA">% lương:</td>
-						<td><form:input path="constSalary" maxlength="8" type="number"
-								class="form-control animated"/></td>		
-					</tr>
-					<tr>
-						<td bgcolor="#FAFAFA">Hệ số lương:(*)</td>
-						<td><form:input path="salary" maxlength="12" type="number" min="0.1" step="0.01" 
-								required="required" class="form-control animated"/></td>
-								
-						<td bgcolor="#FAFAFA">Số TK ngân hàng:</td>
-						<td><form:input path="bankNo" maxlength="16" type="number"
-								class="form-control animated"/></td>						
-					</tr>	
-					<tr>
-						<td bgcolor="#FAFAFA">Tên ngân hàng:</td>
-						<td><form:input path="bankName" maxlength="64" 
-								class="form-control animated"/></td>
-								
-						<td bgcolor="#FAFAFA">Tên chi nhánh:</td>
-						<td><form:input path="bankBranch" maxlength="64" 
-								class="form-control animated"/></td>						
-					</tr>				
-					<tr>
-						<td bgcolor="#FAFAFA">Ghi chú:</td>
-						<td colspan="3"><form:textarea path="desc" cols="64" class="form-control animated"/></td>
-					</tr>
+					<c:if test="${empty addedAll }">
+						<tr>
+							<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin	lương nhân viên</td>
+						</tr>
+						<tr>
+							<td bgcolor="#FAFAFA">Chọn NV:</td>
+							<td><form:select path="employeeId" class="form-control animated">
+									<form:options items="${employeeMap}" />
+								</form:select></td>					
+							<td bgcolor="#FAFAFA">% lương:</td>
+							<td><form:input path="constSalary" maxlength="8" type="number"
+									class="form-control animated"/></td>		
+						</tr>
+						<tr>
+							<td bgcolor="#FAFAFA">Hệ số lương:(*)</td>
+							<td><form:input path="salary" maxlength="12" type="number" min="0.1" step="0.01" 
+									required="required" class="form-control animated"/></td>
+									
+							<td bgcolor="#FAFAFA">Số TK ngân hàng:</td>
+							<td><form:input path="bankNo" maxlength="16" type="number"
+									class="form-control animated"/></td>						
+						</tr>	
+						<tr>
+							<td bgcolor="#FAFAFA">Tên ngân hàng:</td>
+							<td><form:input path="bankName" maxlength="64" 
+									class="form-control animated"/></td>
+									
+							<td bgcolor="#FAFAFA">Tên chi nhánh:</td>
+							<td><form:input path="bankBranch" maxlength="64" 
+									class="form-control animated"/></td>						
+						</tr>				
+						<tr>
+							<td bgcolor="#FAFAFA">Ghi chú:</td>
+							<td colspan="3"><form:textarea path="desc" cols="64" class="form-control animated"/></td>
+						</tr>
+					</c:if>
 				</tbody>
 			</table>
-			<input class="btn btn-primary btn-sm" type="submit" value="Lưu" />
+			<c:if test="${empty addedAll }">
+				<input class="btn btn-primary btn-sm" type="submit" value="Lưu" />
+			</c:if>
 	</form:form>	
 </body>
 </html>

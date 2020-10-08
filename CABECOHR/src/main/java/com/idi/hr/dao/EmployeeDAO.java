@@ -295,7 +295,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @return List of employee
 	 * @throws Exception
 	 */
-	public List<EmployeeInfo> getEmployeesForInsertSalaryByGroup(String dept) {
+	public List<EmployeeInfo> getEmployeesForInsertSalaryByGroup(String group) {
 
 		String sql = hr.getProperty("GET_EMPLOYEES_NO_SALARY_INFO_BY_WORK_GROUP").toString();
 		String sqlUnicode = "";
@@ -306,7 +306,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 			e.printStackTrace();
 		}
 		log.info("GET_EMPLOYEES_NO_SALARY_INFO_BY_WORK_GROUP query: " + sqlUnicode);
-		Object[] params = new Object[] {dept};
+		Object[] params = new Object[] {"%" + group + "%"};
 		EmployeeMapper mapper = new EmployeeMapper();
 
 		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
@@ -450,7 +450,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 			e.printStackTrace();
 		}
 		log.info("GET_EMPLOYEES_ID_BY_WORK_GROUP query: " + sqlUnicode);
-		Object[] params = new Object[] {group};		
+		Object[] params = new Object[] {"%" + group + "%"};		
 
 		List<Integer> list = jdbcTmpl.queryForList(sqlUnicode, params, Integer.class);
 

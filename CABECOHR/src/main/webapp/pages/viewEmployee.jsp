@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>Tập đoàn IDI - Xem thông tin nhân viên</title>
+<title>CABECO - Xem thông tin nhân viên</title>
 <style>
 .error-message {
 	color: red;
@@ -31,8 +31,14 @@
 					<td><c:out value="${employeeForm.phoneNo}" /></td>
 				</tr>
 				<tr>
-					<td rowspan="6">
-					<img src="<c:out value="${employeeForm.imagePath}"/>" alt="profile image" width="125px" height="150px"/>
+					<td rowspan="6">					
+						<c:if test="${ not empty employeeForm.imagePath}">
+							<img src="${employeeForm.imagePath}" height="170px"
+								width="200px" />
+						</c:if> <c:if test="${ empty employeeForm.imagePath}">
+							<img src="/CABECOHR/public/images/avatar.gif" height="170px"
+								width="145px" />
+						</c:if>					
 					</td>
 
 					<td bgcolor="#EEEEEE">Email:</td>

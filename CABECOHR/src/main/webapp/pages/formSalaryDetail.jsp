@@ -38,7 +38,7 @@
 </script>	
 </head>
 <body>
-	<a href="${url}/salary/listSalarysByGroup?group=${salaryDetail.group}&month=${salaryDetail.month}&year=${salaryDetail.year}">
+	<a href="${url}/salary/listSalarysByGroup?group=${salaryDetail.workGroup}&month=${salaryDetail.month}&year=${salaryDetail.year}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách lương tháng</button></a>
 	<br/><br/>
 	<form:form modelAttribute="salaryDetail" method="POST"
@@ -53,6 +53,8 @@
 			<table class="table">
 				<tbody>
  					<form:hidden path="employeeId"/>
+ 					<form:hidden path="workGroup"/>
+ 					<form:hidden path="group"/>
 					<form:hidden path="salary"/>
 					<form:hidden path="fullName"/>
 					<form:hidden path="month"/> 
@@ -67,7 +69,7 @@
 					<form:hidden path="salaryInsurance"/>
 					<form:hidden path="salaryPerHour"/> 					
 					<tr>
-						<td colspan="8" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin nhân viên</td>
+						<td colspan="8" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin nhân viên </td>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Họ tên:</td>
@@ -111,8 +113,8 @@
 						</c:if>					
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Ngày công sản phẩm:</td>
-						<td><form:input path="workedDay" class="form-control bfh-number" min="0.001" max="31" step="0.001" type="number" required="required"/></td>	
+						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Nếu không làm ngày nào vui lòng nhập 0">Ngày công sản phẩm:</td>
+						<td><form:input path="workedDay" class="form-control bfh-number" min="0" max="31" step="0.001" type="number" required="required"/></td>	
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Bắt buộc phải > hoăc = 0. Mặc định là 100%">Hệ số hoàn thành/chuyên cần (%):</td>
 						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" value="100" type="number" size="4" required="required"/></td>		
 						<td colspan="2"></td>									
@@ -282,7 +284,7 @@
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" /><br/>
 	</form:form>
 	<br/>
-	<a href="${url}/salary/listSalarysByGroup?group=${salaryDetail.group}&month=${salaryDetail.month}&year=${salaryDetail.year}">
+	<a href="${url}/salary/listSalarysByGroup?group=${salaryDetail.workGroup}&month=${salaryDetail.month}&year=${salaryDetail.year}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách lương tháng</button></a>
 </body>
 </html>

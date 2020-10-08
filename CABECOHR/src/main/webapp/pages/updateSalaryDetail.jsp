@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Tập đoàn IDI - Quản lý tiền lương</title>
+<title>CABECO - Quản lý tiền lương</title>
 <style>
 .error-message {
 	color: red;

@@ -80,7 +80,7 @@ tr:nth-child(even) {
 			class="btn btn-lg btn-primary btn-sm">Tính sản lượng</button></a>			
 	<a href="${url}/salary/salaryRe"><button class="btn btn-primary btn-sm">Điều tiết</button></a>		
 	<a href="${pageContext.request.contextPath}/salary/insertSalary?group=${salaryForm.group}&month=${salaryForm.monthReport}&year=${salaryForm.yearReport}"><button
-			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
+			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên vào nhóm </button></a>
 	<br />
 	<br />
 	<form:form modelAttribute="salaryForm" method="POST">
@@ -181,6 +181,8 @@ tr:nth-child(even) {
 			</tr>
 		</table>	
 	</form:form>
+	
+	<div class="alert alert-warning">Xin lưu ý: Hãy tính sản lượng cho nhóm lao động trước khi tính lương, vì liên quan đến tính chính sác của lương theo sản phẩm!!!</div>
 	
 	<div class="table-responsive">		
 		<table class="table table-striped">

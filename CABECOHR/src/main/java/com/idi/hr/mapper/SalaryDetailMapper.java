@@ -11,6 +11,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 
 	public SalaryDetail mapRow(ResultSet rs, int nowNum) throws SQLException {
 		int employeeId = rs.getInt("EMPLOYEE_ID");
+		String workGroup = rs.getString("WORK_GROUP");
 		String basicSalary = rs.getString("BASIC_SALARY");
 		String finalSalary = rs.getString("ACTUAL_SALARY");
 		String unionFee = rs.getString("UNION_FEE");
@@ -40,7 +41,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String bankName = rs.getString("BANK_NAME");
 		String bankBranch = rs.getString("BANK_BRANCH");
 		String salary = rs.getString("SALARY");
-		String group = rs.getString("WORK_GROUP");
+		String group = rs.getString("E.WORK_GROUP");
 		String department = rs.getString("DEPARTMENT");
 		String jobTitle = rs.getString("JOB_TITLE");
 		String salaryInsurance = rs.getString("SALA_SOCI_INSU");
@@ -55,7 +56,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String saProduct = rs.getString("SA_PRODUCT");
 		String saTime = rs.getString("SA_TIME");
 		
-		return new SalaryDetail(employeeId, basicSalary, finalSalary, unionFee, subInsurance, workedTime, 
+		return new SalaryDetail(employeeId, workGroup, basicSalary, finalSalary, unionFee, subInsurance, workedTime, 
 				workedTimePrice, overTimeSalary, bounus, maintainDay, subsidize, subLunch, subPhone, subGas, subSkill, 
 				overWork, advancePayed, taxPersonal, month, year, totalIncome, totalReduce, desc,
 				payedInsurance, fullName, phoneNo, bankNo, bankName, bankBranch, salary, group, department, 

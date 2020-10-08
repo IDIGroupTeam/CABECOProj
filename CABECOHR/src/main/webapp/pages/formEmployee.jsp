@@ -10,7 +10,7 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Tập đoàn IDI - Quản lý nhân viên</title>
+<title>CABECO - Quản lý nhân viên</title>
 <style>
 .error-message {
 	color: red;
@@ -45,8 +45,7 @@
 
 <body>
 	<a href="${pageContext.request.contextPath}/">
-			<button class="btn btn-lg btn-primary btn-sm">Quay lại danh
-				sách NV</button>
+			<button class="btn btn-lg btn-primary btn-sm">Quay lại danh	sách NV</button>
 	</a>
 	<br />
 	<br />
@@ -83,12 +82,12 @@
 								class="form-control animated" /></td>
 					</tr>
 					<tr>
-						<td rowspan="6"><form:hidden path="imagePath" /> <c:if
+						<td rowspan="4"><form:hidden path="imagePath" /> <c:if
 								test="${ not empty employeeForm.imagePath}">
 								<img src="${employeeForm.imagePath}" height="170px"
-									width="145px" />
+									width="200px" />
 							</c:if> <c:if test="${ empty employeeForm.imagePath}">
-								<img src="/IDIHR/public/images/avatar.gif" height="170px"
+								<img src="/CABECOHR/public/images/avatar.gif" height="170px"
 									width="145px" />
 							</c:if></td>
 						<td bgcolor="#EEEEEE">Email:</td>
@@ -145,6 +144,18 @@
 							</form:select></td>
 					</tr>
 					<tr>
+						<td rowspan="3">
+						<c:if test="${not empty employeeForm.workGroup}">
+							Nhóm hiện tại: ${employeeForm.workGroup}
+						</c:if>
+						<c:if test="${empty employeeForm.workGroup}">
+							&nbsp;&nbsp; Lựa chọn nhóm lao động:
+						</c:if>							
+							<form:select path="workGroup" class="form-control animated" multiple="multiple" size="7">
+								<%-- <form:option value="" label="--- Lựa chọn nhóm lao động ---" /> --%>
+								<form:options items="${workGroupMap}" />								
+							</form:select>
+						</td>					
 						<td bgcolor="#EEEEEE" nowrap="nowrap">Ngày vào cty(*):</td>
 						<td>
 							<div class="input-group date datetime">
@@ -164,7 +175,7 @@
 							</div>
 						</td>						
 					</tr>
-					<tr>						
+					<tr>		
 						<td bgcolor="#EEEEEE" nowrap="nowrap">Ngày hết hạn hợp đồng:</td>
 						<td>
 							<div class="input-group date datetime">
@@ -180,11 +191,6 @@
 						</td>						
 					</tr>
 					<tr>
-						<td><form:select path="workGroup" class="form-control animated">
-								<form:option value="" label="--- Lựa chọn nhóm lao động ---" />
-								<form:options items="${workGroupMap}" />								
-							</form:select>
-						</td>
 						<td bgcolor="#EEEEEE" nowrap="nowrap">Trình độ/bằng cấp:</td>
 						<td>
 							<form:input path="academyLevel" class="form-control" size="32" maxlength="32" />	

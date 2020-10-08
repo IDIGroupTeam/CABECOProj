@@ -88,7 +88,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 		String sql = hr.getProperty("GET_LIST_SALARY_INFO_BY_WORK_GROUP_AND_MONTH").toString();
 		log.info("GET_LIST_SALARY_INFO_BY_WORK_GROUP_AND_MONTH query: " + sql);
 		Salary4ListMapper mapper = new Salary4ListMapper();
-		Object[] params = new Object[] { group, month, year };
+		Object[] params = new Object[] { "%" + group + "%", month, year, group };
 		List<Salary4List> list = jdbcTmpl.query(sql, params, mapper);
 		System.out.println("Work group list dao = " + group +"|" + month + "|" + year + "|" + list.size());
 		return list;
@@ -179,13 +179,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @param employeeId, month, year
 	 * @return SalaryDetail object
 	 */
-	public SalaryDetail getSalaryDetail(int employeeId, int month, int year) {
+	public SalaryDetail getSalaryDetail(int employeeId, int month, int year, String workGroup) {
 
 		SalaryDetail salaryDetail = null;
 		if (month > 0 && year > 0) {
 			String sql = hr.get("GET_SALARY_DETAIL").toString();
 			log.info("GET_SALARY_DETAIL query: " + sql);
-			Object[] params = new Object[] { employeeId, month, year };
+			Object[] params = new Object[] { employeeId, month, year, workGroup };
 			SalaryDetailMapper mapper = new SalaryDetailMapper();
 			salaryDetail = jdbcTmpl.queryForObject(sql, params, mapper);
 		} else {
@@ -401,7 +401,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setSubInsurance(salaryDetail.getSubInsurance().replaceAll(",", ""));
 			}	
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
-			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getUnionFee(),
+			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getWorkGroup(), salaryDetail.getUnionFee(),
 					salaryDetail.getSubInsurance(), salaryDetail.getWorkedTime(), salaryDetail.getWorkedTimePrice(),
 					salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(), salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(),
 					salaryDetail.getSubLunch(), salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(),
@@ -536,7 +536,10 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
 				salaryDetail.setSubInsurance(salaryDetail.getSubInsurance().replaceAll(",", ""));
 			}
-			Object[] params = new Object[] { salaryDetail.getUnionFee(), salaryDetail.getSubInsurance(),
+			System.out.println("salaryDetail.getSaProduct() in DAO: " + salaryDetail.getSaProduct());
+			if(salaryDetail.getSaProduct() == null)
+				salaryDetail.setSaProduct("0");
+			Object[] params = new Object[] {salaryDetail.getUnionFee(), salaryDetail.getSubInsurance(),
 					salaryDetail.getWorkedTime(), salaryDetail.getWorkedTimePrice(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getMaintainDay(), salaryDetail.getSubsidize(), salaryDetail.getSubLunch(),
 					salaryDetail.getSubPhone(), salaryDetail.getSubGas(), salaryDetail.getSubSkill(), salaryDetail.getOverWork(),
@@ -544,7 +547,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getTotalIncome(), salaryDetail.getTotalReduce(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
 					salaryDetail.getArrears(), salaryDetail.getPayStatus(),salaryDetail.getrSalary(), salaryDetail.getSaProduct(), salaryDetail.getSaTime(),
-					salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear(),  salaryDetail.getWorkGroup() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -577,15 +580,15 @@ public class SalaryDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * Count member in department filled worked day
+	 * Count member in group filled worked day
 	 * @param month, year, department 
 	 * @return number
 	 */
-	public int countMembers( int month, int year, String department) {
+	public int countMembers( int month, int year, String group) {
 
 		String sql = hr.get("GET_COUNT_SALARY_FILLED").toString();
 		log.info("GET_COUNT_SALARY_FILLED query: " + sql);
-		Object[] params = new Object[] { month, year, department };
+		Object[] params = new Object[] { month, year, group };
 		
 		String numberEmployee = jdbcTmpl.queryForObject(sql, String.class, params);
 		
