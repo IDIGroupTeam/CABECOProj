@@ -549,8 +549,8 @@ public class SalaryController {
 	public String insertSalaryDetailForm(Model model, @RequestParam("employeeId") int employeeId,
 			SalaryDetail salaryDetail) {
 		try {
-			System.err.println("group from salary detail: " + salaryDetail.getWorkGroup());
-			System.err.println("group from epmloyee: " + salaryDetail.getGroup());
+			//System.err.println("group from salary detail: " + salaryDetail.getWorkGroup());
+			//System.err.println("group from epmloyee: " + salaryDetail.getGroup());
 			String workGroup =  salaryDetail.getGroup();
 			Calendar now = Calendar.getInstance();
 			int month = now.get(Calendar.MONTH) + 1;
@@ -648,7 +648,7 @@ public class SalaryController {
 			
 			model.addAttribute("salaryDetail", salaryDetail);
 			model.addAttribute("employeeId", employeeId);
-			model.addAttribute("formTitle", "Thông tin lương chi tiết của " + name + " tháng " + salaryDetail.getMonth() + ", " + salaryDetail.getYear());
+			model.addAttribute("formTitle", "Thông tin lương chi tiết của " + name + ", nhóm lao động " + salaryDetail.getWorkGroup() + ", tháng " + salaryDetail.getMonth() + ", " + salaryDetail.getYear());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -665,7 +665,7 @@ public class SalaryController {
 					&& hr.getProperty("BASIC_SALARY") != null && hr.getProperty("BASIC_SALARY").length() > 0) {
 				float s = Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(hr.getProperty("BASIC_SALARY"));
 				salaryDetail.setBasicSalary(String.valueOf(s));
-				System.out.println("BasicSalary: " + s);
+				//System.out.println("BasicSalary: " + s);
 			}
 			/*
 			WorkingDay workingDay = null;
@@ -741,10 +741,10 @@ public class SalaryController {
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary)); */
 			
-			System.out.println("subInsurance in controller: " + salaryDetail.getSubInsurance());
-			System.out.println("bonus: " + salaryDetail.getBounus());
-			System.out.println("getWorkGroup: " + salaryDetail.getWorkGroup());
-			System.out.println("salaryDetail.getSaProduct() in controller: " + salaryDetail.getSaProduct());
+			//System.out.println("subInsurance in controller: " + salaryDetail.getSubInsurance());
+			//System.out.println("bonus: " + salaryDetail.getBounus());
+			//System.out.println("getWorkGroup: " + salaryDetail.getWorkGroup());
+			//System.out.println("salaryDetail.getSaProduct() in controller: " + salaryDetail.getSaProduct());
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().trim().length() > 0) {
 				if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
 					salaryDetail.setPayedInsurance(String.valueOf((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",",""))) * 10.5 / 100));
@@ -832,7 +832,7 @@ public class SalaryController {
 			@RequestParam(required = false, name="month") int month, @RequestParam(required = false, name="year") int year,
 			final RedirectAttributes redirectAttributes) throws Exception{
 		try {
-			System.err.println("calculatesSalary: " + group);
+			//System.err.println("calculatesSalary: " + group);
 			//san luong cua phong/bo phan
 			String totalMoneyIncome = "0";
 			float totalMoney = 0;
@@ -859,7 +859,7 @@ public class SalaryController {
 				float sumHSL = 0;
 				// tinh hs luong cho tung nv
 				for(int i=0; i < eIds.size(); i++) {
-					System.err.println(eIds.get(i) +"|"+ month+"|"+ year);
+					//System.err.println(eIds.get(i) +"|"+ month+"|"+ year);
 					SalaryDetail salaryDetail = salaryDAO.getSalaryDetail(eIds.get(i), month, year, group);
 					
 					//he so luong cong
@@ -881,10 +881,17 @@ public class SalaryController {
 					
 					// Tính lương thực nhận
 					float finalSalary = 0;
-					if (salaryDetail.getWorkedDay() != null && salaryDetail.getWorkedDay().trim().length() > 0)
-						finalSalary = Float.valueOf(salaryDetail.getBasicSalary()) + Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay())*hsc ;			
-					else
-						finalSalary = 0 + 0 ;
+					//System.err.println(eIds.get(j) + ": So nhom da tinh luong cho thang nay cua nv: " + salaryDAO.isFirstGroup(eIds.get(j), month, year));
+					if (salaryDetail.getWorkedDay() != null && salaryDetail.getWorkedDay().trim().length() > 0) {
+						//check xem co phai la nhom dau tien tinh luong cua nv nay ko
+						if(salaryDAO.isFirstGroup(eIds.get(j), month, year) > 1) {
+							finalSalary = Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay())*hsc ;
+						}else {
+							finalSalary = Float.valueOf(salaryDetail.getBasicSalary()) + Float.valueOf(salaryDetail.getBasicSalary())*Float.valueOf(salaryDetail.getWorkedDay())*hsc ;
+						}
+					}	
+					//else
+					//	finalSalary = 0 + 0 ;
 					//System.err.println("finalSalary luong sp: " + finalSalary);
 					
 					float luongsp = finalSalary;
@@ -905,36 +912,46 @@ public class SalaryController {
 					
 					//luong thoi gian (giao nhan) -> ngay cong lao dong
 					float luongtgld = 0;
-					System.err.println("luong thoi gian ...: " + salaryDetail.getWorkedTime() + "h, gia" + salaryDetail.getWorkedTimePrice());
+					//System.err.println("luong thoi gian ...: " + salaryDetail.getWorkedTime() + "h, gia" + salaryDetail.getWorkedTimePrice());
 					if(salaryDetail.getWorkedTime() != null && salaryDetail.getWorkedTime().trim().length() > 0
 							&& salaryDetail.getWorkedTimePrice() != null && salaryDetail.getWorkedTimePrice().trim().length() > 0) {
 						//System.err.println("luong thoi gian bf: " + finalSalary);
 						luongtgld = Float.valueOf(salaryDetail.getWorkedTimePrice().replaceAll(",", ""))*Float.valueOf(salaryDetail.getWorkedTime().replaceAll(",", ""));
 						finalSalary = finalSalary + luongtgld;
-						System.err.println("luong thoi gian lao dong: " + luongtgld);
+						//System.err.println("luong thoi gian lao dong: " + luongtgld);
 						//System.err.println("luong thoi gian at: " + finalSalary);
 					}
 					
+					//System.err.println("finalSalary 1: " + eIds.get(j) + "|" + finalSalary);
 					//luong cho ngay cong thoi gian (bao tri boc xep)
 					//luong thoi gian - ngay cong bao tri
 					float luongtg = 0;
 					float luongtgnc = 0;					
 					//gia luong ngay cong thoi gian: luong sp/ ngay cong ld theo san pham
+					//System.err.println("luong thoi gian ngay cong: " + salaryDetail.getMaintainDay() + "|" + salaryDetail.getWorkedDay());
 					if(salaryDetail.getMaintainDay() != null && salaryDetail.getMaintainDay().length() > 0) {
-						if (salaryDetail.getWorkedDay() != null && salaryDetail.getWorkedDay().trim().length() > 0)
+						if (salaryDetail.getWorkedDay() != null && salaryDetail.getWorkedDay().trim().length() > 0 && Integer.valueOf(salaryDetail.getWorkedDay()) > 0) {
 							luongtgnc = Float.valueOf(salaryDetail.getMaintainDay())*(luongsp/Float.valueOf(salaryDetail.getWorkedDay()));
-						else
+							//System.err.println("luong thoi gian ngay cong if: " + luongtgnc);
+						}else {
 							luongtgnc = 0;
+							//System.err.println("luong thoi gian ngay cong else: " + luongtgnc);
+						}
 						//System.err.println("luong thoi gian ngay cong: " + luongtgnc);
 						finalSalary = finalSalary + luongtgnc;
 					}
-					//tinh tong lyong thoi gian:
+					//System.err.println("luongtgnc: " + eIds.get(j) + "|" + luongtgnc);
+					//System.err.println("finalSalary 2: " + eIds.get(j) + "|" + finalSalary);
+					//tinh tong luong thoi gian:
 					luongtg = luongtgnc + luongtgld;
 					salaryDetail.setSaTime(String.valueOf(luongtg));
+					
 
 					// Tang		
 					// float salaryPerHour = 0; if (salaryDetail.getSalaryPerHour() > 0)
 					//  salaryPerHour = salaryDetail.getSalaryPerHour();					 
+					
+					//System.err.println("finalSalary tang: " + eIds.get(j) + "|" + finalSalary);
 					
 					if (salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0) {
 						finalSalary = finalSalary + Float.valueOf(salaryDetail.getBounus().replaceAll(",", ""));
@@ -990,6 +1007,7 @@ public class SalaryController {
 					}
 					salaryDetail.setTotalIncome(String.valueOf(finalSalary));
 					
+					//System.err.println("finalSalary giam: " + eIds.get(j) + "|" + finalSalary);
 					// Giảm
 					if (salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0) {
 						finalSalary = finalSalary - Float.valueOf(salaryDetail.getArrears().replaceAll(",", ""));
@@ -1003,20 +1021,23 @@ public class SalaryController {
 						finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 						salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 					}	
-					if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().trim().length() > 0) {						
-						if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
-							finalSalary = finalSalary - ((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",", ""))) * (float)10.5 / 100);
-							finalSalary = finalSalary - ((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",", ""))) * (float)1/100);
-						}else {
-							finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;							
+					//check xem co phai la nhom dau tien tinh luong cua nv nay ko
+					if(salaryDAO.isFirstGroup(eIds.get(j), month, year) == 1) {
+						if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().trim().length() > 0) {						
+							if(salaryDetail.getSubInsurance() != null && salaryDetail.getSubInsurance().trim().length() > 0) {
+								finalSalary = finalSalary - ((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",", ""))) * (float)10.5 / 100);
+								finalSalary = finalSalary - ((Float.parseFloat(salaryDetail.getSalaryInsurance()) + Float.parseFloat(salaryDetail.getSubInsurance().replaceAll(",", ""))) * (float)1/100);
+							}else {
+								finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;							
+							}
+													
 						}
-												
 					}
 					salaryDetail.setTotalReduce(String.valueOf(Float.valueOf(salaryDetail.getTotalIncome()) - finalSalary));
 					
 					salaryDetail.setFinalSalary(String.valueOf((double) Math.round(finalSalary)));
 					
-					System.err.println("finalSalary: " + eIds.get(j) + "|" + finalSalary);
+					//System.err.println("finalSalary x: " + eIds.get(j) + "|" + finalSalary);
 					salaryDAO.updateSalaryDetail(salaryDetail);
 				}					
 			}			

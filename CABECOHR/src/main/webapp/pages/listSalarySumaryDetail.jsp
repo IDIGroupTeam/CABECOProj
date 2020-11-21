@@ -181,6 +181,7 @@ tr:nth-child(even) {
 				<th>Mã NV</th>
 				<th>Họ tên</th>
 				<th>Phòng</th>
+				<th>Nhóm lao động</th>
 				<th>Chức danh</th>				
 				<th>HSLương</th>		
 				<th>Lương thực nhận</th>		
@@ -196,7 +197,7 @@ tr:nth-child(even) {
 				<th><i>Đóng BHXH</i></th>				
 			</tr>
 			<c:if test="${not empty salaryReport}">
-				<th colspan="5" align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tổng cộng: </th>		
+				<th colspan="6" align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tổng cộng: </th>		
 				<th><fmt:formatNumber value="${salaryReport.finalSalary + salaryReport.advancePayed}" type="number"/></th>		
 				<th><fmt:formatNumber value="${salaryReport.bounus}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.subsidize}" type="number"/></th>
@@ -213,7 +214,8 @@ tr:nth-child(even) {
 				<tr>
 					<td>${salary.employeeId}</td>
 					<td nowrap="nowrap">${salary.fullName}</td>
-					<td>${salary.department}</td>					
+					<td>${salary.department}</td>	
+					<td>${salary.workGroup}</td>					
 					<td>${salary.jobTitle}</td>
 					<td><fmt:formatNumber value="${salary.salary}" type="number"/> </td>					
 					<td><fmt:formatNumber value="${salary.finalSalary + salary.advancePayed}" type="number"/></td>

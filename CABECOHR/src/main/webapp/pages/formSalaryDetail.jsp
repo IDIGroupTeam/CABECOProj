@@ -120,7 +120,7 @@
 						<td colspan="2"></td>									
 					</tr>
 					<tr>						
-						<td bgcolor="#FAFAFA">Ngày công thời gian (bảo trì/bốc xếp):</td>
+						<td bgcolor="#FAFAFA" title="Chỉ tính/nhập khi ngày công sản phẩm > 0">Ngày công thời gian (bảo trì/bốc xếp):</td>
 						<td><form:input path="maintainDay" class="form-control animated" min="0" max="31" step="0.001" type="number" /></td>						
 						<td>Công lao động thời gian (giao nhận)</td>
 						<td><form:input path="workedTime" class="form-control animated" min="0" max="31" step="0.001" type="number" /></td>

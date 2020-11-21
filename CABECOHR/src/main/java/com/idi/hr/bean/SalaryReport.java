@@ -11,9 +11,6 @@ public class SalaryReport implements Serializable {
 	
 	private int employeeId; 
 	private String finalSalary;
-	private String overTimeN;
-	private String overTimeW;
-	private String overTimeH;
 	private String overTimeSalary;
 	private String bounus;
 	private String subsidize;
@@ -32,14 +29,10 @@ public class SalaryReport implements Serializable {
 		
 	}
 
-	public SalaryReport(String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
-		String bounus, String subsidize, String subLunch, String subPhone, String subGas, String subSkill, String overWork, 
-		String advancePayed, String taxPersonal, String payedInsurance) {
+	public SalaryReport(String finalSalary, String overTimeSalary, String bounus, String subsidize, String subLunch, 
+			String subPhone, String subGas, String subSkill, String overWork, String advancePayed, String taxPersonal, String payedInsurance) {
 		
 		this.finalSalary = finalSalary;
-		this.overTimeN = overTimeN;
-		this.overTimeW = overTimeW;
-		this.overTimeH = overTimeH;
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
 		this.subsidize = subsidize;
@@ -70,30 +63,6 @@ public class SalaryReport implements Serializable {
 
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
-	}
-
-	public String getOverTimeN() {
-		return overTimeN;
-	}
-
-	public void setOverTimeN(String overTimeN) {
-		this.overTimeN = overTimeN;
-	}
-
-	public String getOverTimeW() {
-		return overTimeW;
-	}
-
-	public void setOverTimeW(String overTimeW) {
-		this.overTimeW = overTimeW;
-	}
-
-	public String getOverTimeH() {
-		return overTimeH;
-	}
-
-	public void setOverTimeH(String overTimeH) {
-		this.overTimeH = overTimeH;
 	}
 
 	public String getOverTimeSalary() {

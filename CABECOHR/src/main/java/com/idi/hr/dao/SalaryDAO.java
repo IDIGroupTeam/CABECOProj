@@ -176,7 +176,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 	/**
 	 * get SalaryDetail detail for month
 	 * 
-	 * @param employeeId, month, year
+	 * @param employeeId, month, year, workGroup
 	 * @return SalaryDetail object
 	 */
 	public SalaryDetail getSalaryDetail(int employeeId, int month, int year, String workGroup) {
@@ -198,6 +198,26 @@ public class SalaryDAO extends JdbcDaoSupport {
 		return salaryDetail;
 	}
 
+	/**
+	 * check if it is the first group calculator for month this month by employee
+	 * 
+	 * @param employeeId, month, year
+	 * @return rowNumer 0 is first > 0 is not 
+	 */
+	public int isFirstGroup(int employeeId, int month, int year) {
+
+		int rowNumber = 0;
+		
+		String sql = hr.get("IS_FISRT_GROUP_SALARY").toString();
+		log.info("IS_FISRT_GROUP_SALARY query: " + sql);
+		Object[] params = new Object[] { employeeId, month, year};
+		
+		rowNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		//System.out.println("isFirstGroup: " + employeeId + "|" + month + "|" +  year + "|" + rowNumber);
+		//System.out.println("isFirstGroup: " + employeeId + "|" + month + "|" +  year + "|" + jdbcTmpl.queryForObject(sql, String.class, params));
+		return rowNumber;
+	}
+	
 	/**
 	 * 
 	 * @param employeeId
@@ -249,11 +269,6 @@ public class SalaryDAO extends JdbcDaoSupport {
 		else
 			sql = sql.replaceAll("%DEPT%", " ");
 		
-		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
-			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept + "'");
-		else
-			sql = sql.replaceAll("%DEPT%", " ");
-		
 		if(group != null && group.length() > 0 && !group.equalsIgnoreCase("all"))
 			sql = sql.replaceAll("%GROUP%", " AND E.WORK_GROUP= '" + group + "'");
 		else
@@ -275,7 +290,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 	 * @return
 	 */
 	public List<SalaryDetail> getSalaryReportDetail(String month, String year, String dept, String group) {
-		System.err.println("dept: " + dept);
+		//System.err.println("dept: " + dept);
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL").toString();
 		if(dept != null && dept.length() > 0 && !dept.equalsIgnoreCase("all"))
 			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT= '" + dept +"'");
@@ -537,6 +552,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setSubInsurance(salaryDetail.getSubInsurance().replaceAll(",", ""));
 			}
 			System.out.println("salaryDetail.getSaProduct() in DAO: " + salaryDetail.getSaProduct());
+			System.out.println(salaryDetail.getEmployeeId()+ ": salaryDetail.getFinalSalary() in DAO: " + salaryDetail.getFinalSalary());
 			if(salaryDetail.getSaProduct() == null)
 				salaryDetail.setSaProduct("0");
 			Object[] params = new Object[] {salaryDetail.getUnionFee(), salaryDetail.getSubInsurance(),
